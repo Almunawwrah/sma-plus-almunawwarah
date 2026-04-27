@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sejarah Sekolah - SMA Plus Almunawwarah</title>
+    <meta name="description" content="Sejarah perjalanan SMA Plus Almunawwarah dari pendirian yayasan hingga era digital, visi misi, dan nilai-nilai inti sekolah.">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(var(--primary), var(--secondary));
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) {
+            flex-direction: row;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            background: var(--primary);
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: var(--shadow);
+            z-index: 2;
+        }
+
+        .timeline-content {
+            width: 45%;
+            padding: 24px;
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .timeline-year {
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .timeline-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .timeline-content p {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            line-height: 1.7;
+        }
+
+        .visi-misi-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .visi-card,
+        .misi-card {
+            padding: 32px;
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .visi-card h3,
+        .misi-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            color: var(--primary);
+        }
+
+        .visi-card h3 i,
+        .misi-card h3 i {
+            font-size: 1.2rem;
+        }
+
+        .visi-card p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--gray-700);
+            font-style: italic;
+        }
+
+        .misi-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .misi-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 14px;
+            font-size: 0.95rem;
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        .misi-list li i {
+            color: var(--primary);
+            margin-top: 4px;
+            flex-shrink: 0;
+            font-size: 0.8rem;
+        }
+
+        .nilai-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .nilai-item {
+            text-align: center;
+            padding: 24px 16px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+        }
+
+        .nilai-item:hover {
+            transform: translateY(-4px);
+        }
+
+        .nilai-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: var(--primary-lighter);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 1.3rem;
+            color: var(--primary);
+        }
+
+        .nilai-item h4 {
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+            color: var(--gray-800);
+        }
+
+        .nilai-item p {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        .bg-light {
+            background: var(--gray-50);
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                flex-direction: column !important;
+            }
+
+            .timeline-dot {
+                left: 20px;
+            }
+
+            .timeline-content {
+                width: 100%;
+                margin-left: 50px;
+            }
+
+            .visi-misi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nilai-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="page-header">
+            <div class="container">
+                <h1 data-aos="fade-up">Sejarah Sekolah</h1>
+                <p data-aos="fade-up" data-aos-delay="100">Perjalanan dan perkembangan SMA Plus Almunawwarah</p>
+                <div class="breadcrumb" data-aos="fade-up" data-aos-delay="200">
+                    <a href="../index.html">Beranda</a>
+                    <span>/</span>
+                    <a href="#">Profil</a>
+                    <span>/</span>
+                    <span>Sejarah</span>
+                </div>
+            </div>
+        </div>
+
+        <section class="section">
+            <div class="container">
+                <div class="text-center" style="margin-bottom: 40px;">
+                    <span class="section-badge" data-aos="fade-up">Perjalanan Kami</span>
+                    <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">Jejak Langkah SMA Plus Almunawwarah</h2>
+                    <p class="section-subtitle" data-aos="fade-up" data-aos-delay="200">Dari sebuah yayasan kecil menjadi lembaga pendidikan Islam yang berkulaitas</p>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item" data-aos="fade-up">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">2008</div>
+                            <h3>Pendirian Yayasan</h3>
+                            <p>Yayasan Almunawwarah didirikan dengan visi mencetak generasi Islami yang unggul dalam ilmu pengetahuan dan berkarakter mulia. Awal mula dari keinginan para pendiri untuk memberikan pendidikan berkualitas yang mengintegrasikan nilai-nilai keislaman.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="100">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">2010</div>
+                            <h3>Berdirinya SMA Plus</h3>
+                            <p>SMA Plus Almunawwarah resmi berdiri dengan 2 ruang kelas dan 60 siswa angkatan pertama. Sekolah ini hadir sebagai alternatif pendidikan menengah atas yang menggabungkan kurikulum nasional dengan program keislaman terpadu.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="200">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">2014</div>
+                            <h3>Akreditasi A</h3>
+                            <p>Meraih akreditasi A dari BAN-S/M, menandakan komitmen sekolah terhadap mutu pendidikan. Pencapaian ini menjadi bukti bahwa integrasi pendidikan umum dan agama dapat menghasilkan kualitas yang diakui secara nasional.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="300">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">2018</div>
+                            <h3>Ekspansi Fasilitas</h3>
+                            <p>Pembangunan masjid, laboratorium, dan asrama baru untuk menunjang kegiatan belajar mengajar. Fasilitas modern ini dirancang untuk mendukung program boarding school yang komprehensif dan nyaman bagi seluruh siswa.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="400">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">2023</div>
+                            <h3>Era Digital</h3>
+                            <p>Transformasi digital dengan perpustakaan digital dan sistem pembelajaran modern berbasis teknologi. Sekolah terus berinovasi untuk mempersiapkan siswa menghadapi tantangan era digital tanpa meninggalkan nilai-nilai keislaman.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section bg-light">
+            <div class="container">
+                <div class="text-center" style="margin-bottom: 40px;">
+                    <span class="section-badge" data-aos="fade-up">Visi & Misi</span>
+                    <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">Arah & Tujuan Sekolah</h2>
+                    <p class="section-subtitle" data-aos="fade-up" data-aos-delay="200">Landasan yang memandu setiap langkah pendidikan kami</p>
+                </div>
+
+                <div class="visi-misi-grid">
+                    <div class="visi-card" data-aos="fade-right">
+                        <h3><i class="fa-solid fa-eye"></i> Visi</h3>
+                        <p>"Menjadi lembaga pendidikan Islam terdepan yang menghasilkan generasi berilmu, berakhlak mulia, dan berprestasi"</p>
+                    </div>
+                    <div class="misi-card" data-aos="fade-left">
+                        <h3><i class="fa-solid fa-bullseye"></i> Misi</h3>
+                        <ul class="misi-list">
+                            <li>
+                                <i class="fa-solid fa-check-circle"></i>
+                                <span>Menyelenggarakan pendidikan Islam terpadu yang berkualitas dan berdaya saing</span>
+                            </li>
+                            <li>
+                                <i class="fa-solid fa-check-circle"></i>
+                                <span>Membina hafalan Al-Quran dan pemahaman ilmu-ilmu keislaman</span>
+                            </li>
+                            <li>
+                                <i class="fa-solid fa-check-circle"></i>
+                                <span>Mengembangkan potensi akademik dan non-akademik siswa secara optimal</span>
+                            </li>
+                            <li>
+                                <i class="fa-solid fa-check-circle"></i>
+                                <span>Menanamkan nilai-nilai keislaman dalam seluruh aspek kehidupan sekolah</span>
+                            </li>
+                            <li>
+                                <i class="fa-solid fa-check-circle"></i>
+                                <span>Membangun jiwa kepemimpinan dan kepedulian sosial pada peserta didik</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <div class="text-center" style="margin-bottom: 40px;">
+                    <span class="section-badge" data-aos="fade-up">Nilai Inti</span>
+                    <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">Pilar Pendidikan Kami</h2>
+                    <p class="section-subtitle" data-aos="fade-up" data-aos-delay="200">Empat nilai utama yang menjadi fondasi pembentukan karakter siswa</p>
+                </div>
+
+                <div class="nilai-grid">
+                    <div class="nilai-item" data-aos="fade-up" data-aos-delay="0">
+                        <div class="nilai-icon">
+                            <i class="fa-solid fa-mosque"></i>
+                        </div>
+                        <h4>Iman & Takwa</h4>
+                        <p>Pondasi keimanan yang kokoh sebagai dasar setiap langkah</p>
+                    </div>
+                    <div class="nilai-item" data-aos="fade-up" data-aos-delay="100">
+                        <div class="nilai-icon">
+                            <i class="fa-solid fa-book-quran"></i>
+                        </div>
+                        <h4>Ilmu & Amal</h4>
+                        <p>Menuntut ilmu dan mengamalkannya dalam kehidupan sehari-hari</p>
+                    </div>
+                    <div class="nilai-item" data-aos="fade-up" data-aos-delay="200">
+                        <div class="nilai-icon">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <h4>Akhlak Mulia</h4>
+                        <p>Pembentukan karakter yang luhur sesuai ajaran Islam</p>
+                    </div>
+                    <div class="nilai-item" data-aos="fade-up" data-aos-delay="300">
+                        <div class="nilai-icon">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <h4>Prestasi</h4>
+                        <p>Berprestasi dalam berbagai bidang di tingkat lokal maupun nasional</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out-cubic',
+            once: true,
+            offset: 80
+        });
+    </script>
+    <script>
+        // Register Service Worker for caching
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                var swPath = (window.location.pathname.includes('/pages/') || window.location.pathname.includes('/admincms/')) ? '../sw.js' : 'sw.js';
+                navigator.serviceWorker.register(swPath).then(function(reg) {
+                    console.log('SW registered:', reg.scope);
+                }).catch(function(err) {
+                    console.warn('SW registration failed:', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

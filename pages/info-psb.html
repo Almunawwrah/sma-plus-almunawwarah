@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informasi PSB - SMA Plus Almunawwarah</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .psb-content{max-width:800px;margin:0 auto}
+        .psb-card{background:#fff;border-radius:16px;box-shadow:0 4px 6px rgba(0,0,0,0.07);padding:32px;margin-bottom:24px}
+        .psb-card h2{font-size:1.3rem;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+        .psb-card h2 i{color:var(--primary)}
+        .psb-card p{font-size:0.9rem;color:var(--gray-600);line-height:1.7}
+        .syarat-list{list-style:none;padding:0}
+        .syarat-list li{padding:10px 0;border-bottom:1px solid var(--gray-100);display:flex;align-items:flex-start;gap:10px;font-size:0.9rem;color:var(--gray-700)}
+        .syarat-list li i{color:var(--primary);margin-top:3px;min-width:16px}
+        .alur-steps{display:flex;flex-direction:column;gap:0}
+        .alur-step{display:flex;gap:16px;padding:16px 0}
+        .alur-step-number{min-width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;position:relative}
+        .alur-step:not(:last-child) .alur-step-number::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);width:2px;height:calc(100% + 16px);background:var(--primary-light)}
+        .alur-step-text{padding-top:8px}
+        .alur-step-text h4{font-size:0.95rem;margin-bottom:4px}
+        .alur-step-text p{font-size:0.85rem;color:var(--gray-500)}
+        .biaya-table{width:100%;border-collapse:collapse}
+        .biaya-table th,.biaya-table td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--gray-100);font-size:0.9rem}
+        .biaya-table th{background:var(--primary-lighter);color:var(--primary-dark);font-weight:600}
+        .psb-cta{background:linear-gradient(135deg,var(--primary-darker),var(--primary));color:#fff;border-radius:16px;padding:40px;text-align:center;margin-top:30px}
+        .psb-cta h2{color:#fff;font-size:1.5rem;margin-bottom:12px;display:block}
+        .psb-cta p{opacity:0.9;margin-bottom:24px}
+        .btn-psb{background:#fff;color:var(--primary-dark);padding:14px 36px;border-radius:50px;font-weight:700;font-size:1rem;border:none;cursor:pointer;transition:all 0.3s;display:inline-flex;align-items:center;gap:8px;font-family:inherit;text-decoration:none}
+        .btn-psb:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.2)}
+        .psb-empty{text-align:center;padding:60px 20px}
+        .psb-empty i{font-size:3rem;color:var(--gray-300);margin-bottom:16px;display:block}
+        .psb-empty p{color:var(--gray-500);font-size:1rem}
+        .psb-empty .btn-psb{margin-top:20px}
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <h1 data-aos="fade-up">Informasi PSB</h1>
+                <p data-aos="fade-up" data-aos-delay="100">Penerimaan Peserta Didik Baru</p>
+                <div class="breadcrumb" data-aos="fade-up" data-aos-delay="200">
+                    <a href="../index.html">Beranda</a>
+                    <span>/</span>
+                    <a href="#">Informasi</a>
+                    <span>/</span>
+                    <span>Info PSB</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- PSB Content Section -->
+        <section class="section">
+            <div class="container">
+                <div class="psb-content" id="psb-container">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            var container = document.getElementById('psb-container');
+
+            function renderPSB(data) {
+                if (!data || data.length === 0) {
+                    container.innerHTML =
+                        '<div class="psb-empty">' +
+                        '  <i class="fa-solid fa-clipboard-list"></i>' +
+                        '  <p>Informasi PSB belum tersedia saat ini. Silakan cek kembali nanti atau hubungi panitia PSB.</p>' +
+                        '  <a href="link-psb.html" class="btn-psb"><i class="fa-solid fa-pen-to-square"></i> Daftar Sekarang</a>' +
+                        '</div>';
+                    return;
+                }
+
+                var item = data[0];
+                var html = '';
+
+                // 1. Info card
+                if (item.konten) {
+                    html +=
+                        '<div class="psb-card" data-aos="fade-up">' +
+                        '  <h2><i class="fa-solid fa-info-circle"></i> ' + escapeHtml(item.judul || 'Informasi PSB') + '</h2>' +
+                        '  <p>' + escapeHtml(item.konten) + '</p>' +
+                        '</div>';
+                }
+
+                // 2. Syarat Pendaftaran
+                if (item.syarat && Array.isArray(item.syarat) && item.syarat.length > 0) {
+                    html +=
+                        '<div class="psb-card" data-aos="fade-up" data-aos-delay="100">' +
+                        '  <h2><i class="fa-solid fa-list-check"></i> Syarat Pendaftaran</h2>' +
+                        '  <ul class="syarat-list">';
+                    for (var i = 0; i < item.syarat.length; i++) {
+                        html +=
+                            '    <li><i class="fa-solid fa-check"></i> ' + escapeHtml(item.syarat[i]) + '</li>';
+                    }
+                    html +=
+                        '  </ul>' +
+                        '</div>';
+                }
+
+                // 3. Alur Pendaftaran
+                if (item.alur_pendaftaran) {
+                    var alurLines = item.alur_pendaftaran.split('\n').filter(function (line) {
+                        return line.trim() !== '';
+                    });
+
+                    html +=
+                        '<div class="psb-card" data-aos="fade-up" data-aos-delay="200">' +
+                        '  <h2><i class="fa-solid fa-route"></i> Alur Pendaftaran</h2>' +
+                        '  <div class="alur-steps">';
+
+                    for (var j = 0; j < alurLines.length; j++) {
+                        html +=
+                            '    <div class="alur-step">' +
+                            '      <div class="alur-step-number">' + (j + 1) + '</div>' +
+                            '      <div class="alur-step-text">' +
+                            '        <h4>' + escapeHtml(alurLines[j].trim()) + '</h4>' +
+                            '      </div>' +
+                            '    </div>';
+                    }
+
+                    html +=
+                        '  </div>' +
+                        '</div>';
+                }
+
+                // 4. Biaya
+                if (item.biaya) {
+                    html +=
+                        '<div class="psb-card" data-aos="fade-up" data-aos-delay="300">' +
+                        '  <h2><i class="fa-solid fa-money-bill"></i> Biaya Pendaftaran</h2>' +
+                        '  <p>' + escapeHtml(item.biaya) + '</p>' +
+                        '</div>';
+                }
+
+                // 5. Kontak
+                if (item.kontak) {
+                    html +=
+                        '<div class="psb-card" data-aos="fade-up" data-aos-delay="400">' +
+                        '  <h2><i class="fa-solid fa-phone"></i> Kontak PSB</h2>' +
+                        '  <p>' + escapeHtml(item.kontak) + '</p>' +
+                        '</div>';
+                }
+
+                // 6. CTA Section
+                html +=
+                    '<div class="psb-cta" data-aos="fade-up" data-aos-delay="500">' +
+                    '  <h2>Siap Mendaftar?</h2>' +
+                    '  <p>Jangan lewatkan kesempatan bergabung bersama SMA Plus Almunawwarah. Daftar sekarang dan raih masa depan yang lebih baik!</p>' +
+                    '  <a href="link-psb.html" class="btn-psb"><i class="fa-solid fa-pen-to-square"></i> Daftar Sekarang</a>' +
+                    '</div>';
+
+                container.innerHTML = html;
+                AOS.refresh();
+            }
+
+            async function loadPSB() {
+                try {
+                    var data = await SMAPlusAPI.fetchInfoPSB();
+                    renderPSB(data);
+                } catch (err) {
+                    console.error('Gagal memuat info PSB:', err);
+                    container.innerHTML =
+                        '<div class="psb-empty">' +
+                        '  <i class="fa-solid fa-circle-exclamation"></i>' +
+                        '  <p>Gagal memuat informasi PSB. Silakan coba lagi nanti.</p>' +
+                        '</div>';
+                }
+            }
+
+            loadPSB();
+
+            AOS.init({
+                duration: 800,
+                easing: 'ease-out-cubic',
+                once: true,
+                offset: 80
+            });
+        })();
+    </script>
+    <script>
+        // Register Service Worker for caching
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                var swPath = (window.location.pathname.includes('/pages/') || window.location.pathname.includes('/admincms/')) ? '../sw.js' : 'sw.js';
+                navigator.serviceWorker.register(swPath).then(function(reg) {
+                    console.log('SW registered:', reg.scope);
+                }).catch(function(err) {
+                    console.warn('SW registration failed:', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+(function () {
+  'use strict';
+
+  /* ─── a) Duplicate injection guard ─── */
+  if (window.__smaFooterLoaded) return;
+
+  /* ─── b) Path detection ─── */
+  var isPages =
+    window.location.pathname.includes('/pages/') ||
+    window.location.pathname.includes('/admincms/');
+
+  var homeUrl = isPages ? '../index.html' : 'index.html';
+
+  function pages(name) {
+    return isPages ? './' + name : 'pages/' + name;
+  }
+
+  var imgLogo = isPages ? '../assets/logo.png' : 'assets/logo.png';
+
+  /* ─── c) Footer CSS ─── */
+  var footerCSS = document.createElement('style');
+  footerCSS.id = 'sma-footer-css';
+  footerCSS.textContent = [
+    '.site-footer {',
+    '  background: linear-gradient(135deg, #064e3b, #065f46);',
+    '  color: rgba(255,255,255,0.9);',
+    '  padding: 60px 0 0;',
+    '  position: relative;',
+    '}',
+    '',
+    '.site-footer::before {',
+    '  content: "";',
+    '  position: absolute;',
+    '  top: 0;',
+    '  left: 0;',
+    '  right: 0;',
+    '  height: 4px;',
+    '  background: linear-gradient(to right, var(--primary), var(--accent), var(--primary));',
+    '}',
+    '',
+    '.footer-grid {',
+    '  display: grid;',
+    '  grid-template-columns: 1.5fr 1fr 1.2fr 0.8fr;',
+    '  gap: 40px;',
+    '  max-width: 1200px;',
+    '  margin: 0 auto;',
+    '  padding: 0 24px;',
+    '}',
+    '',
+    '.footer-brand {',
+    '  margin-bottom: 0;',
+    '}',
+    '',
+    '.footer-brand .brand-name {',
+    '  font-size: 1.3rem;',
+    '  font-weight: 700;',
+    '  color: white;',
+    '  margin-bottom: 12px;',
+    '}',
+    '',
+    '.footer-brand .brand-name i {',
+    '  font-size: 1.5rem;',
+    '  color: var(--accent);',
+    '}',
+    '',
+    '.footer-brand p {',
+    '  font-size: 0.9rem;',
+    '  line-height: 1.7;',
+    '  color: rgba(255,255,255,0.75);',
+    '  margin-bottom: 20px;',
+    '}',
+    '',
+    '.footer-col h4 {',
+    '  font-size: 1rem;',
+    '  font-weight: 600;',
+    '  color: white;',
+    '  margin-bottom: 20px;',
+    '  position: relative;',
+    '  padding-bottom: 10px;',
+    '}',
+    '',
+    '.footer-col h4::after {',
+    '  content: "";',
+    '  position: absolute;',
+    '  bottom: 0;',
+    '  left: 0;',
+    '  width: 30px;',
+    '  height: 3px;',
+    '  background: var(--accent);',
+    '  border-radius: 2px;',
+    '}',
+    '',
+    '.footer-col ul {',
+    '  list-style: none;',
+    '  padding: 0;',
+    '}',
+    '',
+    '.footer-col ul li {',
+    '  margin-bottom: 10px;',
+    '}',
+    '',
+    '.footer-col ul li a {',
+    '  color: rgba(255,255,255,0.75);',
+    '  font-size: 0.9rem;',
+    '  transition: all 0.3s;',
+    '  display: flex;',
+    '  align-items: center;',
+    '  gap: 8px;',
+    '}',
+    '',
+    '.footer-col ul li a:hover {',
+    '  color: white;',
+    '  padding-left: 6px;',
+    '}',
+    '',
+    '.footer-col ul li a i {',
+    '  font-size: 0.7rem;',
+    '  color: var(--accent);',
+    '}',
+    '',
+    '.footer-contact-item {',
+    '  display: flex;',
+    '  align-items: flex-start;',
+    '  gap: 12px;',
+    '  margin-bottom: 14px;',
+    '}',
+    '',
+    '.footer-contact-item i {',
+    '  color: var(--accent);',
+    '  font-size: 1rem;',
+    '  margin-top: 3px;',
+    '  width: 18px;',
+    '}',
+    '',
+    '.footer-contact-item span {',
+    '  color: rgba(255,255,255,0.75);',
+    '  font-size: 0.9rem;',
+    '  line-height: 1.5;',
+    '}',
+    '',
+    '.footer-social {',
+    '  display: flex;',
+    '  gap: 10px;',
+    '  margin-top: 16px;',
+    '}',
+    '',
+    '.footer-social a {',
+    '  width: 40px;',
+    '  height: 40px;',
+    '  border-radius: 50%;',
+    '  background: rgba(255,255,255,0.1);',
+    '  display: flex;',
+    '  align-items: center;',
+    '  justify-content: center;',
+    '  color: white;',
+    '  transition: all 0.3s;',
+    '  font-size: 1rem;',
+    '}',
+    '',
+    '.footer-social a:hover {',
+    '  background: var(--accent);',
+    '  transform: translateY(-3px);',
+    '}',
+    '',
+    '.footer-bottom {',
+    '  margin-top: 40px;',
+    '  padding: 20px 24px;',
+    '  border-top: 1px solid rgba(255,255,255,0.1);',
+    '  text-align: center;',
+    '}',
+    '',
+    '.footer-bottom p {',
+    '  font-size: 0.85rem;',
+    '  color: rgba(255,255,255,0.6);',
+    '}',
+    '',
+    '.whatsapp-float {',
+    '  position: fixed;',
+    '  bottom: 24px;',
+    '  right: 24px;',
+    '  width: 56px;',
+    '  height: 56px;',
+    '  background: #25D366;',
+    '  border-radius: 50%;',
+    '  display: flex;',
+    '  align-items: center;',
+    '  justify-content: center;',
+    '  color: white;',
+    '  font-size: 1.5rem;',
+    '  box-shadow: 0 4px 15px rgba(37,211,102,0.4);',
+    '  z-index: 900;',
+    '  transition: all 0.3s;',
+    '}',
+    '',
+    '.whatsapp-float:hover {',
+    '  transform: scale(1.1);',
+    '  box-shadow: 0 6px 20px rgba(37,211,102,0.5);',
+    '}',
+    '',
+    '.back-to-top {',
+    '  position: fixed;',
+    '  bottom: 90px;',
+    '  right: 24px;',
+    '  width: 44px;',
+    '  height: 44px;',
+    '  background: var(--primary);',
+    '  border-radius: 50%;',
+    '  display: flex;',
+    '  align-items: center;',
+    '  justify-content: center;',
+    '  color: white;',
+    '  font-size: 1rem;',
+    '  box-shadow: var(--shadow-lg);',
+    '  z-index: 900;',
+    '  transition: all 0.3s;',
+    '  opacity: 0;',
+    '  visibility: hidden;',
+    '  transform: translateY(10px);',
+    '  border: none;',
+    '  cursor: pointer;',
+    '}',
+    '',
+    '.back-to-top.active {',
+    '  opacity: 1;',
+    '  visibility: visible;',
+    '  transform: translateY(0);',
+    '}',
+    '',
+    '.back-to-top:hover {',
+    '  background: var(--primary-dark);',
+    '  transform: translateY(-3px);',
+    '}',
+    '',
+    '@media (max-width: 900px) {',
+    '  .footer-grid {',
+    '    grid-template-columns: 1fr 1fr;',
+    '    gap: 30px;',
+    '  }',
+    '}',
+    '',
+    '@media (max-width: 560px) {',
+    '  .footer-grid {',
+    '    grid-template-columns: 1fr;',
+    '    gap: 24px;',
+    '  }',
+    '  .site-footer {',
+    '    padding: 40px 0 0;',
+    '  }',
+    '}'
+  ].join('\n');
+  document.head.appendChild(footerCSS);
+
+  /* ─── d) Footer HTML (injected on DOM ready) ─── */
+  function injectFooter() {
+    var footerHTML = [
+      '<footer class="site-footer">',
+      '  <div class="footer-grid">',
+      '',
+      '    <!-- Brand -->',
+      '    <div class="footer-brand">',
+      '      <img src="' + imgLogo + '" alt="Logo SMA Plus Almunawwarah" style="height:56px;width:auto;object-fit:contain;border-radius:10px;margin-bottom:16px;">',
+      '      <div class="brand-name">SMA Plus Almunawwarah</div>',
+      '      <p>SMA Plus Almunawwarah adalah pesantren berbasis sekolah menengah atas yang berkomitmen pada keunggulan akademik dan pembentukan karakter Islami untuk mencetak generasi yang berilmu, berakhlak, dan berdaya saing.</p>',
+      '    </div>',
+      '',
+      '    <!-- Tautan Cepat -->',
+      '    <div class="footer-col">',
+      '      <h4>Tautan Cepat</h4>',
+      '      <ul>',
+      '        <li><a href="' + homeUrl + '"><i class="fas fa-chevron-right"></i>Beranda</a></li>',
+      '        <li><a href="' + pages('sejarah.html') + '"><i class="fas fa-chevron-right"></i>Sejarah</a></li>',
+      '        <li><a href="' + pages('kurikulum.html') + '"><i class="fas fa-chevron-right"></i>Kurikulum</a></li>',
+      '        <li><a href="' + pages('berita.html') + '"><i class="fas fa-chevron-right"></i>Berita</a></li>',
+      '        <li><a href="' + pages('galeri.html') + '"><i class="fas fa-chevron-right"></i>Galeri</a></li>',
+      '        <li><a href="' + pages('info-psb.html') + '"><i class="fas fa-chevron-right"></i>Info PSB</a></li>',
+      '      </ul>',
+      '    </div>',
+      '',
+      '    <!-- Hubungi Kami -->',
+      '    <div class="footer-col">',
+      '      <h4>Hubungi Kami</h4>',
+      '      <div class="footer-contact-item">',
+      '        <i class="fas fa-map-marker-alt"></i>',
+      '        <span>Gunungmanik, Kec. Tanjungsari, Kabupaten Sumedang, Jawa Barat 45362</span>',
+      '      </div>',
+      '      <div class="footer-contact-item">',
+      '        <i class="fas fa-phone-alt"></i>',
+      '        <span> +62 831-7871-0191</span>',
+      '      </div>',
+      '      <div class="footer-contact-item">',
+      '        <i class="fas fa-envelope"></i>',
+      '        <span>info@smaplus-almunawwarah.sch.id</span>',
+      '      </div>',
+      '    </div>',
+      '',
+      '    <!-- Media Sosial -->',
+      '    <div class="footer-col">',
+      '      <h4>Media Sosial</h4>',
+      '      <div class="footer-social">',
+      '        <a href="https://www.instagram.com/sma_plus_almunawwarah" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>',
+      '        <a href="https://www.youtube.com/@El-MunaTV" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>',
+      '        <a href="https://www.tiktok.com/@elmuna.tv" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>',
+      '      </div>',
+      '    </div>',
+      '',
+      '  </div>',
+      '',
+      '  <div class="footer-bottom">',
+      '    <p>&copy; 2026 SMA Plus Almunawwarah. Seluruh hak cipta dilindungi.</p>',
+      '  </div>',
+      '</footer>',
+      '',
+      '<a href="https://wa.me/6283178710191" target="_blank" class="whatsapp-float" aria-label="WhatsApp">',
+      '  <i class="fab fa-whatsapp"></i>',
+      '</a>',
+      '',
+      '<button class="back-to-top" aria-label="Kembali ke atas">',
+      '  <i class="fas fa-arrow-up"></i>',
+      '</button>'
+    ].join('\n');
+
+    var wrapper = document.querySelector('.page-wrapper');
+    if (wrapper) {
+      wrapper.insertAdjacentHTML('beforeend', footerHTML);
+    } else {
+      document.body.insertAdjacentHTML('beforeend', footerHTML);
+    }
+  }
+
+  /* ─── e) JavaScript logic (back-to-top) ─── */
+  function initBackToTop() {
+    var btn = document.querySelector('.back-to-top');
+    if (!btn) return;
+
+    window.addEventListener('scroll', function () {
+      if (window.scrollY > 300) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    }, { passive: true });
+
+    btn.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  /* ─── DOM-ready bootstrap ─── */
+  function boot() {
+    injectFooter();
+    initBackToTop();
+    window.__smaFooterLoaded = true;
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();

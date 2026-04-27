@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri - SMA Plus Almunawwarah</title>
+    <meta name="description" content="Galeri foto kegiatan dan dokumentasi SMA Plus Almunawwarah.">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .filter-pills{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:30px}
+        .filter-pill{padding:8px 20px;border-radius:50px;border:2px solid var(--gray-200);background:#fff;font-size:0.875rem;font-weight:500;cursor:pointer;transition:all 0.3s;font-family:inherit;color:var(--gray-600)}
+        .filter-pill:hover,.filter-pill.active{border-color:var(--primary);background:var(--primary-lighter);color:var(--primary)}
+        .galeri-masonry{columns:4;column-gap:16px}
+        .galeri-item{break-inside:avoid;margin-bottom:16px;position:relative;border-radius:12px;overflow:hidden;cursor:pointer}
+        .galeri-item img{width:100%;display:block;transition:transform 0.5s}
+        .galeri-item:hover img{transform:scale(1.05)}
+        .galeri-overlay{position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(0,0,0,0.7));opacity:0;transition:opacity 0.3s;display:flex;align-items:flex-end;padding:16px}
+        .galeri-item:hover .galeri-overlay{opacity:1}
+        .galeri-overlay span{color:#fff;font-size:0.9rem;font-weight:500}
+
+        .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:2000;display:none;align-items:center;justify-content:center}
+        .lightbox.active{display:flex}
+        .lightbox img{max-width:90%;max-height:85vh;object-fit:contain;border-radius:8px}
+        .lightbox-close{position:absolute;top:20px;right:20px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.2);color:#fff;border:none;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+        .lightbox-close:hover{background:rgba(255,255,255,0.3)}
+        .lightbox-caption{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;font-size:0.95rem;background:rgba(0,0,0,0.5);padding:8px 20px;border-radius:8px;white-space:nowrap}
+        .lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.2);color:#fff;border:none;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+        .lightbox-nav:hover{background:rgba(255,255,255,0.3)}
+        .lightbox-prev{left:20px}
+        .lightbox-next{right:20px}
+
+        .empty-state{text-align:center;padding:60px 20px}
+        .empty-state i{font-size:3rem;color:var(--gray-300);margin-bottom:16px;display:block}
+        .empty-state h3{color:var(--gray-500);margin-bottom:8px}
+        .empty-state p{color:var(--gray-400);font-size:0.9rem}
+
+        @media(max-width:992px){.galeri-masonry{columns:3}}
+        @media(max-width:768px){.galeri-masonry{columns:2}}
+        @media(max-width:576px){.galeri-masonry{columns:1}}
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="page-header">
+            <div class="container">
+                <h1 data-aos="fade-up">Galeri</h1>
+                <p data-aos="fade-up" data-aos-delay="100">Dokumentasi kegiatan dan momen berkesan SMA Plus Almunawwarah</p>
+                <div class="breadcrumb" data-aos="fade-up" data-aos-delay="200">
+                    <a href="../index.html">Beranda</a>
+                    <span>/</span>
+                    <a href="#">Informasi</a>
+                    <span>/</span>
+                    <span>Galeri</span>
+                </div>
+            </div>
+        </div>
+
+        <section class="section">
+            <div class="container">
+                <div class="filter-pills" id="filter-pills" data-aos="fade-up">
+                    <button class="filter-pill active" data-filter="Semua">Semua</button>
+                    <button class="filter-pill" data-filter="Acara">Acara</button>
+                    <button class="filter-pill" data-filter="Kegiatan">Kegiatan</button>
+                    <button class="filter-pill" data-filter="Fasilitas">Fasilitas</button>
+                    <button class="filter-pill" data-filter="Umum">Umum</button>
+                </div>
+
+                <div class="galeri-masonry" id="galeri-grid">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="lightbox" id="lightbox">
+            <img src="" alt="Galeri" id="lightbox-img">
+            <button class="lightbox-close" id="lightbox-close">&times;</button>
+            <div class="lightbox-caption" id="lightbox-caption"></div>
+            <button class="lightbox-nav lightbox-prev" id="lightbox-prev"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="lightbox-nav lightbox-next" id="lightbox-next"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            var grid = document.getElementById('galeri-grid');
+            var filterContainer = document.getElementById('filter-pills');
+            var lightbox = document.getElementById('lightbox');
+            var lightboxImg = document.getElementById('lightbox-img');
+            var lightboxClose = document.getElementById('lightbox-close');
+            var lightboxCaption = document.getElementById('lightbox-caption');
+            var lightboxPrev = document.getElementById('lightbox-prev');
+            var lightboxNext = document.getElementById('lightbox-next');
+
+            var allGaleri = [];
+            var filteredGaleri = [];
+            var activeFilter = 'Semua';
+            var currentIndex = 0;
+
+            function renderGaleri(data) {
+                if (!data || data.length === 0) {
+                    grid.innerHTML =
+                        '<div class="empty-state">' +
+                        '  <i class="fa-solid fa-images"></i>' +
+                        '  <h3>Tidak Ada Foto</h3>' +
+                        '  <p>Belum ada dokumentasi galeri untuk kategori ini.</p>' +
+                        '</div>';
+                    return;
+                }
+
+                var html = '';
+                for (var i = 0; i < data.length; i++) {
+                    var item = data[i];
+                    var imgUrl = getImageUrl(item.foto_link);
+                    var caption = escapeHtml(item.judul || item.kategori || '');
+                    var delay = (i % 4) * 80;
+
+                    html +=
+                        '<div class="galeri-item" data-index="' + i + '" data-aos="fade-up" data-aos-delay="' + delay + '">' +
+                        '  <img src="' + escapeHtml(imgUrl) + '" alt="' + escapeHtml(item.judul || 'Galeri') + '" loading="lazy">' +
+                        '  <div class="galeri-overlay">' +
+                        '    <span>' + caption + '</span>' +
+                        '  </div>' +
+                        '</div>';
+                }
+
+                grid.innerHTML = html;
+                AOS.refresh();
+            }
+
+            function setActivePill(kategori) {
+                var pills = filterContainer.querySelectorAll('.filter-pill');
+                pills.forEach(function (pill) {
+                    pill.classList.remove('active');
+                    if (pill.getAttribute('data-filter') === kategori) {
+                        pill.classList.add('active');
+                    }
+                });
+            }
+
+            filterContainer.addEventListener('click', function (e) {
+                var pill = e.target.closest('.filter-pill');
+                if (!pill) return;
+
+                var filter = pill.getAttribute('data-filter');
+                activeFilter = filter;
+                setActivePill(filter);
+
+                if (filter === 'Semua') {
+                    filteredGaleri = allGaleri.slice();
+                } else {
+                    filteredGaleri = allGaleri.filter(function (item) {
+                        return item.kategori && item.kategori.toLowerCase() === filter.toLowerCase();
+                    });
+                }
+
+                renderGaleri(filteredGaleri);
+            });
+
+            grid.addEventListener('click', function (e) {
+                var item = e.target.closest('.galeri-item');
+                if (!item) return;
+
+                var index = parseInt(item.getAttribute('data-index'));
+                openLightbox(index);
+            });
+
+            function openLightbox(index) {
+                if (filteredGaleri.length === 0) return;
+                currentIndex = index;
+                updateLightbox();
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function updateLightbox() {
+                var item = filteredGaleri[currentIndex];
+                if (!item) return;
+
+                var imgUrl = getImageUrl(item.foto_link);
+                lightboxImg.src = imgUrl;
+                lightboxImg.alt = item.judul || 'Galeri';
+                lightboxCaption.textContent = item.judul || item.kategori || '';
+            }
+
+            function closeLightbox() {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            function prevImage() {
+                currentIndex = (currentIndex - 1 + filteredGaleri.length) % filteredGaleri.length;
+                updateLightbox();
+            }
+
+            function nextImage() {
+                currentIndex = (currentIndex + 1) % filteredGaleri.length;
+                updateLightbox();
+            }
+
+            lightboxClose.addEventListener('click', closeLightbox);
+
+            lightbox.addEventListener('click', function (e) {
+                if (e.target === lightbox || e.target === lightboxImg) {
+                    if (e.target === lightbox) {
+                        closeLightbox();
+                    }
+                }
+            });
+
+            lightboxPrev.addEventListener('click', function (e) {
+                e.stopPropagation();
+                prevImage();
+            });
+
+            lightboxNext.addEventListener('click', function (e) {
+                e.stopPropagation();
+                nextImage();
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (!lightbox.classList.contains('active')) return;
+
+                if (e.key === 'Escape') {
+                    closeLightbox();
+                } else if (e.key === 'ArrowLeft') {
+                    prevImage();
+                } else if (e.key === 'ArrowRight') {
+                    nextImage();
+                }
+            });
+
+            async function loadGaleri() {
+                try {
+                    var data = await SMAPlusAPI.fetchGaleri();
+                    allGaleri = data || [];
+                    filteredGaleri = allGaleri.slice();
+
+                    if (allGaleri.length === 0) {
+                        grid.innerHTML =
+                            '<div class="empty-state">' +
+                            '  <i class="fa-solid fa-images"></i>' +
+                            '  <h3>Belum Ada Galeri</h3>' +
+                            '  <p>Data galeri foto belum tersedia saat ini.</p>' +
+                            '</div>';
+                        return;
+                    }
+
+                    renderGaleri(filteredGaleri);
+                } catch (err) {
+                    console.error('Gagal memuat galeri:', err);
+                    grid.innerHTML =
+                        '<div class="empty-state">' +
+                        '  <i class="fa-solid fa-circle-exclamation"></i>' +
+                        '  <h3>Gagal Memuat Data</h3>' +
+                        '  <p>Tidak dapat memuat data galeri. Silakan coba lagi nanti.</p>' +
+                        '</div>';
+                }
+            }
+
+            loadGaleri();
+
+            AOS.init({
+                duration: 800,
+                easing: 'ease-out-cubic',
+                once: true,
+                offset: 80
+            });
+        })();
+    </script>
+    <script>
+        // Register Service Worker for caching
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                var swPath = (window.location.pathname.includes('/pages/') || window.location.pathname.includes('/admincms/')) ? '../sw.js' : 'sw.js';
+                navigator.serviceWorker.register(swPath).then(function(reg) {
+                    console.log('SW registered:', reg.scope);
+                }).catch(function(err) {
+                    console.warn('SW registration failed:', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

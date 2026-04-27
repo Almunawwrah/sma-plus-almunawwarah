@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMA Plus Almunawwarah - Boarding School Islami</title>
+    <meta name="description" content="SMA Plus Almunawwarah - Boarding School Islami terbaik di Sulawesi Selatan">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           HERO SLIDER
+           ============================================================ */
+        .hero-slider {
+            position: relative;
+            height: 520px;
+            overflow: hidden;
+            background: var(--gray-100);
+        }
+        .hero-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1s ease;
+            z-index: 1;
+        }
+        .hero-slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+        .hero-slide-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+        }
+        .hero-slide-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(6,78,59,0.85), rgba(5,150,105,0.7));
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+        }
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            line-height: 1.2;
+            color: white;
+        }
+        .hero-content p {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+        .hero-dots {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 3;
+        }
+        .hero-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .hero-dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+        .hero-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 4;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.5);
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .hero-arrow:hover {
+            background: rgba(255,255,255,0.4);
+            border-color: white;
+        }
+        .hero-arrow-prev {
+            left: 20px;
+        }
+        .hero-arrow-next {
+            right: 20px;
+        }
+        .hero-logo {
+            position: absolute;
+            top: 20px;
+            left: 24px;
+            z-index: 5;
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            object-fit: contain;
+            background: white;
+            padding: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .hero-fallback {
+            height: 520px;
+            overflow: hidden;
+            position: relative;
+            color: white;
+            text-align: center;
+        }
+
+        /* ============================================================
+           WELCOME SECTION
+           ============================================================ */
+        .welcome-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+        .welcome-text .section-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        .welcome-text h2 {
+            font-size: 2.2rem;
+            margin: 16px 0;
+        }
+        .welcome-text p {
+            color: var(--gray-600);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        .counter-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin: 30px 0;
+        }
+        .counter-item {
+            text-align: center;
+            padding: 16px;
+            background: var(--primary-lighter);
+            border-radius: var(--radius);
+        }
+        .counter-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .counter-label {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+            margin-top: 4px;
+        }
+        .welcome-image {
+            position: relative;
+        }
+        .welcome-image img {
+            border-radius: var(--radius-lg);
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            box-shadow: var(--shadow-xl);
+        }
+        .image-badge {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            background: var(--primary);
+            color: white;
+            padding: 16px 24px;
+            border-radius: var(--radius);
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+
+
+        /* ============================================================
+           BERITA SECTION
+           ============================================================ */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .news-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s;
+        }
+        .news-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-xl);
+        }
+        .news-card-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .news-card-date {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .news-card-body {
+            padding: 20px;
+        }
+        .news-card-body h3 {
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .news-card-body p {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        .news-link {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .news-link:hover {
+            color: var(--primary-dark);
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .section-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 32px;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .section-link:hover {
+            color: var(--primary-dark);
+        }
+
+        /* ============================================================
+           AGENDA SECTION
+           ============================================================ */
+        .agenda-list {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .agenda-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 12px;
+            transition: all 0.3s;
+            align-items: center;
+        }
+        .agenda-item:hover {
+            transform: translateX(6px);
+            box-shadow: var(--shadow-md);
+        }
+        .agenda-date-box {
+            min-width: 70px;
+            text-align: center;
+            padding: 12px;
+            background: var(--primary-lighter);
+            border-radius: 10px;
+        }
+        .agenda-date-box .day {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .agenda-date-box .month {
+            font-size: 0.75rem;
+            color: var(--primary-dark);
+            text-transform: uppercase;
+        }
+        .agenda-info h4 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+        .agenda-info p {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+        }
+
+        /* ============================================================
+           TESTIMONI SECTION
+           ============================================================ */
+        .testimoni-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+        .testimoni-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .testimoni-card {
+            min-width: 100%;
+            padding: 40px;
+            text-align: center;
+        }
+        .testimoni-quote {
+            font-size: 2rem;
+            color: var(--primary-light);
+            margin-bottom: 16px;
+        }
+        .testimoni-text {
+            font-size: 1.05rem;
+            color: var(--gray-600);
+            line-height: 1.8;
+            max-width: 700px;
+            margin: 0 auto 20px;
+            font-style: italic;
+        }
+        .testimoni-stars {
+            color: var(--accent);
+            margin-bottom: 16px;
+            font-size: 1rem;
+        }
+        .testimoni-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .testimoni-author img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .testimoni-author-info h4 {
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+        .testimoni-author-info span {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+        }
+        .testimoni-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 24px;
+        }
+        .testimoni-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--gray-300);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .testimoni-dot.active {
+            background: var(--primary);
+            width: 30px;
+            border-radius: 5px;
+        }
+
+        /* ============================================================
+           GALERI PREVIEW
+           ============================================================ */
+        .galeri-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 180px;
+            gap: 12px;
+        }
+        .galeri-item {
+            position: relative;
+            border-radius: var(--radius);
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .galeri-item:first-child {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+        .galeri-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        .galeri-item:hover img {
+            transform: scale(1.1);
+        }
+        .galeri-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(transparent 50%, rgba(0,0,0,0.7));
+            opacity: 0;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: flex-end;
+            padding: 16px;
+        }
+        .galeri-item:hover .galeri-overlay {
+            opacity: 1;
+        }
+        .galeri-overlay span {
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* ============================================================
+           MAPS SECTION
+           ============================================================ */
+        .maps-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+        .maps-grid iframe {
+            width: 100%;
+            height: 350px;
+            border: none;
+            border-radius: var(--radius-lg);
+        }
+        .maps-info {
+            padding: 20px 0;
+        }
+        .maps-info h3 {
+            margin-bottom: 20px;
+        }
+        .maps-info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+        .maps-info-item i {
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-top: 3px;
+            width: 20px;
+        }
+        .maps-info-item div h4 {
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+        .maps-info-item div p {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+        }
+
+        /* ============================================================
+           CTA SECTION
+           ============================================================ */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary-darker), var(--primary));
+            padding: 80px 0;
+            text-align: center;
+            color: white;
+        }
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 16px;
+            color: white;
+        }
+        .cta-section p {
+            font-size: 1.05rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-cta-primary {
+            background: white;
+            color: var(--primary-dark);
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: inherit;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-cta-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: inherit;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            color: var(--primary-dark);
+        }
+        .btn-cta-outline:hover {
+            background: white;
+            color: var(--primary-dark);
+        }
+
+        /* ============================================================
+           EMPTY STATE
+           ============================================================ */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray-400);
+        }
+        .empty-state i {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .empty-state p {
+            font-size: 0.95rem;
+            color: var(--gray-500);
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 992px) {
+            .welcome-grid {
+                grid-template-columns: 1fr;
+            }
+            .counter-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .news-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-slider {
+                height: 420px;
+            }
+            .hero-fallback {
+                height: 420px;
+            }
+            .hero-arrow {
+                width: 38px;
+                height: 38px;
+                font-size: 0.95rem;
+            }
+            .hero-arrow-prev {
+                left: 12px;
+            }
+            .hero-arrow-next {
+                right: 12px;
+            }
+            .hero-logo {
+                width: 52px;
+                height: 52px;
+                top: 16px;
+                left: 16px;
+            }
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            .galeri-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-auto-rows: 150px;
+            }
+            .maps-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-slider {
+                height: 360px;
+            }
+            .hero-fallback {
+                height: 360px;
+            }
+            .hero-arrow {
+                width: 34px;
+                height: 34px;
+                font-size: 0.85rem;
+            }
+            .hero-arrow-prev {
+                left: 8px;
+            }
+            .hero-arrow-next {
+                right: 8px;
+            }
+            .hero-logo {
+                width: 44px;
+                height: 44px;
+                top: 12px;
+                left: 12px;
+                border-radius: 8px;
+            }
+            .hero-content h1 {
+                font-size: 1.75rem;
+            }
+            .counter-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+            .galeri-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .galeri-item:first-child {
+                grid-column: span 2;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+
+        <!-- ============================================================
+             HERO SLIDER
+             ============================================================ -->
+        <div id="hero-slider" class="hero-slider">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+            </div>
+        </div>
+        <div id="hero-fallback" class="hero-fallback" style="display:none;">
+        </div>
+
+        <!-- ============================================================
+             WELCOME SECTION
+             ============================================================ -->
+        <section class="section">
+            <div class="container">
+                <div class="welcome-grid">
+                    <div class="welcome-text" data-aos="fade-right">
+                        <span class="section-badge">Tentang Kami</span>
+                        <h2>SMA Plus Almunawwarah, Mencetak Generasi Islami Berprestasi</h2>
+                        <p>SMA Plus Almunawwarah adalah lembaga pendidikan Islam terpadu yang menggabungkan kurikulum nasional dengan pendidikan karakter berbasis nilai-nilai Islam. Berlokasi di Kabupaten Bone, Sulawesi Selatan, kami berkomitmen mencetak generasi yang berilmu, berakhlak mulia, dan berdaya saing di tingkat nasional maupun global.</p>
+                        <p>Dengan sistem boarding school yang terstruktur, siswa mendapatkan pembinaan intensif baik dalam bidang akademik maupun spiritual, didukung oleh tenaga pendidik profesional dan fasilitas modern yang lengkap.</p>
+                        <div class="counter-grid" id="counter-grid">
+                            <div class="cms-loading"><div class="spinner-circle" style="width:24px;height:24px;border:3px solid #e5e7eb;border-top-color:#059669;border-radius:50%;animation:cms-spin 0.8s linear infinite;margin:0 auto"></div></div>
+                        </div>
+                        <a href="pages/sejarah.html" class="btn btn-primary">
+                            <i class="fa-solid fa-arrow-right"></i> Kenali Kami Lebih Lanjut
+                        </a>
+                    </div>
+                    <div class="welcome-image" data-aos="fade-left">
+                        <img src="https://via.placeholder.com/600x400/059669/ffffff?text=SMA+Plus+Almunawwarah" alt="SMA Plus Almunawwarah" loading="lazy">
+                        <div class="image-badge">
+                            <i class="fa-solid fa-award"></i> Terakreditasi A
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             BERITA TERKINI SECTION
+             ============================================================ -->
+        <section class="section">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-badge">Berita Terkini</span>
+                    <h2 class="section-title">Informasi & Kabar Terbaru</h2>
+                    <p class="section-subtitle">Ikuti perkembangan terbaru dari berbagai kegiatan dan informasi penting di SMA Plus Almunawwarah.</p>
+                </div>
+                <div class="news-grid" id="news-grid">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+                <div style="text-align:center;" data-aos="fade-up">
+                    <a href="pages/berita.html" class="section-link">
+                        Lihat Semua Berita <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             AGENDA SECTION
+             ============================================================ -->
+        <section class="section" style="background:var(--primary-lighter);">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-badge">Agenda Kegiatan</span>
+                    <h2 class="section-title">Jadwal Kegiatan Mendatang</h2>
+                    <p class="section-subtitle">Kegiatan dan acara yang akan datang di SMA Plus Almunawwarah.</p>
+                </div>
+                <div class="agenda-list" id="agenda-list">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             TESTIMONI SECTION
+             ============================================================ -->
+        <section class="section">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-badge">Testimoni</span>
+                    <h2 class="section-title">Kata Mereka Tentang Kami</h2>
+                    <p class="section-subtitle">Penilaian dan kesan dari siswa, alumni, dan orang tua siswa SMA Plus Almunawwarah.</p>
+                </div>
+                <div class="testimoni-wrapper" id="testimoni-wrapper" data-aos="fade-up">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             GALERI PREVIEW SECTION
+             ============================================================ -->
+        <section class="section" style="background:var(--primary-lighter);">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-badge">Galeri Foto</span>
+                    <h2 class="section-title">Dokumentasi Kegiatan</h2>
+                    <p class="section-subtitle">Momen-momen berkesan dari berbagai kegiatan di SMA Plus Almunawwarah.</p>
+                </div>
+                <div class="galeri-grid" id="galeri-grid">
+                    <div class="loading-spinner" style="grid-column:1/-1;">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+                <div style="text-align:center; margin-top:32px;" data-aos="fade-up">
+                    <a href="pages/galeri.html" class="section-link">
+                        Lihat Galeri <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             GOOGLE MAPS SECTION
+             ============================================================ -->
+        <section class="section">
+            <div class="container">
+                <div class="maps-grid" data-aos="fade-up">
+                    <div>
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.8401753454036!2d107.82330209999999!3d-6.909706000000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68db5105028871%3A0xcda2c2aff5a2397e!2sSma%20plus%20Al%20Munawwarah!5e0!3m2!1sid!2sid!4v1777264733277!5m2!1sid!2sid"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            title="Lokasi SMA Plus Almunawwarah">
+                        </iframe>
+                    </div>
+                    <div class="maps-info">
+                        <h3>Hubungi Kami</h3>
+                        <div class="maps-info-item">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <div>
+                                <h4>Alamat</h4>
+                                <p>Gunungmanik, Kec. Tanjungsari, Kabupaten Sumedang, Jawa Barat 45362</p>
+                            </div>
+                        </div>
+                        <div class="maps-info-item">
+                            <i class="fa-solid fa-phone"></i>
+                            <div>
+                                <h4>Telepon</h4>
+                                <p>(0481) 123456</p>
+                            </div>
+                        </div>
+                        <div class="maps-info-item">
+                            <i class="fa-solid fa-envelope"></i>
+                            <div>
+                                <h4>Email</h4>
+                                <p>info@smaplus-almunawwarah.sch.id</p>
+                            </div>
+                        </div>
+                        <div class="maps-info-item">
+                            <i class="fa-solid fa-clock"></i>
+                            <div>
+                                <h4>Jam Operasional</h4>
+                                <p>Senin – Sabtu: 07.00 – 16.00 WIB</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             CTA SECTION
+             ============================================================ -->
+        <section class="cta-section">
+            <div class="container" data-aos="fade-up">
+                <h2>Siap Bergabung Bersama Kami?</h2>
+                <p>Jadilah bagian dari keluarga besar SMA Plus Almunawwarah dan raih masa depan yang gemilang dengan ilmu, iman, dan akhlak mulia.</p>
+                <div class="cta-buttons">
+                    <a href="pages/info-psb.html" class="btn-cta-primary">
+                        <i class="fa-solid fa-info-circle"></i> Info Pendaftaran
+                    </a>
+                    <a href="pages/link-psb.html" class="btn-cta-outline">
+                        <i class="fa-solid fa-pen-to-square"></i> Daftar Sekarang
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/api.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/footer.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        /* ============================================================
+           AOS INITIALIZATION
+           ============================================================ */
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out-cubic',
+            once: true,
+            offset: 50
+        });
+
+        /* ============================================================
+           HERO SLIDER
+           ============================================================ */
+        (async function initHeroSlider() {
+            var sliderContainer = document.getElementById('hero-slider');
+            var fallback = document.getElementById('hero-fallback');
+
+            try {
+                var sliders = await SMAPlusAPI.fetchSliders();
+
+                if (!sliders || sliders.length === 0) {
+                    sliderContainer.style.display = 'none';
+                    fallback.style.display = 'block';
+                    fallback.classList.add('hero-slider');
+                    var fallbackSlides = [
+                        { judul: 'SMA Plus Almunawwarah', deskripsi: 'Boarding School Islami — Membentuk Generasi Berilmu, Berakhlak, dan Berprestasi' },
+                        { judul: 'Kurikulum Terpadu', deskripsi: 'Menggabungkan kurikulum nasional dengan pendidikan keislaman yang komprehensif' },
+                        { judul: 'Prestasi Gemilang', deskripsi: 'Raihan prestasi di berbagai kompetisi tingkat kabupaten hingga nasional' },
+                        { judul: 'Pendaftaran Siswa Baru', deskripsi: 'Bergabunglah dan raih masa depan gemilang bersama SMA Plus Almunawwarah' }
+                    ];
+                    var fbSlidesHTML = '';
+                    var fbDotsHTML = '';
+                    for (var fi = 0; fi < fallbackSlides.length; fi++) {
+                        var fs = fallbackSlides[fi];
+                        var fbActive = fi === 0 ? ' active' : '';
+                        var bgColors = ['linear-gradient(135deg, #064e3b, #059669)', 'linear-gradient(135deg, #065f46, #10b981)', 'linear-gradient(135deg, #047857, #34d399)', 'linear-gradient(135deg, #064e3b, #059669)'];
+                        fbSlidesHTML += '<div class="hero-slide' + fbActive + '">' +
+                            '<div class="hero-slide-bg" style="background:' + bgColors[fi] + ';"></div>' +
+                            '<div class="hero-slide-overlay"></div>' +
+                            '<div class="hero-content" style="text-align:center;align-items:center">' +
+                                '<h1>' + escapeHtml(fs.judul) + '</h1>' +
+                                '<p>' + escapeHtml(fs.deskripsi) + '</p>' +
+                            '</div>' +
+                        '</div>';
+                        fbDotsHTML += '<div class="hero-dot' + fbActive + '" data-index="' + fi + '"></div>';
+                    }
+                    fallback.innerHTML = '<img src="assets/logo.png" alt="SMA Plus Almunawwarah" class="hero-logo">' + fbSlidesHTML + '<button class="hero-arrow hero-arrow-prev" aria-label="Slide Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button><button class="hero-arrow hero-arrow-next" aria-label="Slide Berikutnya"><i class="fa-solid fa-chevron-right"></i></button><div class="hero-dots">' + fbDotsHTML + '</div>';
+
+                    // Setup fallback slider logic (same as main slider)
+                    var fbSlides = fallback.querySelectorAll('.hero-slide');
+                    var fbDots = fallback.querySelectorAll('.hero-dot');
+                    var fbCurrent = 0;
+                    var fbInterval = null;
+                    function fbGoTo(idx) {
+                        fbSlides.forEach(function(s){s.classList.remove('active')});
+                        fbDots.forEach(function(d){d.classList.remove('active')});
+                        fbCurrent = idx;
+                        fbSlides[fbCurrent].classList.add('active');
+                        fbDots[fbCurrent].classList.add('active');
+                    }
+                    function fbNext() { fbGoTo((fbCurrent + 1) % fbSlides.length); }
+                    fbDots.forEach(function(dot) {
+                        dot.addEventListener('click', function() {
+                            clearInterval(fbInterval);
+                            fbGoTo(parseInt(this.getAttribute('data-index')));
+                            fbInterval = setInterval(fbNext, 5000);
+                        });
+                    });
+                    // Arrow navigation for fallback
+                    var fbPrevBtn = fallback.querySelector('.hero-arrow-prev');
+                    var fbNextBtn = fallback.querySelector('.hero-arrow-next');
+                    if (fbPrevBtn) {
+                        fbPrevBtn.addEventListener('click', function() {
+                            clearInterval(fbInterval);
+                            var prev = (fbCurrent - 1 + fbSlides.length) % fbSlides.length;
+                            fbGoTo(prev);
+                            fbInterval = setInterval(fbNext, 5000);
+                        });
+                    }
+                    if (fbNextBtn) {
+                        fbNextBtn.addEventListener('click', function() {
+                            clearInterval(fbInterval);
+                            fbNext();
+                            fbInterval = setInterval(fbNext, 5000);
+                        });
+                    }
+                    fbInterval = setInterval(fbNext, 5000);
+                    return;
+                }
+
+                // Build slides HTML
+                var slidesHTML = '';
+                var dotsHTML = '';
+
+                for (var i = 0; i < sliders.length; i++) {
+                    var s = sliders[i];
+                    var imgUrl = getImageUrl(s.foto_link);
+                    var isActive = i === 0 ? ' active' : '';
+                    var dotActive = i === 0 ? ' active' : '';
+
+                    slidesHTML += '<div class="hero-slide' + isActive + '">' +
+                        '<div class="hero-slide-bg" style="background-image:url(\'' + escapeHtml(imgUrl) + '\');"></div>' +
+                        '<div class="hero-slide-overlay"></div>' +
+                        '<div class="hero-content">' +
+                            '<h1>' + escapeHtml(s.judul) + '</h1>' +
+                            '<p>' + escapeHtml(s.deskripsi || '') + '</p>' +
+                        '</div>' +
+                    '</div>';
+
+                    dotsHTML += '<div class="hero-dot' + dotActive + '" data-index="' + i + '"></div>';
+                }
+
+                sliderContainer.innerHTML = '<img src="assets/logo.png" alt="SMA Plus Almunawwarah" class="hero-logo">' + slidesHTML + '<button class="hero-arrow hero-arrow-prev" aria-label="Slide Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button><button class="hero-arrow hero-arrow-next" aria-label="Slide Berikutnya"><i class="fa-solid fa-chevron-right"></i></button><div class="hero-dots">' + dotsHTML + '</div>';
+
+                // Slider logic
+                var slides = sliderContainer.querySelectorAll('.hero-slide');
+                var dots = sliderContainer.querySelectorAll('.hero-dot');
+                var currentSlide = 0;
+                var autoPlayInterval = null;
+
+                function goToSlide(index) {
+                    for (var j = 0; j < slides.length; j++) {
+                        slides[j].classList.remove('active');
+                        dots[j].classList.remove('active');
+                    }
+                    currentSlide = index;
+                    slides[currentSlide].classList.add('active');
+                    dots[currentSlide].classList.add('active');
+                }
+
+                function nextSlide() {
+                    var next = (currentSlide + 1) % slides.length;
+                    goToSlide(next);
+                }
+
+                function startAutoPlay() {
+                    autoPlayInterval = setInterval(nextSlide, 5000);
+                }
+
+                function stopAutoPlay() {
+                    if (autoPlayInterval) {
+                        clearInterval(autoPlayInterval);
+                        autoPlayInterval = null;
+                    }
+                }
+
+                // Dot click navigation
+                for (var k = 0; k < dots.length; k++) {
+                    dots[k].addEventListener('click', function() {
+                        stopAutoPlay();
+                        goToSlide(parseInt(this.getAttribute('data-index')));
+                        startAutoPlay();
+                    });
+                }
+
+                // Arrow navigation
+                var prevBtn = sliderContainer.querySelector('.hero-arrow-prev');
+                var nextBtn = sliderContainer.querySelector('.hero-arrow-next');
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', function() {
+                        stopAutoPlay();
+                        var prev = (currentSlide - 1 + slides.length) % slides.length;
+                        goToSlide(prev);
+                        startAutoPlay();
+                    });
+                }
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', function() {
+                        stopAutoPlay();
+                        nextSlide();
+                        startAutoPlay();
+                    });
+                }
+
+                // Pause on hover
+                sliderContainer.addEventListener('mouseenter', stopAutoPlay);
+                sliderContainer.addEventListener('mouseleave', startAutoPlay);
+
+                // Start autoplay
+                startAutoPlay();
+
+            } catch (err) {
+                console.error('Gagal memuat slider:', err);
+                sliderContainer.style.display = 'none';
+                fallback.style.display = 'block';
+                fallback.classList.add('hero-slider');
+                var fallbackSlides = [
+                    { judul: 'SMA Plus Almunawwarah', deskripsi: 'Boarding School Islami — Membentuk Generasi Berilmu, Berakhlak, dan Berprestasi' },
+                    { judul: 'Kurikulum Terpadu', deskripsi: 'Menggabungkan kurikulum nasional dengan pendidikan keislaman yang komprehensif' },
+                    { judul: 'Prestasi Gemilang', deskripsi: 'Raihan prestasi di berbagai kompetisi tingkat kabupaten hingga nasional' },
+                    { judul: 'Pendaftaran Siswa Baru', deskripsi: 'Bergabunglah dan raih masa depan gemilang bersama SMA Plus Almunawwarah' }
+                ];
+                var fbSlidesHTML = '';
+                var fbDotsHTML = '';
+                for (var fi = 0; fi < fallbackSlides.length; fi++) {
+                    var fs = fallbackSlides[fi];
+                    var fbActive = fi === 0 ? ' active' : '';
+                    var bgColors = ['linear-gradient(135deg, #064e3b, #059669)', 'linear-gradient(135deg, #065f46, #10b981)', 'linear-gradient(135deg, #047857, #34d399)', 'linear-gradient(135deg, #064e3b, #059669)'];
+                    fbSlidesHTML += '<div class="hero-slide' + fbActive + '">' +
+                        '<div class="hero-slide-bg" style="background:' + bgColors[fi] + ';"></div>' +
+                        '<div class="hero-slide-overlay"></div>' +
+                        '<div class="hero-content" style="text-align:center;align-items:center">' +
+                            '<h1>' + escapeHtml(fs.judul) + '</h1>' +
+                            '<p>' + escapeHtml(fs.deskripsi) + '</p>' +
+                        '</div>' +
+                    '</div>';
+                    fbDotsHTML += '<div class="hero-dot' + fbActive + '" data-index="' + fi + '"></div>';
+                }
+                fallback.innerHTML = '<img src="assets/logo.png" alt="SMA Plus Almunawwarah" class="hero-logo">' + fbSlidesHTML + '<button class="hero-arrow hero-arrow-prev" aria-label="Slide Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button><button class="hero-arrow hero-arrow-next" aria-label="Slide Berikutnya"><i class="fa-solid fa-chevron-right"></i></button><div class="hero-dots">' + fbDotsHTML + '</div>';
+
+                var fbSlides = fallback.querySelectorAll('.hero-slide');
+                var fbDots = fallback.querySelectorAll('.hero-dot');
+                var fbCurrent = 0;
+                var fbInterval = null;
+                function fbGoTo(idx) {
+                    fbSlides.forEach(function(s){s.classList.remove('active')});
+                    fbDots.forEach(function(d){d.classList.remove('active')});
+                    fbCurrent = idx;
+                    fbSlides[fbCurrent].classList.add('active');
+                    fbDots[fbCurrent].classList.add('active');
+                }
+                function fbNext() { fbGoTo((fbCurrent + 1) % fbSlides.length); }
+                fbDots.forEach(function(dot) {
+                    dot.addEventListener('click', function() {
+                        clearInterval(fbInterval);
+                        fbGoTo(parseInt(this.getAttribute('data-index')));
+                        fbInterval = setInterval(fbNext, 5000);
+                    });
+                });
+                // Arrow navigation for fallback
+                var fbPrevBtn = fallback.querySelector('.hero-arrow-prev');
+                var fbNextBtn = fallback.querySelector('.hero-arrow-next');
+                if (fbPrevBtn) {
+                    fbPrevBtn.addEventListener('click', function() {
+                        clearInterval(fbInterval);
+                        var prev = (fbCurrent - 1 + fbSlides.length) % fbSlides.length;
+                        fbGoTo(prev);
+                        fbInterval = setInterval(fbNext, 5000);
+                    });
+                }
+                if (fbNextBtn) {
+                    fbNextBtn.addEventListener('click', function() {
+                        clearInterval(fbInterval);
+                        fbNext();
+                        fbInterval = setInterval(fbNext, 5000);
+                    });
+                }
+                fbInterval = setInterval(fbNext, 5000);
+            }
+        })();
+
+        /* ============================================================
+           DB-DRIVEN COUNTERS
+           ============================================================ */
+        (async function initDBCounters() {
+            var counterGrid = document.getElementById('counter-grid');
+            if (!counterGrid) return;
+
+            try {
+                var stats = await SMAPlusAPI.fetchStatistikSekolah();
+
+                if (!stats || stats.length === 0) {
+                    // Fallback if no data
+                    stats = [
+                        { label: 'Siswa', nilai: 288, ikon: 'fa-user-graduate' },
+                        { label: 'Guru', nilai: 24, ikon: 'fa-chalkboard-user' },
+                        { label: '15+ Tahun', nilai: 15, ikon: 'fa-clock' },
+                        { label: 'Prestasi', nilai: 45, ikon: 'fa-trophy' }
+                    ];
+                }
+
+                var html = '';
+                for (var i = 0; i < stats.length; i++) {
+                    var st = stats[i];
+                    html += '<div class="counter-item" data-aos="zoom-in" data-aos-delay="' + (i * 100) + '">' +
+                        '<i class="fa-solid ' + escapeHtml(st.ikon || 'fa-chart-bar') + '" style="font-size:1.5rem;color:var(--primary);margin-bottom:8px;display:block"></i>' +
+                        '<div class="counter-number" data-target="' + (st.nilai || 0) + '">0</div>' +
+                        '<div class="counter-label">' + escapeHtml(st.label) + '</div>' +
+                    '</div>';
+                }
+                counterGrid.innerHTML = html;
+
+                // Animate counters
+                var counters = counterGrid.querySelectorAll('.counter-number');
+                var counterAnimated = false;
+                var observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting && !counterAnimated) {
+                            counterAnimated = true;
+                            observer.unobserve(counterGrid);
+                            counters.forEach(function(counter) {
+                                var target = parseInt(counter.getAttribute('data-target')) || 0;
+                                var current = 0;
+                                var totalFrames = 60;
+                                var frame = 0;
+                                var increment = target / totalFrames;
+                                function updateCounter() {
+                                    frame++;
+                                    current += increment;
+                                    if (frame >= totalFrames) {
+                                        counter.textContent = target + '+';
+                                        return;
+                                    }
+                                    counter.textContent = Math.floor(current) + '+';
+                                    requestAnimationFrame(updateCounter);
+                                }
+                                requestAnimationFrame(updateCounter);
+                            });
+                        }
+                    });
+                }, { threshold: 0.3 });
+                observer.observe(counterGrid);
+
+                AOS.refresh();
+
+            } catch (err) {
+                console.error('Gagal memuat data counter:', err);
+                counterGrid.innerHTML = '<div class="counter-item"><div class="counter-number">288+</div><div class="counter-label">Siswa</div></div>' +
+                    '<div class="counter-item"><div class="counter-number">24+</div><div class="counter-label">Guru</div></div>' +
+                    '<div class="counter-item"><div class="counter-number">15+</div><div class="counter-label">Tahun</div></div>' +
+                    '<div class="counter-item"><div class="counter-number">45+</div><div class="counter-label">Prestasi</div></div>';
+            }
+        })();
+
+        /* ============================================================
+           LOAD BERITA TERKINI
+           ============================================================ */
+        (async function loadBerita() {
+            var newsGrid = document.getElementById('news-grid');
+            if (!newsGrid) return;
+
+            try {
+                var beritaList = await SMAPlusAPI.fetchBeritaTerbaru(3);
+
+                if (!beritaList || beritaList.length === 0) {
+                    newsGrid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">' +
+                        '<i class="fa-regular fa-newspaper"></i>' +
+                        '<p>Belum ada berita yang dipublikasikan.</p>' +
+                    '</div>';
+                    return;
+                }
+
+                var html = '';
+                for (var i = 0; i < beritaList.length; i++) {
+                    var b = beritaList[i];
+                    var imgUrl = getImageUrl(b.foto_link);
+                    var dateStr = formatDateShort(b.created_at);
+                    var excerpt = truncateText(b.ringkasan || b.konten, 120);
+                    var slug = b.slug || slugify(b.judul);
+                    var link = 'pages/berita-detail.html?slug=' + encodeURIComponent(slug);
+
+                    html += '<div class="news-card" data-aos="fade-up" data-aos-delay="' + ((i + 1) * 100) + '">' +
+                        '<div class="news-card-image" style="background-image:url(\'' + escapeHtml(imgUrl) + '\');">' +
+                            '<div class="news-card-date">' + escapeHtml(dateStr) + '</div>' +
+                        '</div>' +
+                        '<div class="news-card-body">' +
+                            '<h3>' + escapeHtml(b.judul) + '</h3>' +
+                            '<p>' + escapeHtml(excerpt) + '</p>' +
+                            '<a href="' + link + '" class="news-link">Baca Selengkapnya <i class="fa-solid fa-arrow-right"></i></a>' +
+                        '</div>' +
+                    '</div>';
+                }
+
+                newsGrid.innerHTML = html;
+                AOS.refresh();
+
+            } catch (err) {
+                console.error('Gagal memuat berita:', err);
+                newsGrid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">' +
+                    '<i class="fa-regular fa-newspaper"></i>' +
+                    '<p>Gagal memuat berita. Silakan coba lagi nanti.</p>' +
+                '</div>';
+            }
+        })();
+
+        /* ============================================================
+           LOAD AGENDA
+           ============================================================ */
+        (async function loadAgenda() {
+            var agendaList = document.getElementById('agenda-list');
+            if (!agendaList) return;
+
+            try {
+                var agendaData = await SMAPlusAPI.fetchAgenda();
+
+                if (!agendaData || agendaData.length === 0) {
+                    agendaList.innerHTML = '<div class="empty-state">' +
+                        '<i class="fa-regular fa-calendar"></i>' +
+                        '<p>Belum ada agenda kegiatan yang terjadwal.</p>' +
+                    '</div>';
+                    return;
+                }
+
+                // Filter upcoming agenda (tanggal_mulai >= today) and limit to 5
+                var now = new Date();
+                var upcoming = agendaData.filter(function(a) {
+                    return new Date(a.tanggal_mulai) >= now;
+                });
+
+                // If no upcoming, show all (up to 5)
+                var displayAgenda = upcoming.length > 0 ? upcoming.slice(0, 5) : agendaData.slice(0, 5);
+
+                var html = '';
+                for (var i = 0; i < displayAgenda.length; i++) {
+                    var a = displayAgenda[i];
+                    var startDate = new Date(a.tanggal_mulai);
+                    var day = startDate.getDate();
+                    var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                    var month = monthNames[startDate.getMonth()] || '';
+
+                    html += '<div class="agenda-item" data-aos="fade-up" data-aos-delay="' + ((i + 1) * 80) + '">' +
+                        '<div class="agenda-date-box">' +
+                            '<div class="day">' + day + '</div>' +
+                            '<div class="month">' + month + '</div>' +
+                        '</div>' +
+                        '<div class="agenda-info">' +
+                            '<h4>' + escapeHtml(a.judul) + '</h4>' +
+                            '<p>' + escapeHtml(a.deskripsi || a.lokasi || formatDate(a.tanggal_mulai)) + '</p>' +
+                        '</div>' +
+                    '</div>';
+                }
+
+                agendaList.innerHTML = html;
+                AOS.refresh();
+
+            } catch (err) {
+                console.error('Gagal memuat agenda:', err);
+                agendaList.innerHTML = '<div class="empty-state">' +
+                    '<i class="fa-regular fa-calendar"></i>' +
+                    '<p>Gagal memuat agenda. Silakan coba lagi nanti.</p>' +
+                '</div>';
+            }
+        })();
+
+        /* ============================================================
+           LOAD TESTIMONI
+           ============================================================ */
+        (async function loadTestimoni() {
+            var wrapper = document.getElementById('testimoni-wrapper');
+            if (!wrapper) return;
+
+            try {
+                var testimoniList = await SMAPlusAPI.fetchTestimoni();
+
+                if (!testimoniList || testimoniList.length === 0) {
+                    wrapper.innerHTML = '<div class="empty-state">' +
+                        '<i class="fa-regular fa-comment-dots"></i>' +
+                        '<p>Belum ada testimoni yang tersedia.</p>' +
+                    '</div>';
+                    return;
+                }
+
+                // Build testimoni track
+                var cardsHTML = '';
+                var dotsHTML = '';
+
+                for (var i = 0; i < testimoniList.length; i++) {
+                    var t = testimoniList[i];
+                    var fotoUrl = getImageUrl(t.foto_link);
+                    var stars = '';
+                    for (var s = 0; s < (t.rating || 5); s++) {
+                        stars += '<i class="fa-solid fa-star"></i> ';
+                    }
+
+                    cardsHTML += '<div class="testimoni-card">' +
+                        '<div class="testimoni-quote"><i class="fa-solid fa-quote-left"></i></div>' +
+                        '<p class="testimoni-text">"' + escapeHtml(t.konten) + '"</p>' +
+                        '<div class="testimoni-stars">' + stars + '</div>' +
+                        '<div class="testimoni-author">' +
+                            '<img src="' + escapeHtml(fotoUrl) + '" alt="' + escapeHtml(t.nama) + '" loading="lazy">' +
+                            '<div class="testimoni-author-info">' +
+                                '<h4>' + escapeHtml(t.nama) + '</h4>' +
+                                '<span>' + escapeHtml(t.jabatan || 'Siswa') + '</span>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+
+                    var dotActive = i === 0 ? ' active' : '';
+                    dotsHTML += '<div class="testimoni-dot' + dotActive + '" data-index="' + i + '"></div>';
+                }
+
+                wrapper.innerHTML = '<div class="testimoni-track">' + cardsHTML + '</div>' +
+                    '<div class="testimoni-dots">' + dotsHTML + '</div>';
+
+                // Carousel logic
+                var track = wrapper.querySelector('.testimoni-track');
+                var dots = wrapper.querySelectorAll('.testimoni-dot');
+                var currentTestimoni = 0;
+                var testimoniAutoPlay = null;
+
+                function goToTestimoni(index) {
+                    currentTestimoni = index;
+                    track.style.transform = 'translateX(-' + (index * 100) + '%)';
+                    for (var j = 0; j < dots.length; j++) {
+                        dots[j].classList.remove('active');
+                    }
+                    dots[currentTestimoni].classList.add('active');
+                }
+
+                function nextTestimoni() {
+                    var next = (currentTestimoni + 1) % testimoniList.length;
+                    goToTestimoni(next);
+                }
+
+                function startTestimoniAutoPlay() {
+                    testimoniAutoPlay = setInterval(nextTestimoni, 6000);
+                }
+
+                function stopTestimoniAutoPlay() {
+                    if (testimoniAutoPlay) {
+                        clearInterval(testimoniAutoPlay);
+                        testimoniAutoPlay = null;
+                    }
+                }
+
+                // Dot click navigation
+                for (var k = 0; k < dots.length; k++) {
+                    dots[k].addEventListener('click', function() {
+                        stopTestimoniAutoPlay();
+                        goToTestimoni(parseInt(this.getAttribute('data-index')));
+                        startTestimoniAutoPlay();
+                    });
+                }
+
+                // Pause on hover
+                wrapper.addEventListener('mouseenter', stopTestimoniAutoPlay);
+                wrapper.addEventListener('mouseleave', startTestimoniAutoPlay);
+
+                // Start autoplay
+                startTestimoniAutoPlay();
+
+            } catch (err) {
+                console.error('Gagal memuat testimoni:', err);
+                wrapper.innerHTML = '<div class="empty-state">' +
+                    '<i class="fa-regular fa-comment-dots"></i>' +
+                    '<p>Gagal memuat testimoni. Silakan coba lagi nanti.</p>' +
+                '</div>';
+            }
+        })();
+
+        /* ============================================================
+           LOAD GALERI PREVIEW
+           ============================================================ */
+        (async function loadGaleri() {
+            var galeriGrid = document.getElementById('galeri-grid');
+            if (!galeriGrid) return;
+
+            try {
+                var galeriList = await SMAPlusAPI.fetchGaleri(null, 8);
+
+                if (!galeriList || galeriList.length === 0) {
+                    galeriGrid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">' +
+                        '<i class="fa-regular fa-images"></i>' +
+                        '<p>Belum ada foto galeri yang tersedia.</p>' +
+                    '</div>';
+                    return;
+                }
+
+                var html = '';
+                for (var i = 0; i < galeriList.length; i++) {
+                    var g = galeriList[i];
+                    var imgUrl = getImageUrl(g.foto_link);
+
+                    html += '<div class="galeri-item" data-aos="fade-up" data-aos-delay="' + ((i % 4) * 80) + '">' +
+                        '<img src="' + escapeHtml(imgUrl) + '" alt="' + escapeHtml(g.judul) + '" loading="lazy">' +
+                        '<div class="galeri-overlay">' +
+                            '<span>' + escapeHtml(g.judul) + '</span>' +
+                        '</div>' +
+                    '</div>';
+                }
+
+                galeriGrid.innerHTML = html;
+                AOS.refresh();
+
+            } catch (err) {
+                console.error('Gagal memuat galeri:', err);
+                galeriGrid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">' +
+                    '<i class="fa-regular fa-images"></i>' +
+                    '<p>Gagal memuat galeri. Silakan coba lagi nanti.</p>' +
+                '</div>';
+            }
+        })();
+    </script>
+    <script>
+        // Register Service Worker for caching
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                var swPath = (window.location.pathname.includes('/pages/') || window.location.pathname.includes('/admincms/')) ? '../sw.js' : 'sw.js';
+                navigator.serviceWorker.register(swPath).then(function(reg) {
+                    console.log('SW registered:', reg.scope);
+                }).catch(function(err) {
+                    console.warn('SW registration failed:', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Program Unggulan - SMA Plus Almunawwarah</title>
+    <meta name="description" content="Program unggulan SMA Plus Almunawwarah meliputi Tahfidz Al-Quran, Bilingual, Robotik & Coding, Leadership, Sains Terapan, dan Pembinaan Keagamaan.">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Page-specific CSS */
+        .program-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        .program-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .program-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-xl);
+        }
+        .program-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(var(--primary), var(--secondary));
+        }
+        .program-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: var(--primary-lighter);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+        .program-card h3 {
+            font-size: 1.15rem;
+            margin-bottom: 10px;
+        }
+        .program-card p {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            line-height: 1.7;
+        }
+        .program-card ul {
+            margin-top: 12px;
+            padding-left: 0;
+        }
+        .program-card ul li {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+            padding: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .program-card ul li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            font-size: 0.75rem;
+        }
+        @media (max-width: 768px) {
+            .program-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <h1 data-aos="fade-up">Program Unggulan</h1>
+                <p data-aos="fade-up" data-aos-delay="100">Program-program unggulan yang menjadi pembeda SMA Plus Almunawwarah</p>
+                <div class="breadcrumb" data-aos="fade-up" data-aos-delay="200">
+                    <a href="../index.html">Beranda</a>
+                    <span>/</span>
+                    <a href="#">Akademik</a>
+                    <span>/</span>
+                    <span>Program Unggulan</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Program Unggulan Section -->
+        <section class="section">
+            <div class="container">
+                <div class="text-center" style="margin-bottom: 40px;" data-aos="fade-up">
+                    <span class="section-badge">Unggulan</span>
+                    <h2 class="section-title" style="display: block; text-align: center;">Program Unggulan Kami</h2>
+                    <p class="section-subtitle">Enam program unggulan yang dirancang untuk mencetak generasi berilmu, berakhlak, dan berdaya saing</p>
+                </div>
+                <div class="program-grid">
+                    <!-- 1. Tahfidz Al-Quran -->
+                    <div class="program-card" data-aos="fade-up" data-aos-delay="0">
+                        <div class="program-icon">
+                            <i class="fa-solid fa-book-quran"></i>
+                        </div>
+                        <h3>Tahfidz Al-Quran</h3>
+                        <p>Program unggulan tahfidz dengan target hafalan 5-30 juz. Siswa mendapatkan bimbingan intensif dari pembimbing bersanad untuk mencapai target hafalan sesuai kemampuan masing-masing.</p>
+                        <ul>
+                            <li>Pembimbing bersanad</li>
+                            <li>Muroja'ah harian</li>
+                            <li>Setoran hafalan berkala</li>
+                        </ul>
+                    </div>
+
+                    <!-- 2. Bilingual Program -->
+                    <div class="program-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="program-icon">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <h3>Bilingual Program</h3>
+                        <p>Program dwibahasa Indonesia-Inggris yang mempersiapkan siswa untuk berkompetisi di tingkat global dan melanjutkan pendidikan ke perguruan tinggi terbaik.</p>
+                        <ul>
+                            <li>Native speaker</li>
+                            <li>English day</li>
+                            <li>Debate competition</li>
+                        </ul>
+                    </div>
+
+                    <!-- 3. Robotik & Coding -->
+                    <div class="program-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="program-icon">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <h3>Robotik & Coding</h3>
+                        <p>Pengembangan skill teknologi melalui program robotik dan coding yang melatih kemampuan berpikir komputasional dan problem solving siswa.</p>
+                        <ul>
+                            <li>Arduino programming</li>
+                            <li>Robot building</li>
+                            <li>Kompetisi robotik</li>
+                        </ul>
+                    </div>
+
+                    <!-- 4. Leadership Program -->
+                    <div class="program-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="program-icon">
+                            <i class="fa-solid fa-user-tie"></i>
+                        </div>
+                        <h3>Leadership Program</h3>
+                        <p>Pembinaan kepemimpinan yang membentuk karakter pemimpin yang bertanggung jawab, berintegritas, dan mampu menginspirasi orang lain.</p>
+                        <ul>
+                            <li>Student council</li>
+                            <li>Public speaking</li>
+                            <li>Team building</li>
+                        </ul>
+                    </div>
+
+                    <!-- 5. Sains Terapan -->
+                    <div class="program-card" data-aos="fade-up" data-aos-delay="400">
+                        <div class="program-icon">
+                            <i class="fa-solid fa-microscope"></i>
+                        </div>
+                        <h3>Sains Terapan</h3>
+                        <p>Riset dan eksperimen yang mengasah kemampuan berpikir ilmiah dan analitis siswa melalui berbagai proyek penelitian dan kompetisi sains.</p>
+                        <ul>
+                            <li>Lab modern</li>
+                            <li>Olimpiade sains</li>
+                            <li>Penelitian ilmiah</li>
+                        </ul>
+                    </div>
+
+                    <!-- 6. Pembinaan Keagamaan -->
+                    <div class="program-card" data-aos="fade-up" data-aos-delay="500">
+                        <div class="program-icon">
+                            <i class="fa-solid fa-hands-praying"></i>
+                        </div>
+                        <h3>Pembinaan Keagamaan</h3>
+                        <p>Pendalaman ilmu agama secara komprehensif untuk membentuk pribadi Muslim yang berilmu, berakhlak mulia, dan mengamalkan ajaran Islam dalam kehidupan sehari-hari.</p>
+                        <ul>
+                            <li>Kajian kitab</li>
+                            <li>Shalat berjamaah</li>
+                            <li>Pesantren kilat</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="section" style="background: var(--gray-50);">
+            <div class="container">
+                <div class="text-center" data-aos="fade-up">
+                    <span class="section-badge">Bergabunglah</span>
+                    <h2 class="section-title" style="display: block; text-align: center;">Tertarik dengan Program Kami?</h2>
+                    <p class="section-subtitle">Daftarkan putra-putri Anda dan jadilah bagian dari keluarga besar SMA Plus Almunawwarah</p>
+                    <div style="margin-top: 30px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                        <a href="info-psb.html" class="btn btn-primary btn-lg">
+                            <i class="fa-solid fa-pen-to-square"></i> Info PSB
+                        </a>
+                        <a href="../index.html" class="btn btn-outline btn-lg">
+                            <i class="fa-solid fa-home"></i> Kembali ke Beranda
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 80
+        });
+    </script>
+    <script>
+        // Register Service Worker for caching
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                var swPath = (window.location.pathname.includes('/pages/') || window.location.pathname.includes('/admincms/')) ? '../sw.js' : 'sw.js';
+                navigator.serviceWorker.register(swPath).then(function(reg) {
+                    console.log('SW registered:', reg.scope);
+                }).catch(function(err) {
+                    console.warn('SW registration failed:', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

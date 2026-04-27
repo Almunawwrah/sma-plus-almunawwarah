@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sarana & Prasarana - SMA Plus Almunawwarah</title>
+    <meta name="description" content="Fasilitas sarana dan prasarana SMA Plus Almunawwarah, laboratorium, ruang kelas, lapangan, dan fasilitas ibadah.">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .filter-pills {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .filter-pill {
+            padding: 8px 20px;
+            border-radius: 50px;
+            border: 2px solid var(--gray-200);
+            background: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            color: var(--gray-600);
+        }
+
+        .filter-pill:hover,
+        .filter-pill.active {
+            border-color: var(--primary);
+            background: var(--primary-lighter);
+            color: var(--primary);
+        }
+
+        .fasilitas-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .fasilitas-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s;
+        }
+
+        .fasilitas-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .fasilitas-card-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .fasilitas-card-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .fasilitas-card-body {
+            padding: 20px;
+        }
+
+        .fasilitas-card-body h3 {
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+            color: var(--gray-800);
+        }
+
+        .fasilitas-card-body p {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            line-height: 1.6;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray-400);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+            color: var(--gray-500);
+        }
+
+        @media (max-width: 992px) {
+            .fasilitas-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .fasilitas-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="page-header">
+            <div class="container">
+                <h1 data-aos="fade-up">Sarana & Prasarana</h1>
+                <p data-aos="fade-up" data-aos-delay="100">Fasilitas lengkap untuk menunjang kegiatan belajar mengajar</p>
+                <div class="breadcrumb" data-aos="fade-up" data-aos-delay="200">
+                    <a href="../index.html">Beranda</a>
+                    <span>/</span>
+                    <a href="#">Profil</a>
+                    <span>/</span>
+                    <span>Sarana & Prasarana</span>
+                </div>
+            </div>
+        </div>
+
+        <section class="section">
+            <div class="container">
+                <div class="text-center" style="margin-bottom: 40px;">
+                    <span class="section-badge" data-aos="fade-up">Fasilitas</span>
+                    <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">Fasilitas Sekolah</h2>
+                    <p class="section-subtitle" data-aos="fade-up" data-aos-delay="200">Sarana dan prasarana modern yang mendukung proses pembelajaran berkualitas</p>
+                </div>
+
+                <div class="filter-pills" id="filter-pills" data-aos="fade-up" data-aos-delay="100">
+                    <button class="filter-pill active" data-filter="Semua">Semua</button>
+                    <button class="filter-pill" data-filter="Lab">Lab</button>
+                    <button class="filter-pill" data-filter="Ruang">Ruang</button>
+                    <button class="filter-pill" data-filter="Lapangan">Lapangan</button>
+                    <button class="filter-pill" data-filter="Ibadah">Ibadah</button>
+                    <button class="filter-pill" data-filter="Umum">Umum</button>
+                </div>
+
+                <div class="fasilitas-grid" id="fasilitas-grid">
+                    <div class="loading-spinner" style="grid-column: 1 / -1;">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            var grid = document.getElementById('fasilitas-grid');
+            var filterContainer = document.getElementById('filter-pills');
+            var allData = [];
+            var activeFilter = 'Semua';
+
+            function renderFasilitas(data) {
+                if (!data || data.length === 0) {
+                    grid.innerHTML =
+                        '<div class="empty-state">' +
+                        '  <i class="fa-solid fa-building"></i>' +
+                        '  <p>Tidak ada fasilitas yang ditampilkan untuk kategori ini.</p>' +
+                        '</div>';
+                    return;
+                }
+
+                var html = '';
+
+                data.forEach(function (item, index) {
+                    var delay = (index % 3) * 100;
+                    var imgUrl = getImageUrl(item.gambar);
+                    html +=
+                        '<div class="fasilitas-card" data-aos="fade-up" data-aos-delay="' + delay + '">' +
+                        '  <div class="fasilitas-card-image" style="background-image: url(\'' + imgUrl + '\')">' +
+                        (item.kategori ? '    <span class="fasilitas-card-badge">' + escapeHtml(item.kategori) + '</span>' : '') +
+                        '  </div>' +
+                        '  <div class="fasilitas-card-body">' +
+                        '    <h3>' + escapeHtml(item.nama) + '</h3>' +
+                        (item.deskripsi ? '    <p>' + escapeHtml(item.deskripsi) + '</p>' : '') +
+                        '  </div>' +
+                        '</div>';
+                });
+
+                grid.innerHTML = html;
+
+                AOS.refresh();
+            }
+
+            function filterData(kategori) {
+                if (kategori === 'Semua') {
+                    return allData;
+                }
+                return allData.filter(function (item) {
+                    return item.kategori && item.kategori.toLowerCase() === kategori.toLowerCase();
+                });
+            }
+
+            function setActivePill(kategori) {
+                var pills = filterContainer.querySelectorAll('.filter-pill');
+                pills.forEach(function (pill) {
+                    pill.classList.remove('active');
+                    if (pill.getAttribute('data-filter') === kategori) {
+                        pill.classList.add('active');
+                    }
+                });
+            }
+
+            filterContainer.addEventListener('click', function (e) {
+                var pill = e.target.closest('.filter-pill');
+                if (!pill) return;
+
+                var filter = pill.getAttribute('data-filter');
+                activeFilter = filter;
+                setActivePill(filter);
+
+                var filtered = filterData(filter);
+                renderFasilitas(filtered);
+            });
+
+            async function loadSaranaPrasarana() {
+                try {
+                    var data = await SMAPlusAPI.fetchSaranaPrasarana();
+                    allData = data || [];
+
+                    if (allData.length === 0) {
+                        grid.innerHTML =
+                            '<div class="empty-state">' +
+                            '  <i class="fa-solid fa-building"></i>' +
+                            '  <p>Data sarana dan prasarana belum tersedia.</p>' +
+                            '</div>';
+                        return;
+                    }
+
+                    renderFasilitas(allData);
+                } catch (err) {
+                    console.error('Gagal memuat sarana prasarana:', err);
+                    grid.innerHTML =
+                        '<div class="empty-state" style="grid-column: 1 / -1;">' +
+                        '  <i class="fa-solid fa-circle-exclamation"></i>' +
+                        '  <p>Gagal memuat data sarana prasarana. Silakan coba lagi nanti.</p>' +
+                        '</div>';
+                }
+            }
+
+            loadSaranaPrasarana();
+
+            AOS.init({
+                duration: 800,
+                easing: 'ease-out-cubic',
+                once: true,
+                offset: 80
+            });
+        })();
+    </script>
+    <script>
+        // Register Service Worker for caching
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                var swPath = (window.location.pathname.includes('/pages/') || window.location.pathname.includes('/admincms/')) ? '../sw.js' : 'sw.js';
+                navigator.serviceWorker.register(swPath).then(function(reg) {
+                    console.log('SW registered:', reg.scope);
+                }).catch(function(err) {
+                    console.warn('SW registration failed:', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

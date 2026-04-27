@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prestasi - SMA Plus Almunawwarah</title>
+    <meta name="description" content="Prestasi dan penghargaan SMA Plus Almunawwarah di berbagai kompetisi akademik dan non-akademik tingkat sekolah hingga nasional.">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .filter-pills {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .filter-pill {
+            padding: 8px 20px;
+            border-radius: 50px;
+            border: 2px solid var(--gray-200);
+            background: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            color: var(--gray-600);
+        }
+
+        .filter-pill:hover,
+        .filter-pill.active {
+            border-color: var(--primary);
+            background: var(--primary-lighter);
+            color: var(--primary);
+        }
+
+        .prestasi-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .prestasi-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 24px;
+            display: flex;
+            gap: 20px;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .prestasi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .prestasi-card[data-tingkat="Nasional"] {
+            border-left-color: #3b82f6;
+        }
+
+        .prestasi-card[data-tingkat="Provinsi"] {
+            border-left-color: #8b5cf6;
+        }
+
+        .prestasi-card[data-tingkat="Kabupaten"] {
+            border-left-color: var(--primary);
+        }
+
+        .prestasi-card[data-tingkat="Sekolah"] {
+            border-left-color: var(--accent);
+        }
+
+        .prestasi-icon {
+            min-width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: var(--primary-lighter);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: var(--primary);
+        }
+
+        .prestasi-info {
+            flex: 1;
+        }
+
+        .prestasi-info h3 {
+            font-size: 1rem;
+            margin-bottom: 6px;
+            color: var(--gray-800);
+        }
+
+        .prestasi-info p {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .prestasi-meta {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .prestasi-meta span {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--gray-500);
+        }
+
+        .prestasi-meta span i {
+            font-size: 0.7rem;
+            color: var(--gray-400);
+        }
+
+        .tingkat-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .tingkat-badge-Nasional {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .tingkat-badge-Provinsi {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .tingkat-badge-Kabupaten {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .tingkat-badge-Sekolah {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .tingkat-badge-Internasional {
+            background: #fce7f3;
+            color: #9d174d;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray-400);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+            color: var(--gray-500);
+        }
+
+        @media (max-width: 576px) {
+            .prestasi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .prestasi-card {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="page-header">
+            <div class="container">
+                <h1 data-aos="fade-up">Prestasi</h1>
+                <p data-aos="fade-up" data-aos-delay="100">Deretan pencapaian membanggakan SMA Plus Almunawwarah</p>
+                <div class="breadcrumb" data-aos="fade-up" data-aos-delay="200">
+                    <a href="../index.html">Beranda</a>
+                    <span>/</span>
+                    <a href="#">Profil</a>
+                    <span>/</span>
+                    <span>Prestasi</span>
+                </div>
+            </div>
+        </div>
+
+        <section class="section">
+            <div class="container">
+                <div class="text-center" style="margin-bottom: 40px;">
+                    <span class="section-badge" data-aos="fade-up">Prestasi</span>
+                    <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">Pencapaian Sekolah</h2>
+                    <p class="section-subtitle" data-aos="fade-up" data-aos-delay="200">Prestasi akademik dan non-akademik yang diraih oleh siswa-siswi kami</p>
+                </div>
+
+                <div class="filter-pills" id="filter-pills" data-aos="fade-up" data-aos-delay="100">
+                    <button class="filter-pill active" data-filter="Semua">Semua</button>
+                    <button class="filter-pill" data-filter="Sekolah">Sekolah</button>
+                    <button class="filter-pill" data-filter="Kabupaten">Kabupaten</button>
+                    <button class="filter-pill" data-filter="Provinsi">Provinsi</button>
+                    <button class="filter-pill" data-filter="Nasional">Nasional</button>
+                    <button class="filter-pill" data-filter="Internasional">Internasional</button>
+                </div>
+
+                <div class="prestasi-grid" id="prestasi-grid">
+                    <div class="loading-spinner" style="grid-column: 1 / -1;">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            var grid = document.getElementById('prestasi-grid');
+            var filterContainer = document.getElementById('filter-pills');
+            var allData = [];
+            var activeFilter = 'Semua';
+
+            function getTingkatBadgeClass(tingkat) {
+                var map = {
+                    'Nasional': 'tingkat-badge-Nasional',
+                    'Provinsi': 'tingkat-badge-Provinsi',
+                    'Kabupaten': 'tingkat-badge-Kabupaten',
+                    'Sekolah': 'tingkat-badge-Sekolah',
+                    'Internasional': 'tingkat-badge-Internasional'
+                };
+                return map[tingkat] || 'tingkat-badge-Sekolah';
+            }
+
+            function renderPrestasi(data) {
+                if (!data || data.length === 0) {
+                    grid.innerHTML =
+                        '<div class="empty-state">' +
+                        '  <i class="fa-solid fa-trophy"></i>' +
+                        '  <p>Tidak ada prestasi yang ditampilkan untuk kategori ini.</p>' +
+                        '</div>';
+                    return;
+                }
+
+                var html = '';
+
+                data.forEach(function (item, index) {
+                    var delay = (index % 2) * 100;
+                    var tingkat = item.tingkat || 'Sekolah';
+                    var badgeClass = getTingkatBadgeClass(tingkat);
+
+                    html +=
+                        '<div class="prestasi-card" data-tingkat="' + escapeHtml(tingkat) + '" data-aos="fade-up" data-aos-delay="' + delay + '">' +
+                        '  <div class="prestasi-icon">' +
+                        '    <i class="fa-solid fa-trophy"></i>' +
+                        '  </div>' +
+                        '  <div class="prestasi-info">' +
+                        '    <h3>' + escapeHtml(item.judul) + '</h3>' +
+                        (item.deskripsi ? '    <p>' + escapeHtml(item.deskripsi) + '</p>' : '') +
+                        '    <div class="prestasi-meta">' +
+                        (item.peserta ? '      <span><i class="fa-solid fa-user"></i> ' + escapeHtml(item.peserta) + '</span>' : '') +
+                        (item.tahun ? '      <span><i class="fa-solid fa-calendar"></i> ' + escapeHtml(String(item.tahun)) + '</span>' : '') +
+                        '      <span class="tingkat-badge ' + badgeClass + '">' + escapeHtml(tingkat) + '</span>' +
+                        '    </div>' +
+                        '  </div>' +
+                        '</div>';
+                });
+
+                grid.innerHTML = html;
+
+                AOS.refresh();
+            }
+
+            function filterData(tingkat) {
+                if (tingkat === 'Semua') {
+                    return allData;
+                }
+                return allData.filter(function (item) {
+                    return item.tingkat && item.tingkat.toLowerCase() === tingkat.toLowerCase();
+                });
+            }
+
+            function setActivePill(tingkat) {
+                var pills = filterContainer.querySelectorAll('.filter-pill');
+                pills.forEach(function (pill) {
+                    pill.classList.remove('active');
+                    if (pill.getAttribute('data-filter') === tingkat) {
+                        pill.classList.add('active');
+                    }
+                });
+            }
+
+            filterContainer.addEventListener('click', function (e) {
+                var pill = e.target.closest('.filter-pill');
+                if (!pill) return;
+
+                var filter = pill.getAttribute('data-filter');
+                activeFilter = filter;
+                setActivePill(filter);
+
+                var filtered = filterData(filter);
+                renderPrestasi(filtered);
+            });
+
+            async function loadPrestasi() {
+                try {
+                    var data = await SMAPlusAPI.fetchPrestasi();
+                    allData = data || [];
+
+                    if (allData.length === 0) {
+                        grid.innerHTML =
+                            '<div class="empty-state">' +
+                            '  <i class="fa-solid fa-trophy"></i>' +
+                            '  <p>Data prestasi belum tersedia.</p>' +
+                            '</div>';
+                        return;
+                    }
+
+                    renderPrestasi(allData);
+                } catch (err) {
+                    console.error('Gagal memuat prestasi:', err);
+                    grid.innerHTML =
+                        '<div class="empty-state" style="grid-column: 1 / -1;">' +
+                        '  <i class="fa-solid fa-circle-exclamation"></i>' +
+                        '  <p>Gagal memuat data prestasi. Silakan coba lagi nanti.</p>' +
+                        '</div>';
+                }
+            }
+
+            loadPrestasi();
+
+            AOS.init({
+                duration: 800,
+                easing: 'ease-out-cubic',
+                once: true,
+                offset: 80
+            });
+        })();
+    </script>
+    <script>
+        // Register Service Worker for caching
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                var swPath = (window.location.pathname.includes('/pages/') || window.location.pathname.includes('/admincms/')) ? '../sw.js' : 'sw.js';
+                navigator.serviceWorker.register(swPath).then(function(reg) {
+                    console.log('SW registered:', reg.scope);
+                }).catch(function(err) {
+                    console.warn('SW registration failed:', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

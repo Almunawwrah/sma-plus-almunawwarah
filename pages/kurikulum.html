@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kurikulum - SMA Plus Almunawwarah</title>
+    <meta name="description" content="Kurikulum Merdeka yang diterapkan di SMA Plus Almunawwarah, mengintegrasikan pendidikan akademik dan karakter Islami.">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Page-specific CSS */
+        .kurikulum-intro {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        .kurikulum-intro-text {
+            padding-right: 20px;
+        }
+        .kurikulum-intro-image {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+        .kurikulum-intro-image img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+        }
+        .mapel-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .mapel-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s;
+        }
+        .mapel-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        .mapel-card h4 {
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .mapel-card h4 i {
+            color: var(--primary);
+        }
+        .mapel-card p {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+        }
+        .tahfidz-section {
+            background: linear-gradient(135deg, var(--primary-lighter), white);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+        }
+        .tahfidz-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .tahfidz-item {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .tahfidz-number {
+            min-width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .tahfidz-item h4 {
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+        .tahfidz-item p {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+        }
+        /* ── Jadwal Tabs ── */
+        .jadwal-tabs-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding-bottom: 4px;
+        }
+        .jadwal-tabs-wrapper::-webkit-scrollbar { display: none; }
+        .jadwal-tabs {
+            display: flex;
+            gap: 6px;
+            min-width: max-content;
+            padding: 4px;
+            background: var(--gray-100);
+            border-radius: 12px;
+        }
+        .kelas-tab {
+            padding: 10px 22px;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-family: inherit;
+            font-weight: 500;
+            color: var(--gray-500);
+            white-space: nowrap;
+        }
+        .kelas-tab:hover {
+            color: var(--primary-dark);
+            background: white;
+        }
+        .kelas-tab.active {
+            background: #059669;
+            color: white;
+            box-shadow: 0 2px 8px rgba(5,150,105,0.3);
+        }
+
+        /* ── Jadwal Grid Table ── */
+        .jadwal-grid-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+        .jadwal-grid {
+            width: 100%;
+            min-width: 700px;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        .jadwal-grid thead th {
+            background: #059669;
+            color: white;
+            padding: 14px 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.01em;
+            border-right: 1px solid rgba(255,255,255,0.15);
+        }
+        .jadwal-grid thead th:last-child { border-right: none; }
+        .jadwal-grid thead th.col-jam {
+            width: 60px;
+            text-align: center;
+        }
+        .jadwal-grid thead th.col-waktu {
+            width: 130px;
+            text-align: center;
+        }
+        .jadwal-grid thead th.col-hari {
+            min-width: 130px;
+        }
+        .jadwal-grid tbody td {
+            padding: 12px 12px;
+            border-bottom: 1px solid var(--gray-100);
+            border-right: 1px solid var(--gray-100);
+            font-size: 0.82rem;
+            vertical-align: top;
+            text-align: center;
+        }
+        .jadwal-grid tbody td:last-child { border-right: none; }
+        .jadwal-grid tbody td.cell-jam {
+            font-weight: 700;
+            color: #059669;
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+        .jadwal-grid tbody td.cell-waktu {
+            color: var(--gray-500);
+            font-size: 0.78rem;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+        .jadwal-grid tbody td.cell-hari {
+            text-align: left;
+        }
+        .jadwal-grid tbody td.cell-hari .mapel-name {
+            font-weight: 600;
+            color: var(--gray-800);
+            display: block;
+            margin-bottom: 2px;
+        }
+        .jadwal-grid tbody td.cell-hari .guru-name {
+            font-size: 0.75rem;
+            color: var(--gray-400);
+            display: block;
+        }
+        .jadwal-grid tbody td.cell-empty {
+            color: var(--gray-300);
+            font-style: italic;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .jadwal-grid tbody tr:last-child td { border-bottom: none; }
+        .jadwal-grid tbody tr:hover td {
+            background: rgba(5,150,105,0.04);
+        }
+
+        /* ── Loading & Empty States ── */
+        .jadwal-loading { text-align: center; padding: 30px; }
+        .jadwal-empty-state {
+            text-align: center;
+            padding: 48px 20px;
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+        }
+        .jadwal-empty-state i {
+            font-size: 2.5rem;
+            color: var(--gray-300);
+            margin-bottom: 12px;
+            display: block;
+        }
+        .jadwal-empty-state p {
+            color: var(--gray-500);
+            font-size: 0.95rem;
+        }
+
+        /* ── Kelas Title ── */
+        .jadwal-kelas-title {
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+        .jadwal-kelas-title i {
+            color: #059669;
+        }
+        @media (max-width: 768px) {
+            .kurikulum-intro {
+                grid-template-columns: 1fr;
+            }
+            .mapel-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .tahfidz-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 576px) {
+            .mapel-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <h1 data-aos="fade-up">Kurikulum</h1>
+                <p data-aos="fade-up" data-aos-delay="100">Kurikulum Merdeka yang mengintegrasikan akademik dan karakter Islami</p>
+                <div class="breadcrumb" data-aos="fade-up" data-aos-delay="200">
+                    <a href="../index.html">Beranda</a>
+                    <span>/</span>
+                    <a href="#">Akademik</a>
+                    <span>/</span>
+                    <span>Kurikulum</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Intro Section -->
+        <section class="section">
+            <div class="container">
+                <div class="kurikulum-intro">
+                    <div class="kurikulum-intro-text" data-aos="fade-right">
+                        <span class="section-badge">Kurikulum Merdeka</span>
+                        <h2 class="section-title">Kurikulum Berbasis Karakter & Akademik</h2>
+                        <p style="margin-top: 24px; color: var(--gray-600); line-height: 1.8;">SMA Plus Almunawwarah menerapkan <strong>Kurikulum Merdeka</strong> yang dirancang untuk memberikan fleksibilitas bagi siswa dalam mengembangkan potensi diri. Kurikulum kami mengintegrasikan pendidikan akademik berkualitas dengan pembentukan karakter Islami yang kuat.</p>
+                        <p style="color: var(--gray-600); line-height: 1.8;">Dengan pendekatan <em>project-based learning</em> dan diferensiasi pembelajaran, setiap siswa mendapatkan pengalaman belajar yang sesuai dengan minat, bakat, dan kemampuannya. Kami percaya bahwa pendidikan terbaik adalah yang mampu menyeimbangkan antara kecerdasan intelektual dan kecerdasan spiritual.</p>
+                        <div style="margin-top: 20px; display: flex; gap: 16px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-check-circle" style="color: var(--primary);"></i>
+                                <span style="font-size: 0.9rem; font-weight: 500;">Kurikulum Merdeka</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-check-circle" style="color: var(--primary);"></i>
+                                <span style="font-size: 0.9rem; font-weight: 500;">Project-Based Learning</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-check-circle" style="color: var(--primary);"></i>
+                                <span style="font-size: 0.9rem; font-weight: 500;">Diferensiasi Pembelajaran</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kurikulum-intro-image" data-aos="fade-left">
+                        <img src="https://via.placeholder.com/800x600/059669/ffffff?text=Kurikulum+Merdeka" alt="Kurikulum SMA Plus Almunawwarah">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mata Pelajaran Section -->
+        <section class="section" style="background: var(--gray-50);">
+            <div class="container">
+                <div class="text-center" style="margin-bottom: 40px;" data-aos="fade-up">
+                    <span class="section-badge">Mata Pelajaran</span>
+                    <h2 class="section-title" style="display: block; text-align: center;">Mata Pelajaran Inti</h2>
+                    <p class="section-subtitle">Program akademik komprehensif yang memenuhi standar kurikulum nasional dan diperkaya dengan muatan keagamaan</p>
+                </div>
+                <div class="mapel-grid">
+                    <div class="mapel-card" data-aos="fade-up" data-aos-delay="0">
+                        <h4><i class="fa-solid fa-mosque"></i> Pendidikan Agama Islam</h4>
+                        <p>Pembelajaran aqidah, ibadah, akhlak, dan muamalah sesuai nilai-nilai Islam</p>
+                    </div>
+                    <div class="mapel-card" data-aos="fade-up" data-aos-delay="50">
+                        <h4><i class="fa-solid fa-book-quran"></i> Al-Quran & Hadits</h4>
+                        <p>Studi mendalam tentang Al-Quran dan Hadits termasuk ilmu tajwid dan tafsir</p>
+                    </div>
+                    <div class="mapel-card" data-aos="fade-up" data-aos-delay="100">
+                        <h4><i class="fa-solid fa-calculator"></i> Matematika</h4>
+                        <p>Matematika umum dan peminatan matematika untuk pengembangan berpikir logis</p>
+                    </div>
+                    <div class="mapel-card" data-aos="fade-up" data-aos-delay="150">
+                        <h4><i class="fa-solid fa-language"></i> Bahasa Indonesia</h4>
+                        <p>Keterampilan berbahasa Indonesia secara lisan dan tulis dalam berbagai konteks</p>
+                    </div>
+                    <div class="mapel-card" data-aos="fade-up" data-aos-delay="200">
+                        <h4><i class="fa-solid fa-globe"></i> Bahasa Inggris</h4>
+                        <p>Penguasaan bahasa Inggris aktif untuk komunikasi global dan akademik</p>
+                    </div>
+                    <div class="mapel-card" data-aos="fade-up" data-aos-delay="250">
+                        <h4><i class="fa-solid fa-flask"></i> IPA (Fisika, Kimia, Biologi)</h4>
+                        <p>Sains terpadu dengan peminatan Fisika, Kimia, atau Biologi</p>
+                    </div>
+                    <div class="mapel-card" data-aos="fade-up" data-aos-delay="300">
+                        <h4><i class="fa-solid fa-earth-asia"></i> IPS</h4>
+                        <p>Ilmu pengetahuan sosial meliputi ekonomi, geografi, sosiologi, dan sejarah</p>
+                    </div>
+                    <div class="mapel-card" data-aos="fade-up" data-aos-delay="350">
+                        <h4><i class="fa-solid fa-palette"></i> Seni Budaya</h4>
+                        <p>Apresiasi dan kreasi seni budaya Nusantara dan mancanegara</p>
+                    </div>
+                    <div class="mapel-card" data-aos="fade-up" data-aos-delay="400">
+                        <h4><i class="fa-solid fa-person-running"></i> PJOK</h4>
+                        <p>Pendidikan jasmani untuk kebugaran, kesehatan, dan sportivitas</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tahfidz Section -->
+        <section class="section">
+            <div class="container">
+                <div class="tahfidz-section">
+                    <div class="text-center" style="margin-bottom: 32px;" data-aos="fade-up">
+                        <span class="section-badge">Program Unggulan</span>
+                        <h2 class="section-title" style="display: block; text-align: center;">Program Tahfidz Al-Quran</h2>
+                        <p class="section-subtitle">Program unggulan tahfidz yang menjadi ciri khas SMA Plus Almunawwarah dalam membentuk generasi penghafal Al-Quran</p>
+                    </div>
+                    <div class="tahfidz-grid">
+                        <div class="tahfidz-item" data-aos="fade-up" data-aos-delay="0">
+                            <div class="tahfidz-number">1</div>
+                            <div>
+                                <h4>Target Hafalan</h4>
+                                <p>Target hafalan minimal 5 juz selama 3 tahun</p>
+                            </div>
+                        </div>
+                        <div class="tahfidz-item" data-aos="fade-up" data-aos-delay="100">
+                            <div class="tahfidz-number">2</div>
+                            <div>
+                                <h4>Bimbingan Intensif</h4>
+                                <p>Pembimbing tahfidz bersertifikat sanad</p>
+                            </div>
+                        </div>
+                        <div class="tahfidz-item" data-aos="fade-up" data-aos-delay="200">
+                            <div class="tahfidz-number">3</div>
+                            <div>
+                                <h4>Muroja'ah Rutin</h4>
+                                <p>Jadwal muroja'ah harian terstruktur</p>
+                            </div>
+                        </div>
+                        <div class="tahfidz-item" data-aos="fade-up" data-aos-delay="300">
+                            <div class="tahfidz-number">4</div>
+                            <div>
+                                <h4>Evaluasi Berkala</h4>
+                                <p>Ujian tahfidz setiap semester</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Jadwal Section -->
+        <section class="section" style="background: var(--gray-50);">
+            <div class="container">
+                <div class="text-center" style="margin-bottom: 40px;" data-aos="fade-up">
+                    <span class="section-badge">Jadwal Pelajaran</span>
+                    <h2 class="section-title" style="display: block; text-align: center;">Jadwal Pelajaran Harian</h2>
+                    <p class="section-subtitle">Rencana distribusi mata pelajaran per kelas untuk semester berjalan</p>
+                </div>
+                <!-- Kelas Tabs -->
+                <div style="margin-bottom: 28px;" data-aos="fade-up">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;color:var(--gray-500);font-size:0.9rem;justify-content:center;">
+                        <i class="fa-solid fa-school"></i> Pilih Kelas
+                    </div>
+                    <div class="jadwal-tabs-wrapper" style="max-width:520px;margin:0 auto;">
+                        <div class="jadwal-tabs" id="kelas-tabs">
+                            <!-- Tabs rendered by JS -->
+                        </div>
+                    </div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <div id="jadwal-container">
+                        <div class="jadwal-loading">
+                            <div style="display:flex;justify-content:center;padding:2rem;">
+                                <div style="width:40px;height:40px;border:4px solid #e5e7eb;border-top-color:#059669;border-radius:50%;animation:smaplus-spin 0.8s linear infinite;"></div>
+                            </div>
+                            <p style="text-align:center;margin-top:12px;color:var(--gray-500);font-size:0.9rem">Memuat jadwal pelajaran...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 80
+        });
+
+        (function() {
+            'use strict';
+
+            var kelasTabsEl = document.getElementById('kelas-tabs');
+            var jadwalContainerEl = document.getElementById('jadwal-container');
+            var allKelas = [];
+            var activeKelasId = null;
+
+            var HARI_ORDER = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+
+            /**
+             * Render kelas tabs
+             */
+            function renderKelasTabs(kelasList) {
+                if (!kelasList || kelasList.length === 0) {
+                    kelasTabsEl.innerHTML = '<span style="color:var(--gray-400);font-size:0.85rem;padding:10px;">Belum ada data kelas</span>';
+                    return;
+                }
+
+                var html = '';
+                for (var i = 0; i < kelasList.length; i++) {
+                    var k = kelasList[i];
+                    var isActive = k.id === activeKelasId ? ' active' : '';
+                    html += '<button class="kelas-tab' + isActive + '" data-kelas-id="' + escapeHtml(k.id) + '">' + escapeHtml(k.nama_kelas) + '</button>';
+                }
+                kelasTabsEl.innerHTML = html;
+
+                // Add click listeners
+                var tabs = kelasTabsEl.querySelectorAll('.kelas-tab');
+                tabs.forEach(function(tab) {
+                    tab.addEventListener('click', function() {
+                        var selectedId = this.getAttribute('data-kelas-id');
+                        activeKelasId = selectedId;
+                        tabs.forEach(function(t) { t.classList.remove('active'); });
+                        this.classList.add('active');
+                        loadJadwal(selectedId);
+                    });
+                });
+            }
+
+            /**
+             * Build a lookup map: key = "hari|jam_ke" → item
+             */
+            function buildLookup(jadwalData) {
+                var lookup = {};
+                for (var i = 0; i < jadwalData.length; i++) {
+                    var item = jadwalData[i];
+                    var hari = item.hari || 'Lainnya';
+                    var jamKe = item.jam_ke || 0;
+                    lookup[hari + '|' + jamKe] = item;
+                }
+                return lookup;
+            }
+
+            /**
+             * Get sorted unique jam_ke values from data
+             */
+            function getJamKeList(jadwalData) {
+                var set = {};
+                for (var i = 0; i < jadwalData.length; i++) {
+                    var jk = jadwalData[i].jam_ke || 0;
+                    set[jk] = true;
+                }
+                var list = Object.keys(set).map(Number);
+                list.sort(function(a, b) { return a - b; });
+                return list;
+            }
+
+            /**
+             * Get the time string for a given jam_ke from lookup
+             */
+            function getWaktuForJamKe(lookup, jamKe) {
+                for (var h = 0; h < HARI_ORDER.length; h++) {
+                    var key = HARI_ORDER[h] + '|' + jamKe;
+                    if (lookup[key]) {
+                        var item = lookup[key];
+                        if (item.jam_mulai && item.jam_selesai) {
+                            return escapeHtml(item.jam_mulai) + ' - ' + escapeHtml(item.jam_selesai);
+                        } else if (item.jam_mulai) {
+                            return escapeHtml(item.jam_mulai);
+                        }
+                    }
+                }
+                return '';
+            }
+
+            /**
+             * Load and render jadwal pelajaran as a grid table
+             */
+            async function loadJadwal(kelasId) {
+                // Show loading spinner
+                jadwalContainerEl.innerHTML = '<div class="jadwal-loading"><div style="display:flex;justify-content:center;padding:2rem;"><div style="width:40px;height:40px;border:4px solid #e5e7eb;border-top-color:#059669;border-radius:50%;animation:smaplus-spin 0.8s linear infinite;"></div></div><p style="text-align:center;margin-top:12px;color:var(--gray-500);font-size:0.9rem">Memuat jadwal...</p></div>';
+
+                try {
+                    var jadwalData = await SMAPlusAPI.fetchJadwalPelajaran(kelasId);
+
+                    if (!jadwalData || jadwalData.length === 0) {
+                        jadwalContainerEl.innerHTML = '<div class="jadwal-empty-state" data-aos="fade-up"><i class="fa-regular fa-calendar-xmark"></i><p>Belum ada jadwal untuk kelas ini.</p></div>';
+                        AOS.refresh();
+                        return;
+                    }
+
+                    // Get the selected kelas name
+                    var selectedKelas = allKelas.find(function(k) { return k.id === kelasId; });
+                    var kelasNama = selectedKelas ? selectedKelas.nama_kelas : '';
+
+                    // Build lookup and jam_ke list
+                    var lookup = buildLookup(jadwalData);
+                    var jamKeList = getJamKeList(jadwalData);
+
+                    // Determine which days have data
+                    var activeHari = [];
+                    for (var h = 0; h < HARI_ORDER.length; h++) {
+                        for (var j = 0; j < jamKeList.length; j++) {
+                            if (lookup[HARI_ORDER[h] + '|' + jamKeList[j]]) {
+                                activeHari.push(HARI_ORDER[h]);
+                                break;
+                            }
+                        }
+                    }
+
+                    // Build grid table HTML
+                    var html = '';
+                    html += '<div class="jadwal-kelas-title" data-aos="fade-up"><i class="fa-solid fa-table-cells-large"></i> Jadwal Kelas ' + escapeHtml(kelasNama) + '</div>';
+                    html += '<div class="jadwal-grid-wrapper" data-aos="fade-up">';
+                    html += '<table class="jadwal-grid">';
+
+                    // Table header
+                    html += '<thead><tr>';
+                    html += '<th class="col-jam">Jam ke</th>';
+                    html += '<th class="col-waktu">Waktu</th>';
+                    for (var h = 0; h < activeHari.length; h++) {
+                        html += '<th class="col-hari">' + escapeHtml(activeHari[h]) + '</th>';
+                    }
+                    html += '</tr></thead>';
+
+                    // Table body
+                    html += '<tbody>';
+                    for (var j = 0; j < jamKeList.length; j++) {
+                        var jamKe = jamKeList[j];
+                        var waktu = getWaktuForJamKe(lookup, jamKe);
+
+                        html += '<tr>';
+                        html += '<td class="cell-jam">' + jamKe + '</td>';
+                        html += '<td class="cell-waktu">' + waktu + '</td>';
+
+                        for (var h = 0; h < activeHari.length; h++) {
+                            var key = activeHari[h] + '|' + jamKe;
+                            var item = lookup[key];
+                            if (item) {
+                                html += '<td class="cell-hari">';
+                                html += '<span class="mapel-name">' + escapeHtml(item.mata_pelajaran || '-') + '</span>';
+                                html += '<span class="guru-name">' + escapeHtml(item.guru || '') + '</span>';
+                                html += '</td>';
+                            } else {
+                                html += '<td class="cell-empty">-</td>';
+                            }
+                        }
+                        html += '</tr>';
+                    }
+                    html += '</tbody></table></div>';
+
+                    jadwalContainerEl.innerHTML = html;
+                    AOS.refresh();
+
+                } catch (err) {
+                    console.error('Gagal memuat jadwal:', err);
+                    jadwalContainerEl.innerHTML = '<div class="jadwal-empty-state"><i class="fa-solid fa-triangle-exclamation" style="color:#ef4444"></i><p>Gagal memuat jadwal pelajaran. Silakan coba lagi nanti.</p></div>';
+                }
+            }
+
+            /**
+             * Initialize the page
+             */
+            async function init() {
+                try {
+                    allKelas = await SMAPlusAPI.fetchKelas();
+
+                    if (!allKelas || allKelas.length === 0) {
+                        kelasTabsEl.innerHTML = '<span style="color:var(--gray-400);font-size:0.85rem;padding:10px;">Belum ada data kelas</span>';
+                        jadwalContainerEl.innerHTML = '<div class="jadwal-empty-state"><i class="fa-regular fa-calendar-xmark"></i><p>Belum ada data kelas dan jadwal pelajaran.</p></div>';
+                        return;
+                    }
+
+                    // Set first kelas as active
+                    activeKelasId = allKelas[0].id;
+
+                    // Render tabs
+                    renderKelasTabs(allKelas);
+
+                    // Load jadwal for first kelas
+                    loadJadwal(activeKelasId);
+
+                } catch (err) {
+                    console.error('Gagal memuat data kelas:', err);
+                    kelasTabsEl.innerHTML = '<span style="color:var(--gray-400);font-size:0.85rem;padding:10px;">Gagal memuat data kelas</span>';
+                }
+            }
+
+            // Load data when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+        })();
+    </script>
+    <script>
+        // Register Service Worker for caching
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                var swPath = (window.location.pathname.includes('/pages/') || window.location.pathname.includes('/admincms/')) ? '../sw.js' : 'sw.js';
+                navigator.serviceWorker.register(swPath).then(function(reg) {
+                    console.log('SW registered:', reg.scope);
+                }).catch(function(err) {
+                    console.warn('SW registration failed:', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekstrakurikuler - SMA Plus Almunawwarah</title>
+    <meta name="description" content="Kegiatan ekstrakurikuler SMA Plus Almunawwarah - Pramuka, PMR, Paskibra, English Club, Robotik, Tahfidz, Seni Tari, Pencak Silat, dan lainnya.">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Page-specific CSS */
+        .ekskul-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .ekskul-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s;
+        }
+        .ekskul-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-xl);
+        }
+        .ekskul-card-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .ekskul-card-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(transparent 50%, rgba(0,0,0,0.6));
+        }
+        .ekskul-card-name {
+            position: absolute;
+            bottom: 12px;
+            left: 16px;
+            color: white;
+            font-size: 1.05rem;
+            font-weight: 600;
+            z-index: 1;
+        }
+        .ekskul-card-body {
+            padding: 20px;
+        }
+        .ekskul-card-body p {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        .ekskul-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .ekskul-meta span {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ekskul-meta span i {
+            color: var(--primary);
+            font-size: 0.75rem;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray-400);
+        }
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+        .empty-state p {
+            font-size: 1rem;
+            color: var(--gray-500);
+        }
+        @media (max-width: 992px) {
+            .ekskul-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 576px) {
+            .ekskul-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <h1 data-aos="fade-up">Ekstrakurikuler</h1>
+                <p data-aos="fade-up" data-aos-delay="100">Kegiatan ekstrakurikuler untuk mengembangkan bakat dan minat siswa</p>
+                <div class="breadcrumb" data-aos="fade-up" data-aos-delay="200">
+                    <a href="../index.html">Beranda</a>
+                    <span>/</span>
+                    <a href="#">Organisasi</a>
+                    <span>/</span>
+                    <span>Ekstrakurikuler</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ekstrakurikuler Content Section -->
+        <section class="section">
+            <div class="container">
+                <div class="text-center" style="margin-bottom: 40px;" data-aos="fade-up">
+                    <span class="section-badge">Ekskul</span>
+                    <h2 class="section-title" style="display: block; text-align: center;">Kegiatan Ekstrakurikuler</h2>
+                    <p class="section-subtitle">Beragam kegiatan ekstrakurikuler untuk menyalurkan bakat, minat, dan kreativitas siswa di luar jam pelajaran</p>
+                </div>
+
+                <!-- Ekskul Grid -->
+                <div class="ekskul-grid" id="ekskul-grid">
+                    <!-- Cards will be injected by JS -->
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            const gridEl = document.getElementById('ekskul-grid');
+
+            /**
+             * Render ekskul cards into the grid
+             */
+            function renderCards(data) {
+                if (!data || data.length === 0) {
+                    gridEl.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1 / -1;">
+                            <i class="fa-solid fa-futbol"></i>
+                            <p>Belum ada data kegiatan ekstrakurikuler.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                gridEl.innerHTML = data.map(function (item, index) {
+                    var imageUrl = getImageUrl(item.foto_link);
+                    var deskripsi = item.deskripsi || 'Kegiatan ekstrakurikuler untuk mengembangkan bakat dan minat siswa.';
+                    var pembina = item.pembina || '-';
+                    var jadwal = item.jadwal || '-';
+
+                    return `
+                        <div class="ekskul-card" data-aos="fade-up" data-aos-delay="${index * 80}">
+                            <div class="ekskul-card-image" style="background-image: url('${escapeHtml(imageUrl)}');">
+                                <span class="ekskul-card-name">${escapeHtml(item.nama)}</span>
+                            </div>
+                            <div class="ekskul-card-body">
+                                <p>${escapeHtml(deskripsi)}</p>
+                                <div class="ekskul-meta">
+                                    ${pembina !== '-' ? `<span><i class="fa-solid fa-user"></i> ${escapeHtml(pembina)}</span>` : ''}
+                                    ${jadwal !== '-' ? `<span><i class="fa-solid fa-calendar"></i> ${escapeHtml(jadwal)}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Re-initialize AOS for dynamically added elements
+                AOS.refresh();
+            }
+
+            /**
+             * Initialize the page
+             */
+            async function init() {
+                // Show loading spinner
+                showLoading(gridEl);
+
+                try {
+                    var data = await SMAPlusAPI.fetchEkstrakurikuler();
+
+                    if (!data || data.length === 0) {
+                        gridEl.innerHTML = `
+                            <div class="empty-state" style="grid-column: 1 / -1;">
+                                <i class="fa-solid fa-futbol"></i>
+                                <p>Belum ada data kegiatan ekstrakurikuler.</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    renderCards(data);
+
+                } catch (err) {
+                    console.error('Gagal memuat data ekstrakurikuler:', err);
+                    gridEl.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1 / -1;">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <p>Gagal memuat data ekstrakurikuler. Silakan coba lagi nanti.</p>
+                        </div>
+                    `;
+                }
+            }
+
+            // Initialize AOS
+            AOS.init({
+                duration: 800,
+                once: true,
+                offset: 80
+            });
+
+            // Load data when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+        })();
+    </script>
+    <script>
+        // Register Service Worker for caching
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                var swPath = (window.location.pathname.includes('/pages/') || window.location.pathname.includes('/admincms/')) ? '../sw.js' : 'sw.js';
+                navigator.serviceWorker.register(swPath).then(function(reg) {
+                    console.log('SW registered:', reg.scope);
+                }).catch(function(err) {
+                    console.warn('SW registration failed:', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

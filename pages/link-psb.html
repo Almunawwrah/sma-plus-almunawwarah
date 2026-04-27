@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran Siswa Baru - SMA Plus Almunawwarah</title>
+    <meta name="description" content="Pendaftaran Siswa Baru (PSB) SMA Plus Almunawwarah - Daftar sekarang untuk bergabung dengan boarding school Islami terbaik">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .psb-hero{text-align:center;padding:60px 0}
+        .psb-hero h1{font-size:2.2rem;margin-bottom:12px}
+        .psb-hero p{font-size:1.05rem;color:var(--gray-500);max-width:600px;margin:0 auto 30px;line-height:1.7}
+        .psb-link-card{max-width:600px;margin:0 auto;background:#fff;border-radius:16px;box-shadow:0 20px 25px rgba(0,0,0,0.1);padding:40px;text-align:center;border:2px solid var(--primary-light)}
+        .psb-link-card .icon-circle{width:80px;height:80px;border-radius:50%;background:var(--primary-lighter);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:2rem;color:var(--primary)}
+        .psb-link-card h2{font-size:1.3rem;margin-bottom:8px;color:var(--gray-800)}
+        .psb-link-card>p{font-size:0.9rem;color:var(--gray-500);margin-bottom:24px;line-height:1.6}
+        .btn-daftar{display:inline-flex;align-items:center;gap:8px;padding:16px 40px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border-radius:50px;font-size:1.05rem;font-weight:700;border:none;cursor:pointer;transition:all 0.3s;text-decoration:none;font-family:inherit}
+        .btn-daftar:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(5,150,105,0.4)}
+        .countdown-section{text-align:center;margin:40px 0}
+        .countdown-section h3{margin-bottom:20px;font-size:1.1rem;color:var(--gray-600)}
+        .countdown-grid{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+        .countdown-item{background:#fff;border-radius:12px;padding:20px 24px;box-shadow:0 4px 6px rgba(0,0,0,0.07);min-width:80px}
+        .countdown-item .number{font-size:2rem;font-weight:800;color:var(--primary)}
+        .countdown-item .label{font-size:0.75rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.5px}
+        .psb-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:800px;margin:40px auto 0}
+        .psb-info-item{text-align:center;padding:24px;background:var(--primary-lighter);border-radius:12px;transition:all 0.3s}
+        .psb-info-item:hover{transform:translateY(-4px);box-shadow:0 4px 6px rgba(0,0,0,0.07)}
+        .psb-info-item i{font-size:1.5rem;color:var(--primary);margin-bottom:10px;display:block}
+        .psb-info-item h4{font-size:0.95rem;margin-bottom:4px}
+        .psb-info-item p{font-size:0.85rem;color:var(--gray-500);margin-bottom:8px}
+        .psb-info-item a{color:var(--primary);font-weight:600;text-decoration:none;font-size:0.85rem}
+        .psb-info-item a:hover{text-decoration:underline}
+        .countdown-done{font-size:1.2rem;font-weight:700;color:var(--primary);padding:20px}
+        @media(max-width:768px){.psb-info-grid{grid-template-columns:1fr}}
+        @media(max-width:576px){.countdown-grid{gap:10px}.countdown-item{min-width:60px;padding:14px 16px}.countdown-item .number{font-size:1.5rem}.psb-hero h1{font-size:1.75rem}}
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <h1 data-aos="fade-up">Pendaftaran Siswa Baru</h1>
+                <p data-aos="fade-up" data-aos-delay="100">Bergabunglah dengan keluarga besar SMA Plus Almunawwarah</p>
+                <div class="breadcrumb" data-aos="fade-up" data-aos-delay="200">
+                    <a href="../index.html">Beranda</a>
+                    <span>/</span>
+                    <a href="info-psb.html">Informasi</a>
+                    <span>/</span>
+                    <span>Pendaftaran</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- PSB Hero -->
+        <section class="section">
+            <div class="container">
+                <div class="psb-hero" data-aos="fade-up">
+                    <h1>Pendaftaran Siswa Baru</h1>
+                    <p>Raih masa depan cemerlang bersama SMA Plus Almunawwarah. Daftarkan diri Anda sekarang dan jadilah bagian dari generasi Islami berprestasi yang siap menghadapi tantangan zaman.</p>
+                </div>
+
+                <!-- Link Card -->
+                <div class="psb-link-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="icon-circle">
+                        <i class="fas fa-pen-to-square"></i>
+                    </div>
+                    <h2>Formulir Pendaftaran Online</h2>
+                    <p>Silakan klik tombol di bawah untuk mengisi formulir pendaftaran online. Pastikan Anda telah menyiapkan semua dokumen yang diperlukan sebelum memulai pendaftaran.</p>
+                    <a href="https://tally.so/r/mOJKb7" class="btn-daftar">
+                        Daftar Sekarang <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Countdown -->
+                <div class="countdown-section" data-aos="fade-up" data-aos-delay="200">
+                    <h3><i class="fas fa-clock" style="color:var(--primary);margin-right:8px"></i>Hitung Mundur Pendaftaran</h3>
+                    <div class="countdown-grid" id="countdown">
+                        <div class="countdown-item">
+                            <div class="number" id="cd-days">00</div>
+                            <div class="label">Hari</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="number" id="cd-hours">00</div>
+                            <div class="label">Jam</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="number" id="cd-minutes">00</div>
+                            <div class="label">Menit</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="number" id="cd-seconds">00</div>
+                            <div class="label">Detik</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Grid -->
+                <div class="psb-info-grid" data-aos="fade-up" data-aos-delay="300">
+                    <div class="psb-info-item">
+                        <i class="fas fa-file-lines"></i>
+                        <h4>Persyaratan</h4>
+                        <p>Lihat persyaratan lengkap untuk pendaftaran siswa baru</p>
+                        <a href="info-psb.html">Lihat Detail <i class="fas fa-arrow-right" style="font-size:0.7rem"></i></a>
+                    </div>
+                    <div class="psb-info-item">
+                        <i class="fas fa-money-bill"></i>
+                        <h4>Biaya Pendaftaran</h4>
+                        <p>Informasi biaya pendaftaran dan pendidikan</p>
+                        <a href="info-psb.html">Lihat Detail <i class="fas fa-arrow-right" style="font-size:0.7rem"></i></a>
+                    </div>
+                    <div class="psb-info-item">
+                        <i class="fas fa-phone"></i>
+                        <h4>Hubungi Kami</h4>
+                        <p>Hubungi panitia PSB untuk informasi lebih lanjut</p>
+                        <a href="tel:0481123456">Hubungi Sekarang <i class="fas fa-arrow-right" style="font-size:0.7rem"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 50 });
+
+        // Countdown Timer
+        (function() {
+            const targetDate = new Date('2026-06-30T00:00:00+07:00').getTime();
+            const daysEl = document.getElementById('cd-days');
+            const hoursEl = document.getElementById('cd-hours');
+            const minutesEl = document.getElementById('cd-minutes');
+            const secondsEl = document.getElementById('cd-seconds');
+            const countdownEl = document.getElementById('countdown');
+
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const diff = targetDate - now;
+
+                if (diff <= 0) {
+                    countdownEl.innerHTML = '<div class="countdown-done"><i class="fas fa-check-circle"></i> Pendaftaran Telah Dibuka!</div>';
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                daysEl.textContent = String(days).padStart(2, '0');
+                hoursEl.textContent = String(hours).padStart(2, '0');
+                minutesEl.textContent = String(minutes).padStart(2, '0');
+                secondsEl.textContent = String(seconds).padStart(2, '0');
+            }
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        })();
+    </script>
+    <script>
+        // Register Service Worker for caching
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                var swPath = (window.location.pathname.includes('/pages/') || window.location.pathname.includes('/admincms/')) ? '../sw.js' : 'sw.js';
+                navigator.serviceWorker.register(swPath).then(function(reg) {
+                    console.log('SW registered:', reg.scope);
+                }).catch(function(err) {
+                    console.warn('SW registration failed:', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

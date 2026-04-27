@@ -1,0 +1,2253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS Dashboard - SMA Plus Almunawwarah</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #059669;
+            --primary-dark: #047857;
+            --primary-light: #d1fae5;
+            --primary-50: #ecfdf5;
+            --sidebar-bg: #064e3b;
+            --sidebar-bg2: #065f46;
+            --accent: #f59e0b;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --text-dark: #1f2937;
+            --text: #374151;
+            --text-muted: #6b7280;
+            --text-light: #9ca3af;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --info: #2563eb;
+            --info-light: #dbeafe;
+            --warning: #d97706;
+            --warning-light: #fef3c7;
+            --purple: #7c3aed;
+            --rose: #e11d48;
+            --cyan: #0891b2;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --transition: all 0.2s ease;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); min-height: 100vh; display: flex; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        img { max-width: 100%; }
+        button { font-family: inherit; }
+        input, textarea, select { font-family: inherit; }
+
+        /* ===== LAYOUT ===== */
+        .cms-layout { display: flex; width: 100%; min-height: 100vh; }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 260px; background: linear-gradient(180deg, var(--sidebar-bg), var(--sidebar-bg2));
+            color: white; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+            overflow-y: auto; transition: transform 0.3s; display: flex; flex-direction: column;
+        }
+        .sidebar-brand { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-brand h2 { font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .sidebar-brand h2 img { height: 28px; width: 28px; object-fit: contain; border-radius: 6px; }
+        .sidebar-brand p { font-size: 0.72rem; opacity: 0.6; margin-top: 2px; }
+        .sidebar-menu { padding: 12px 0; flex: 1; }
+        .menu-group { margin-bottom: 4px; }
+        .menu-label { padding: 8px 20px; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.35); font-weight: 600; }
+        .menu-item {
+            display: flex; align-items: center; gap: 10px; padding: 9px 20px; font-size: 0.84rem;
+            color: rgba(255,255,255,0.65); cursor: pointer; transition: var(--transition);
+            border-left: 3px solid transparent; margin: 1px 0;
+        }
+        .menu-item:hover { background: rgba(255,255,255,0.08); color: white; border-left-color: rgba(255,255,255,0.3); }
+        .menu-item.active { background: rgba(255,255,255,0.12); color: white; border-left-color: var(--accent); }
+        .menu-item i { width: 20px; text-align: center; font-size: 0.82rem; }
+        .menu-item .badge-count { margin-left: auto; background: var(--accent); color: var(--sidebar-bg); font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 50px; }
+        .sidebar-footer { padding: 14px 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto; }
+        .sidebar-footer a { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: rgba(255,255,255,0.55); transition: color 0.2s; padding: 5px 0; }
+        .sidebar-footer a:hover { color: white; }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content { flex: 1; margin-left: 260px; min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* ===== TOPBAR ===== */
+        .topbar {
+            height: 60px; background: white; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 24px;
+            position: sticky; top: 0; z-index: 50;
+        }
+        .topbar-left { display: flex; align-items: center; gap: 12px; }
+        .hamburger-toggle { display: none; background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--text-dark); padding: 8px; }
+        .topbar-title { font-size: 1.05rem; font-weight: 600; color: var(--text-dark); }
+        .topbar-right { display: flex; align-items: center; gap: 14px; }
+        .admin-info { display: flex; align-items: center; gap: 10px; }
+        .admin-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), #10b981); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.82rem; }
+        .admin-name { font-size: 0.82rem; font-weight: 500; }
+        .admin-role { font-size: 0.68rem; color: var(--text-muted); }
+        .logout-btn { padding: 7px 14px; background: var(--danger-light); color: #991b1b; border: none; border-radius: var(--radius-sm); font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: var(--transition); }
+        .logout-btn:hover { background: #fecaca; }
+
+        /* ===== CONTENT AREA ===== */
+        .content-area { flex: 1; padding: 24px; overflow-y: auto; }
+
+        /* ===== DASHBOARD HOME ===== */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .stat-card {
+            background: white; border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow);
+            display: flex; align-items: center; gap: 14px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .stat-icon { width: 46px; height: 46px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+        .stat-icon.emerald { background: var(--primary-light); color: var(--primary); }
+        .stat-icon.blue { background: var(--info-light); color: var(--info); }
+        .stat-icon.amber { background: var(--warning-light); color: var(--warning); }
+        .stat-icon.purple { background: #ede9fe; color: var(--purple); }
+        .stat-icon.rose { background: #ffe4e6; color: var(--rose); }
+        .stat-icon.cyan { background: #cffafe; color: var(--cyan); }
+        .stat-info h4 { font-size: 1.4rem; font-weight: 700; color: var(--text-dark); }
+        .stat-info p { font-size: 0.78rem; color: var(--text-muted); }
+        .recent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .recent-panel { background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+        .recent-panel-header { padding: 14px 18px; border-bottom: 1px solid var(--border-light); font-weight: 600; font-size: 0.88rem; display: flex; align-items: center; justify-content: space-between; }
+        .recent-panel-header a { font-size: 0.78rem; color: var(--primary); cursor: pointer; }
+        .recent-panel-header a:hover { text-decoration: underline; }
+        .recent-item { padding: 10px 18px; border-bottom: 1px solid #f8fafc; display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; }
+        .recent-item:last-child { border-bottom: none; }
+        .recent-item-title { font-weight: 500; color: var(--text); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .status-badge { padding: 2px 10px; border-radius: 50px; font-size: 0.68rem; font-weight: 600; }
+        .status-badge.published { background: var(--primary-light); color: #065f46; }
+        .status-badge.draft { background: var(--warning-light); color: #92400e; }
+        .quick-actions { background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; }
+        .quick-actions h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 14px; }
+        .quick-btn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .quick-btn {
+            padding: 10px 14px; background: var(--primary-50); border: 1px solid var(--primary-light);
+            border-radius: var(--radius-sm); cursor: pointer; font-size: 0.78rem; font-weight: 500;
+            color: var(--primary-dark); display: flex; align-items: center; gap: 8px; transition: var(--transition);
+        }
+        .quick-btn:hover { background: var(--primary-light); }
+        .quick-btn i { font-size: 0.9rem; }
+
+        /* ===== CRUD SECTION ===== */
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+        .section-header h2 { font-size: 1.25rem; font-weight: 700; }
+        .section-header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .add-btn {
+            padding: 9px 18px; background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white; border: none; border-radius: var(--radius-sm); font-size: 0.82rem; font-weight: 600;
+            cursor: pointer; display: flex; align-items: center; gap: 6px; transition: var(--transition);
+        }
+        .add-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(5,150,105,0.3); }
+        .search-wrapper { position: relative; display: inline-block; }
+        .search-wrapper i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-light); }
+        .search-input { padding: 8px 14px 8px 36px; border: 2px solid #e5e7eb; border-radius: var(--radius-sm); font-size: 0.82rem; outline: none; transition: var(--transition); width: 220px; }
+        .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(5,150,105,0.1); }
+        .filter-select { padding: 8px 12px; border: 2px solid #e5e7eb; border-radius: var(--radius-sm); font-size: 0.82rem; outline: none; transition: var(--transition); background: white; }
+        .filter-select:focus { border-color: var(--primary); }
+
+        /* ===== DATA TABLE ===== */
+        .data-table-wrapper { background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th { padding: 11px 16px; text-align: left; font-size: 0.76rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; background: #f8fafc; border-bottom: 2px solid var(--border); }
+        .data-table td { padding: 11px 16px; font-size: 0.82rem; color: var(--text); border-bottom: 1px solid var(--border-light); }
+        .data-table tr:hover td { background: #f8fafc; }
+        .data-table .thumb { width: 46px; height: 46px; border-radius: var(--radius-sm); object-fit: cover; }
+        .data-table .text-ellipsis { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .table-actions { display: flex; gap: 6px; }
+        .btn-edit { padding: 5px 11px; background: var(--info-light); color: #1d4ed8; border: none; border-radius: 6px; font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-edit:hover { background: #bfdbfe; }
+        .btn-delete { padding: 5px 11px; background: var(--danger-light); color: #991b1b; border: none; border-radius: 6px; font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-delete:hover { background: #fecaca; }
+        .table-footer { padding: 11px 16px; display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border-light); }
+        .table-pagination { display: flex; gap: 4px; }
+        .table-pagination button { min-width: 30px; height: 30px; border-radius: 6px; border: 1px solid #e5e7eb; background: white; font-size: 0.78rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); color: var(--text); }
+        .table-pagination button.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .table-pagination button:hover:not(.active):not(:disabled) { border-color: var(--primary); }
+        .table-pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* ===== MODAL ===== */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.active { display: flex; }
+        .modal-card { background: white; border-radius: 16px; max-width: 620px; width: 100%; max-height: 90vh; overflow-y: auto; animation: modalSlideUp 0.3s ease; }
+        @keyframes modalSlideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-header { padding: 18px 22px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
+        .modal-header h3 { font-size: 1.05rem; font-weight: 600; }
+        .modal-close-btn { width: 30px; height: 30px; border-radius: var(--radius-sm); background: #f1f5f9; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; color: var(--text-muted); transition: var(--transition); }
+        .modal-close-btn:hover { background: #e2e8f0; }
+        .modal-body { padding: 22px; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 0.82rem; font-weight: 500; color: var(--text); margin-bottom: 5px; }
+        .form-group label .req { color: var(--danger); }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 9px 13px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 0.82rem; outline: none; transition: var(--transition); }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(5,150,105,0.1); }
+        .form-group textarea { min-height: 90px; resize: vertical; }
+        .form-group textarea.large { min-height: 160px; }
+        .form-group .image-preview { margin-top: 8px; }
+        .form-group .image-preview img { max-width: 120px; max-height: 80px; border-radius: var(--radius-sm); border: 1px solid #e5e7eb; }
+        .modal-footer { padding: 14px 22px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 10px; }
+        .btn-cancel { padding: 9px 18px; background: #f1f5f9; color: var(--text); border: none; border-radius: 10px; font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+        .btn-cancel:hover { background: #e2e8f0; }
+        .btn-save { padding: 9px 18px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; border-radius: 10px; font-size: 0.82rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: box-shadow 0.2s; }
+        .btn-save:hover { box-shadow: 0 4px 12px rgba(5,150,105,0.3); }
+        .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* ===== DELETE CONFIRM ===== */
+        .confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; display: none; align-items: center; justify-content: center; }
+        .confirm-overlay.active { display: flex; }
+        .confirm-dialog { background: white; border-radius: 16px; padding: 28px; text-align: center; max-width: 400px; width: 90%; animation: modalSlideUp 0.3s ease; }
+        .confirm-dialog .icon { width: 52px; height: 52px; border-radius: 50%; background: var(--danger-light); color: var(--danger); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 14px; }
+        .confirm-dialog h3 { font-size: 1.05rem; margin-bottom: 6px; }
+        .confirm-dialog p { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 18px; }
+        .confirm-actions { display: flex; gap: 10px; justify-content: center; }
+        .btn-confirm-cancel { padding: 9px 18px; background: #f1f5f9; color: var(--text); border: none; border-radius: 10px; font-size: 0.82rem; cursor: pointer; transition: background 0.2s; }
+        .btn-confirm-cancel:hover { background: #e2e8f0; }
+        .btn-confirm-delete { padding: 9px 18px; background: var(--danger); color: white; border: none; border-radius: 10px; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-confirm-delete:hover { background: #dc2626; }
+
+        /* ===== TOAST ===== */
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 400; display: flex; flex-direction: column; gap: 8px; }
+        .toast { padding: 12px 18px; border-radius: 10px; font-size: 0.82rem; font-weight: 500; color: white; display: flex; align-items: center; gap: 10px; animation: toastSlideIn 0.3s ease; min-width: 260px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .toast.success { background: var(--primary); }
+        .toast.error { background: var(--danger); }
+        .toast.info { background: var(--info); }
+        @keyframes toastSlideIn { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state { text-align: center; padding: 50px 20px; }
+        .empty-state i { font-size: 2.8rem; color: #d1d5db; margin-bottom: 10px; display: block; }
+        .empty-state h3 { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 4px; }
+        .empty-state p { font-size: 0.82rem; color: var(--text-light); }
+
+        /* ===== SIDEBAR OVERLAY ===== */
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+        .sidebar-overlay.active { display: block; }
+
+        /* ===== LOADING ===== */
+        .cms-loading { display: flex; justify-content: center; align-items: center; padding: 3rem; }
+        .cms-loading .spinner-circle { width: 38px; height: 38px; border: 4px solid #e5e7eb; border-top-color: var(--primary); border-radius: 50%; animation: cms-spin 0.8s linear infinite; }
+        @keyframes cms-spin { to { transform: rotate(360deg); } }
+
+        /* ===== BADGE COLORS ===== */
+        .badge-default { background: #f1f5f9; color: #475569; }
+        .badge-green { background: var(--primary-light); color: #065f46; }
+        .badge-blue { background: var(--info-light); color: #1e40af; }
+        .badge-amber { background: var(--warning-light); color: #92400e; }
+        .badge-purple { background: #ede9fe; color: #5b21b6; }
+        .badge-rose { background: #ffe4e6; color: #9f1239; }
+        .badge-cyan { background: #cffafe; color: #155e75; }
+
+        /* ===== SPREADSHEET (JADWAL PELAJARAN) ===== */
+        .jadwal-toolbar {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;
+        }
+        .jadwal-toolbar .toolbar-btn {
+            padding: 7px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+            background: white; font-size: 0.78rem; font-weight: 500; cursor: pointer;
+            display: flex; align-items: center; gap: 6px; transition: var(--transition); color: var(--text);
+        }
+        .jadwal-toolbar .toolbar-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .jadwal-toolbar .toolbar-btn.primary-btn { background: var(--primary); color: white; border-color: var(--primary); }
+        .jadwal-toolbar .toolbar-btn.primary-btn:hover { background: var(--primary-dark); }
+        .jadwal-toolbar .toolbar-btn.danger-btn { color: var(--danger); border-color: #fca5a5; }
+        .jadwal-toolbar .toolbar-btn.danger-btn:hover { background: var(--danger-light); }
+        .jadwal-tabs { display: flex; gap: 4px; margin-bottom: 14px; flex-wrap: wrap; }
+        .jadwal-tab {
+            padding: 7px 16px; border: 2px solid var(--border); border-radius: var(--radius-sm);
+            background: white; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: var(--transition); color: var(--text-muted);
+        }
+        .jadwal-tab:hover { border-color: var(--primary); color: var(--primary); }
+        .jadwal-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .jadwal-grid-wrapper {
+            background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: auto;
+            max-height: calc(100vh - 300px);
+        }
+        .jadwal-grid { border-collapse: collapse; min-width: 800px; }
+        .jadwal-grid th {
+            padding: 10px 12px; background: #f8fafc; border: 1px solid var(--border); font-size: 0.76rem;
+            font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px;
+            position: sticky; top: 0; z-index: 2;
+        }
+        .jadwal-grid th:first-child { position: sticky; left: 0; z-index: 3; }
+        .jadwal-grid td { border: 1px solid var(--border); padding: 0; vertical-align: top; min-width: 120px; height: 60px; position: relative; }
+        .jadwal-grid td:first-child {
+            background: #f8fafc; font-size: 0.75rem; font-weight: 600; color: var(--text-muted);
+            text-align: center; vertical-align: middle; min-width: 60px; width: 60px; position: sticky; left: 0; z-index: 1;
+        }
+        .jadwal-grid td:first-child .jam-info { font-size: 0.65rem; color: var(--text-light); font-weight: 400; }
+        .jadwal-cell {
+            width: 100%; height: 100%; min-height: 58px; padding: 4px 6px; border: none; outline: none;
+            font-family: inherit; font-size: 0.78rem; resize: none; background: transparent; transition: background 0.15s;
+        }
+        .jadwal-cell:focus { background: #fffbeb; }
+        .jadwal-cell.filled { background: #ecfdf5; }
+        .jadwal-cell.filled:focus { background: #fffbeb; }
+        .jadwal-cell-guru { font-size: 0.65rem; color: var(--text-light); padding: 0 6px 3px; font-style: italic; }
+        .jadwal-cell-actions {
+            position: absolute; top: 2px; right: 2px; display: none; gap: 2px;
+        }
+        .jadwal-grid td:hover .jadwal-cell-actions { display: flex; }
+        .jadwal-cell-action {
+            width: 18px; height: 18px; border: none; border-radius: 3px; cursor: pointer;
+            font-size: 0.6rem; display: flex; align-items: center; justify-content: center; color: white;
+        }
+        .jadwal-cell-action.edit-action { background: var(--primary); }
+        .jadwal-cell-action.delete-action { background: var(--danger); }
+        .jadwal-saving-indicator { font-size: 0.72rem; color: var(--primary); display: flex; align-items: center; gap: 4px; }
+
+        /* ===== BERITA EDITOR ===== */
+        .berita-list-item {
+            background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 18px;
+            margin-bottom: 10px; display: flex; align-items: center; gap: 14px; transition: var(--transition);
+        }
+        .berita-list-item:hover { box-shadow: var(--shadow-md); }
+        .berita-list-thumb { width: 60px; height: 60px; border-radius: var(--radius-sm); object-fit: cover; flex-shrink: 0; background: #f1f5f9; }
+        .berita-list-info { flex: 1; min-width: 0; }
+        .berita-list-info h4 { font-size: 0.88rem; font-weight: 600; color: var(--text-dark); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .berita-list-info p { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+        .berita-list-meta { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+        .berita-editor-page {
+            position: fixed; inset: 0; background: white; z-index: 150; display: none;
+            flex-direction: column; overflow: hidden;
+        }
+        .berita-editor-page.active { display: flex; }
+        .berita-editor-topbar {
+            height: 54px; border-bottom: 1px solid var(--border); display: flex;
+            align-items: center; justify-content: space-between; padding: 0 20px; background: white; flex-shrink: 0;
+        }
+        .berita-editor-topbar h3 { font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .berita-editor-topbar h3 i { color: var(--primary); }
+        .berita-editor-topbar-actions { display: flex; gap: 8px; }
+        .berita-editor-body { flex: 1; display: flex; overflow: hidden; }
+        .berita-editor-main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 24px; }
+        .berita-editor-sidebar { width: 300px; border-left: 1px solid var(--border); padding: 20px; overflow-y: auto; background: #fafafa; flex-shrink: 0; }
+        .berita-title-input {
+            width: 100%; border: none; outline: none; font-size: 1.6rem; font-weight: 700;
+            font-family: inherit; color: var(--text-dark); margin-bottom: 20px; padding: 0;
+        }
+        .berita-title-input::placeholder { color: #d1d5db; }
+        #berita-quill-editor { flex: 1; min-height: 400px; }
+        .ql-container.ql-snow { border: 1px solid var(--border) !important; border-radius: 0 0 var(--radius-sm) var(--radius-sm); font-family: 'Poppins', sans-serif; font-size: 0.92rem; }
+        .ql-toolbar.ql-snow { border: 1px solid var(--border) !important; border-radius: var(--radius-sm) var(--radius-sm) 0 0; background: #fafafa; }
+        .sidebar-form-group { margin-bottom: 16px; }
+        .sidebar-form-group label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+        .sidebar-form-group input, .sidebar-form-group textarea, .sidebar-form-group select { width: 100%; padding: 8px 12px; border: 2px solid #e5e7eb; border-radius: var(--radius-sm); font-size: 0.82rem; outline: none; transition: var(--transition); background: white; }
+        .sidebar-form-group input:focus, .sidebar-form-group textarea:focus, .sidebar-form-group select:focus { border-color: var(--primary); }
+        .sidebar-form-group textarea { min-height: 70px; resize: vertical; }
+        .slug-display { font-size: 0.72rem; color: var(--text-light); margin-top: 3px; word-break: break-all; }
+
+        /* ===== STRUKTUR ORGANISASI IMAGE ===== */
+        .struktur-upload-area {
+            background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 32px;
+            text-align: center; max-width: 700px; margin: 0 auto;
+        }
+        .struktur-upload-area h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 6px; }
+        .struktur-upload-area p { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 20px; }
+        .struktur-preview { max-width: 100%; border-radius: var(--radius); border: 2px solid var(--border); margin: 20px 0; max-height: 500px; object-fit: contain; }
+        .struktur-preview-placeholder {
+            width: 100%; min-height: 250px; background: #f8fafc; border: 2px dashed var(--border);
+            border-radius: var(--radius); display: flex; flex-direction: column; align-items: center;
+            justify-content: center; color: var(--text-light); margin: 20px 0;
+        }
+        .struktur-preview-placeholder i { font-size: 2.5rem; margin-bottom: 8px; }
+        .struktur-preview-placeholder p { font-size: 0.82rem; }
+
+        /* ===== PENGATURAN SITUS ===== */
+        .pengaturan-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; }
+        .pengaturan-card .key-label { font-size: 0.78rem; font-weight: 600; color: var(--primary-dark); min-width: 160px; word-break: break-all; }
+        .pengaturan-card .nilai-input { flex: 1; padding: 8px 12px; border: 2px solid #e5e7eb; border-radius: var(--radius-sm); font-size: 0.82rem; outline: none; transition: var(--transition); }
+        .pengaturan-card .nilai-input:focus { border-color: var(--primary); }
+        .pengaturan-card .desc-text { font-size: 0.72rem; color: var(--text-light); margin-top: 3px; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 992px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .hamburger-toggle { display: block; }
+        }
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .recent-grid { grid-template-columns: 1fr; }
+            .content-area { padding: 14px; }
+            .data-table-wrapper { overflow-x: auto; }
+            .data-table { min-width: 600px; }
+            .berita-editor-sidebar { width: 100%; border-left: none; border-top: 1px solid var(--border); }
+            .berita-editor-body { flex-direction: column; }
+            .quick-btn-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 576px) {
+            .topbar { padding: 0 12px; }
+            .section-header { flex-direction: column; align-items: stretch; }
+            .section-header-actions { flex-direction: column; align-items: stretch; }
+            .search-input { width: 100%; }
+            .admin-info .admin-name, .admin-info .admin-role { display: none; }
+            .berita-editor-main { padding: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="cms-layout">
+        <!-- Sidebar Overlay (Mobile) -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <h2><img src="../assets/logo.png" alt="Logo"> SMA Plus Almunawwarah</h2>
+                <p>CMS Admin Panel</p>
+            </div>
+            <nav class="sidebar-menu">
+                <div class="menu-group">
+                    <div class="menu-label">Utama</div>
+                    <div class="menu-item active" data-section="dashboard">
+                        <i class="fas fa-home"></i> Dashboard
+                    </div>
+                </div>
+                <div class="menu-group">
+                    <div class="menu-label">Profil</div>
+                    <div class="menu-item" data-section="struktur_organisasi">
+                        <i class="fas fa-sitemap"></i> Struktur Organisasi
+                    </div>
+                    <div class="menu-item" data-section="tenaga_pendidik">
+                        <i class="fas fa-chalkboard-user"></i> Tenaga Pendidik
+                    </div>
+                    <div class="menu-item" data-section="sarana_prasarana">
+                        <i class="fas fa-building"></i> Sarana Prasarana
+                    </div>
+                    <div class="menu-item" data-section="prestasi">
+                        <i class="fas fa-trophy"></i> Prestasi
+                    </div>
+                </div>
+                <div class="menu-group">
+                    <div class="menu-label">Organisasi</div>
+                    <div class="menu-item" data-section="osis">
+                        <i class="fas fa-users"></i> OSIS
+                    </div>
+                    <div class="menu-item" data-section="ospm">
+                        <i class="fas fa-handshake"></i> OSPM
+                    </div>
+                    <div class="menu-item" data-section="ekstrakurikuler">
+                        <i class="fas fa-futbol"></i> Ekstrakurikuler
+                    </div>
+                </div>
+                <div class="menu-group">
+                    <div class="menu-label">Akademik</div>
+                    <div class="menu-item" data-section="kelas">
+                        <i class="fas fa-school"></i> Kelas
+                    </div>
+                    <div class="menu-item" data-section="jadwal_pelajaran">
+                        <i class="fas fa-table-cells"></i> Jadwal Pelajaran
+                    </div>
+                </div>
+                <div class="menu-group">
+                    <div class="menu-label">Informasi</div>
+                    <div class="menu-item" data-section="berita">
+                        <i class="fas fa-newspaper"></i> Berita
+                    </div>
+                    <div class="menu-item" data-section="galeri">
+                        <i class="fas fa-images"></i> Galeri
+                    </div>
+                    <div class="menu-item" data-section="info_psb">
+                        <i class="fas fa-clipboard-list"></i> Info PSB
+                    </div>
+                </div>
+                <div class="menu-group">
+                    <div class="menu-label">Website</div>
+                    <div class="menu-item" data-section="sliders">
+                        <i class="fas fa-images"></i> Sliders
+                    </div>
+                    <div class="menu-item" data-section="testimoni">
+                        <i class="fas fa-quote-left"></i> Testimoni
+                    </div>
+                    <div class="menu-item" data-section="agenda">
+                        <i class="fas fa-calendar"></i> Agenda
+                    </div>
+                    <div class="menu-item" data-section="statistik_sekolah">
+                        <i class="fas fa-chart-bar"></i> Statistik Sekolah
+                    </div>
+                </div>
+                <div class="menu-group">
+                    <div class="menu-label">Manajemen</div>
+                    <div class="menu-item" data-section="pengaturan_situs">
+                        <i class="fas fa-cog"></i> Pengaturan Situs
+                    </div>
+                    <div class="menu-item" data-section="profiles">
+                        <i class="fas fa-user-shield"></i> Profil Pengguna
+                    </div>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="../index.html"><i class="fas fa-arrow-left"></i> Lihat Website</a>
+                <a href="#" id="sidebar-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="hamburger-toggle" id="hamburger-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <span class="topbar-title" id="topbar-title">Dashboard</span>
+                </div>
+                <div class="topbar-right">
+                    <div class="admin-info">
+                        <div class="admin-avatar" id="admin-avatar">A</div>
+                        <div>
+                            <div class="admin-name" id="admin-name">Admin</div>
+                            <div class="admin-role" id="admin-role">admin</div>
+                        </div>
+                    </div>
+                    <button class="logout-btn" id="topbar-logout">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+            <div class="content-area" id="content-area">
+                <div class="cms-loading"><div class="spinner-circle"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modal-title">Tambah Data</h3>
+                <button class="modal-close-btn" id="modal-close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="modal-cancel-btn">Batal</button>
+                <button class="btn-save" id="modal-save-btn">
+                    <i class="fas fa-check"></i> Simpan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Dialog -->
+    <div class="confirm-overlay" id="confirm-overlay">
+        <div class="confirm-dialog">
+            <div class="icon"><i class="fas fa-trash-alt"></i></div>
+            <h3>Hapus Data?</h3>
+            <p id="confirm-message">Data yang dihapus tidak dapat dikembalikan.</p>
+            <div class="confirm-actions">
+                <button class="btn-confirm-cancel" id="confirm-cancel-btn">Batal</button>
+                <button class="btn-confirm-delete" id="confirm-delete-btn">Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Berita Editor Full-Screen Page -->
+    <div class="berita-editor-page" id="berita-editor-page">
+        <div class="berita-editor-topbar">
+            <h3><i class="fas fa-newspaper"></i> <span id="berita-editor-title-label">Tulis Berita</span></h3>
+            <div class="berita-editor-topbar-actions">
+                <button class="toolbar-btn" onclick="cmsApp.beritaPreview()" style="padding:7px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:white;font-size:0.78rem;cursor:pointer;display:flex;align-items:center;gap:6px;">
+                    <i class="fas fa-eye"></i> Pratinjau
+                </button>
+                <button class="toolbar-btn" onclick="cmsApp.beritaCloseEditor()" style="padding:7px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:white;font-size:0.78rem;cursor:pointer;display:flex;align-items:center;gap:6px;">
+                    <i class="fas fa-times"></i> Tutup
+                </button>
+            </div>
+        </div>
+        <div class="berita-editor-body">
+            <div class="berita-editor-main">
+                <input type="text" class="berita-title-input" id="berita-judul-input" placeholder="Judul berita...">
+                <div id="berita-quill-editor"></div>
+            </div>
+            <div class="berita-editor-sidebar">
+                <div class="sidebar-form-group">
+                    <label>Status</label>
+                    <select id="berita-status-select">
+                        <option value="draft">Draft</option>
+                        <option value="published">Published</option>
+                    </select>
+                </div>
+                <div class="sidebar-form-group">
+                    <label>Penulis</label>
+                    <input type="text" id="berita-penulis-input" placeholder="Nama penulis">
+                </div>
+                <div class="sidebar-form-group">
+                    <label>Ringkasan</label>
+                    <textarea id="berita-ringkasan-input" placeholder="Ringkasan singkat berita..."></textarea>
+                </div>
+                <div class="sidebar-form-group">
+                    <label>Foto Link</label>
+                    <input type="url" id="berita-foto-input" placeholder="https://...">
+                    <div id="berita-foto-preview" style="margin-top:8px;"></div>
+                </div>
+                <div class="sidebar-form-group">
+                    <label>Slug</label>
+                    <input type="text" id="berita-slug-input" placeholder="auto-generated">
+                    <div class="slug-display" id="berita-slug-display"></div>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:20px;">
+                    <button class="btn-save" onclick="cmsApp.beritaSave('draft')" style="flex:1;justify-content:center;">
+                        <i class="fas fa-save"></i> Simpan
+                    </button>
+                    <button class="btn-save" onclick="cmsApp.beritaSave('published')" style="flex:1;justify-content:center;background:linear-gradient(135deg,#d97706,#b45309);">
+                        <i class="fas fa-paper-plane"></i> Publikasikan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Berita Preview Modal -->
+    <div class="modal-overlay" id="berita-preview-overlay">
+        <div class="modal-card" style="max-width:800px;max-height:90vh;">
+            <div class="modal-header">
+                <h3>Pratinjau Berita</h3>
+                <button class="modal-close-btn" onclick="document.getElementById('berita-preview-overlay').classList.remove('active')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="berita-preview-body" style="padding:24px;"></div>
+        </div>
+    </div>
+
+    <!-- Jadwal Cell Detail Modal -->
+    <div class="modal-overlay" id="jadwal-cell-overlay">
+        <div class="modal-card" style="max-width:450px;">
+            <div class="modal-header">
+                <h3 id="jadwal-cell-modal-title">Detail Jadwal</h3>
+                <button class="modal-close-btn" onclick="document.getElementById('jadwal-cell-overlay').classList.remove('active')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="jadwal-cell-modal-body"></div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="document.getElementById('jadwal-cell-overlay').classList.remove('active')">Batal</button>
+                <button class="btn-save" id="jadwal-cell-save-btn">
+                    <i class="fas fa-check"></i> Simpan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+    (function() {
+        'use strict';
+
+        // ============================================================
+        // STATE
+        // ============================================================
+        let currentSection = 'dashboard';
+        let currentPage = 1;
+        let currentSearch = '';
+        let editingId = null;
+        let allData = [];
+        let deleteTarget = { table: '', id: '' };
+        let quillEditor = null;
+        let beritaEditingId = null;
+        let jadwalKelasList = [];
+        let jadwalActiveKelas = null;
+        let jadwalData = [];
+        let jadwalDirty = {};
+        let jadwalCellDetail = {};
+
+        // ============================================================
+        // TABLE CONFIGURATION
+        // ============================================================
+        const tableConfig = {
+            tenaga_pendidik: {
+                label: 'Tenaga Pendidik', icon: 'fa-chalkboard-user',
+                columns: [
+                    { key: 'foto_link', label: 'Foto', type: 'image' },
+                    { key: 'nama', label: 'Nama', type: 'text' },
+                    { key: 'jabatan', label: 'Jabatan', type: 'text' },
+                    { key: 'bidang_studi', label: 'Bidang Studi', type: 'text' },
+                    { key: 'urutan', label: 'Urutan', type: 'text' }
+                ],
+                formFields: [
+                    { key: 'nama', label: 'Nama', type: 'text', required: true },
+                    { key: 'foto_link', label: 'URL Foto', type: 'url' },
+                    { key: 'jabatan', label: 'Jabatan', type: 'text' },
+                    { key: 'bidang_studi', label: 'Bidang Studi', type: 'text' },
+                    { key: 'urutan', label: 'Urutan', type: 'number' }
+                ],
+                orderColumn: 'urutan', orderAsc: true
+            },
+            sarana_prasarana: {
+                label: 'Sarana Prasarana', icon: 'fa-building',
+                columns: [
+                    { key: 'foto_link', label: 'Foto', type: 'image' },
+                    { key: 'nama', label: 'Nama', type: 'text' },
+                    { key: 'kategori', label: 'Kategori', type: 'badge' },
+                    { key: 'urutan', label: 'Urutan', type: 'text' }
+                ],
+                formFields: [
+                    { key: 'nama', label: 'Nama', type: 'text', required: true },
+                    { key: 'deskripsi', label: 'Deskripsi', type: 'textarea' },
+                    { key: 'foto_link', label: 'URL Foto', type: 'url' },
+                    { key: 'kategori', label: 'Kategori', type: 'select', options: ['Umum','Lab','Ruang','Lapangan','Ibadah'] },
+                    { key: 'urutan', label: 'Urutan', type: 'number' }
+                ],
+                orderColumn: 'urutan', orderAsc: true
+            },
+            prestasi: {
+                label: 'Prestasi', icon: 'fa-trophy',
+                columns: [
+                    { key: 'judul', label: 'Judul', type: 'text' },
+                    { key: 'tingkat', label: 'Tingkat', type: 'badge' },
+                    { key: 'tahun', label: 'Tahun', type: 'text' },
+                    { key: 'peserta', label: 'Peserta', type: 'text' }
+                ],
+                formFields: [
+                    { key: 'judul', label: 'Judul', type: 'text', required: true },
+                    { key: 'deskripsi', label: 'Deskripsi', type: 'textarea' },
+                    { key: 'peserta', label: 'Peserta', type: 'text' },
+                    { key: 'tahun', label: 'Tahun', type: 'number', required: true },
+                    { key: 'tingkat', label: 'Tingkat', type: 'select', options: ['Sekolah','Kabupaten','Provinsi','Nasional','Internasional'] },
+                    { key: 'foto_link', label: 'URL Foto', type: 'url' }
+                ],
+                orderColumn: 'tahun', orderAsc: false
+            },
+            // osis & ospm: sekarang pakai gambar full (bukan CRUD individual)
+            // Dirender oleh renderStrukturOrgImage() khusus
+            ekstrakurikuler: {
+                label: 'Ekstrakurikuler', icon: 'fa-futbol',
+                columns: [
+                    { key: 'nama', label: 'Nama', type: 'text' },
+                    { key: 'pembina', label: 'Pembina', type: 'text' },
+                    { key: 'jadwal', label: 'Jadwal', type: 'text' }
+                ],
+                formFields: [
+                    { key: 'nama', label: 'Nama', type: 'text', required: true },
+                    { key: 'deskripsi', label: 'Deskripsi', type: 'textarea' },
+                    { key: 'pembina', label: 'Pembina', type: 'text' },
+                    { key: 'jadwal', label: 'Jadwal', type: 'text' },
+                    { key: 'foto_link', label: 'URL Foto', type: 'url' },
+                    { key: 'urutan', label: 'Urutan', type: 'number' }
+                ],
+                orderColumn: 'urutan', orderAsc: true
+            },
+            galeri: {
+                label: 'Galeri', icon: 'fa-images',
+                columns: [
+                    { key: 'foto_link', label: 'Foto', type: 'image' },
+                    { key: 'judul', label: 'Judul', type: 'text' },
+                    { key: 'kategori', label: 'Kategori', type: 'badge' },
+                    { key: 'tanggal', label: 'Tanggal', type: 'text' }
+                ],
+                formFields: [
+                    { key: 'judul', label: 'Judul', type: 'text', required: true },
+                    { key: 'deskripsi', label: 'Deskripsi', type: 'textarea' },
+                    { key: 'foto_link', label: 'URL Foto', type: 'url', required: true },
+                    { key: 'kategori', label: 'Kategori', type: 'select', options: ['Kegiatan','Prestasi','Fasilitas','Lainnya'] },
+                    { key: 'tanggal', label: 'Tanggal', type: 'date' }
+                ],
+                orderColumn: 'tanggal', orderAsc: false
+            },
+            info_psb: {
+                label: 'Info PSB', icon: 'fa-clipboard-list',
+                columns: [
+                    { key: 'judul', label: 'Judul', type: 'text' },
+                    { key: 'status_aktif', label: 'Aktif', type: 'badge' },
+                    { key: 'tanggal_mulai', label: 'Mulai', type: 'text' }
+                ],
+                formFields: [
+                    { key: 'judul', label: 'Judul', type: 'text', required: true },
+                    { key: 'deskripsi', label: 'Deskripsi', type: 'textarea' },
+                    { key: 'syarat', label: 'Syarat', type: 'textarea' },
+                    { key: 'tanggal_mulai', label: 'Tanggal Mulai', type: 'date' },
+                    { key: 'tanggal_selesai', label: 'Tanggal Selesai', type: 'date' },
+                    { key: 'link_pendaftaran', label: 'Link Pendaftaran', type: 'url' },
+                    { key: 'kontak', label: 'Kontak', type: 'text' },
+                    { key: 'status_aktif', label: 'Aktif', type: 'select', options: ['true','false'] }
+                ],
+                orderColumn: 'tanggal_mulai', orderAsc: false
+            },
+            sliders: {
+                label: 'Sliders', icon: 'fa-images',
+                columns: [
+                    { key: 'foto_link', label: 'Gambar', type: 'image' },
+                    { key: 'judul', label: 'Judul', type: 'text' },
+                    { key: 'urutan', label: 'Urutan', type: 'text' },
+                    { key: 'aktif', label: 'Aktif', type: 'badge' }
+                ],
+                formFields: [
+                    { key: 'judul', label: 'Judul', type: 'text' },
+                    { key: 'deskripsi', label: 'Deskripsi', type: 'text' },
+                    { key: 'foto_link', label: 'URL Gambar', type: 'url', required: true },
+                    { key: 'link', label: 'Link Tujuan', type: 'url' },
+                    { key: 'urutan', label: 'Urutan', type: 'number' },
+                    { key: 'aktif', label: 'Aktif', type: 'select', options: ['true','false'] }
+                ],
+                orderColumn: 'urutan', orderAsc: true
+            },
+            testimoni: {
+                label: 'Testimoni', icon: 'fa-quote-left',
+                columns: [
+                    { key: 'nama', label: 'Nama', type: 'text' },
+                    { key: 'jabatan', label: 'Jabatan/Peran', type: 'text' },
+                    { key: 'rating', label: 'Rating', type: 'text' }
+                ],
+                formFields: [
+                    { key: 'nama', label: 'Nama', type: 'text', required: true },
+                    { key: 'jabatan', label: 'Jabatan/Peran', type: 'text' },
+                    { key: 'teks', label: 'Testimoni', type: 'textarea', required: true },
+                    { key: 'foto_link', label: 'URL Foto', type: 'url' },
+                    { key: 'rating', label: 'Rating (1-5)', type: 'number' }
+                ],
+                orderColumn: 'rating', orderAsc: false
+            },
+            agenda: {
+                label: 'Agenda', icon: 'fa-calendar',
+                columns: [
+                    { key: 'judul', label: 'Judul', type: 'text' },
+                    { key: 'tanggal_mulai', label: 'Mulai', type: 'text' },
+                    { key: 'tanggal_selesai', label: 'Selesai', type: 'text' },
+                    { key: 'lokasi', label: 'Lokasi', type: 'text' }
+                ],
+                formFields: [
+                    { key: 'judul', label: 'Judul', type: 'text', required: true },
+                    { key: 'deskripsi', label: 'Deskripsi', type: 'textarea' },
+                    { key: 'tanggal_mulai', label: 'Tanggal Mulai', type: 'date', required: true },
+                    { key: 'tanggal_selesai', label: 'Tanggal Selesai', type: 'date' },
+                    { key: 'lokasi', label: 'Lokasi', type: 'text' },
+                    { key: 'waktu', label: 'Waktu', type: 'text' },
+                    { key: 'penanggung_jawab', label: 'Penanggung Jawab', type: 'text' }
+                ],
+                orderColumn: 'tanggal_mulai', orderAsc: true
+            },
+            statistik_sekolah: {
+                label: 'Statistik Sekolah', icon: 'fa-chart-bar',
+                columns: [
+                    { key: 'label', label: 'Label', type: 'text' },
+                    { key: 'nilai', label: 'Nilai', type: 'text' },
+                    { key: 'ikon', label: 'Ikon', type: 'text' },
+                    { key: 'aktif', label: 'Aktif', type: 'badge' }
+                ],
+                formFields: [
+                    { key: 'label', label: 'Label', type: 'text', required: true },
+                    { key: 'nilai', label: 'Nilai', type: 'text', required: true },
+                    { key: 'ikon', label: 'Ikon (class FA)', type: 'text' },
+                    { key: 'urutan', label: 'Urutan', type: 'number' },
+                    { key: 'aktif', label: 'Aktif', type: 'select', options: ['true','false'] }
+                ],
+                orderColumn: 'urutan', orderAsc: true
+            },
+            kelas: {
+                label: 'Kelas', icon: 'fa-school',
+                columns: [
+                    { key: 'nama_kelas', label: 'Nama Kelas', type: 'text' },
+                    { key: 'tingkat', label: 'Tingkat', type: 'text' },
+                    { key: 'urutan', label: 'Urutan', type: 'text' },
+                    { key: 'aktif', label: 'Aktif', type: 'badge' }
+                ],
+                formFields: [
+                    { key: 'nama_kelas', label: 'Nama Kelas', type: 'text', required: true },
+                    { key: 'tingkat', label: 'Tingkat', type: 'number', required: true },
+                    { key: 'urutan', label: 'Urutan', type: 'number' },
+                    { key: 'aktif', label: 'Aktif', type: 'select', options: ['true','false'] }
+                ],
+                orderColumn: 'urutan', orderAsc: true
+            },
+            profiles: {
+                label: 'Profil Pengguna', icon: 'fa-user-shield',
+                columns: [
+                    { key: 'email', label: 'Email', type: 'text' },
+                    { key: 'nama', label: 'Nama', type: 'text' },
+                    { key: 'role', label: 'Role', type: 'badge' },
+                    { key: 'aktif', label: 'Aktif', type: 'badge' }
+                ],
+                formFields: [
+                    { key: 'email', label: 'Email', type: 'text', required: true, readonly: true },
+                    { key: 'nama', label: 'Nama', type: 'text', required: true },
+                    { key: 'role', label: 'Role', type: 'select', options: ['admin','editor'] },
+                    { key: 'aktif', label: 'Aktif', type: 'select', options: ['true','false'] }
+                ],
+                orderColumn: 'nama', orderAsc: true,
+                readOnlyNote: 'Akun pengguna dikelola melalui Supabase Auth (Authentication). Di sini Anda hanya dapat mengubah nama, role, dan status aktif.'
+            }
+        };
+
+        const HARI_LIST = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const JAM_KE_MAX = 10;
+        const DEFAULT_JAM = ['07:00','07:45','08:30','09:15','10:00','10:45','11:30','12:15','13:00','13:45'];
+        const DEFAULT_JAM_AKHIR = ['07:45','08:30','09:15','10:00','10:45','11:30','12:15','13:00','13:45','14:30'];
+        const ITEMS_PER_PAGE = 10;
+
+        // ============================================================
+        // DOM REFERENCES
+        // ============================================================
+        const contentArea = document.getElementById('content-area');
+        const topbarTitle = document.getElementById('topbar-title');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
+        const confirmOverlay = document.getElementById('confirm-overlay');
+        const confirmMessage = document.getElementById('confirm-message');
+
+        // ============================================================
+        // UTILITY FUNCTIONS
+        // ============================================================
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+            toast.innerHTML = '<i class="fas ' + icons[type] + '"></i> ' + escapeHtml(message);
+            container.appendChild(toast);
+            setTimeout(function() {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100px)';
+                toast.style.transition = 'all 0.3s';
+                setTimeout(function() { toast.remove(); }, 300);
+            }, 3000);
+        }
+
+        function showLoading() {
+            contentArea.innerHTML = '<div class="cms-loading"><div class="spinner-circle"></div></div>';
+        }
+
+        function getAdminSession() {
+            try {
+                var s = sessionStorage.getItem('smaplus_admin');
+                return s ? JSON.parse(s) : null;
+            } catch(e) { return null; }
+        }
+
+        function checkAuth() {
+            var session = getAdminSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            var avatarEl = document.getElementById('admin-avatar');
+            var nameEl = document.getElementById('admin-name');
+            var roleEl = document.getElementById('admin-role');
+            if (session.nama) {
+                avatarEl.textContent = session.nama.charAt(0).toUpperCase();
+                nameEl.textContent = session.nama;
+            }
+            if (session.role) {
+                roleEl.textContent = session.role;
+            }
+            return true;
+        }
+
+        function logout() {
+            sessionStorage.removeItem('smaplus_admin');
+            if (window.supabase && window.getSupabaseClient) {
+                getSupabaseClient().then(function(client) {
+                    client.auth.signOut();
+                }).catch(function() {});
+            }
+            window.location.href = 'login.html';
+        }
+
+        async function getAdminClient() {
+            return await getSupabaseClient();
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            var map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return String(str).replace(/[&<>"']/g, function(c) { return map[c]; });
+        }
+
+        function truncateText(text, max) {
+            max = max || 100;
+            if (!text) return '';
+            if (text.length <= max) return text;
+            return text.substring(0, max) + '...';
+        }
+
+        function formatDate(iso) {
+            if (!iso) return '';
+            try {
+                return new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(iso));
+            } catch(e) { return iso; }
+        }
+
+        function slugify(text) {
+            if (!text) return '';
+            return text.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '');
+        }
+
+        function getImageUrl(link) {
+            if (!link) return 'https://via.placeholder.com/800x600/059669/ffffff?text=SMA+Plus';
+            var dMatch = link.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            if (dMatch) return 'https://drive.google.com/thumbnail?id=' + dMatch[1] + '&sz=w800';
+            var idMatch = link.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+            if (idMatch) return 'https://drive.google.com/thumbnail?id=' + idMatch[1] + '&sz=w800';
+            return link;
+        }
+
+        function renderBadge(value) {
+            if (!value) return '<span class="badge-default">-</span>';
+            var v = String(value).toLowerCase();
+            var cls = 'badge-default';
+            if (['true','aktif','published','nasional'].indexOf(v) >= 0) cls = 'badge-green';
+            else if (['false','tidak aktif','draft'].indexOf(v) >= 0) cls = 'badge-amber';
+            else if (['kabupaten','provinsi'].indexOf(v) >= 0) cls = 'badge-blue';
+            else if (['internasional'].indexOf(v) >= 0) cls = 'badge-purple';
+            else if (['sekolah'].indexOf(v) >= 0) cls = 'badge-cyan';
+            else if (['lab','ruang'].indexOf(v) >= 0) cls = 'badge-blue';
+            else if (['umum'].indexOf(v) >= 0) cls = 'badge-green';
+            else if (['lapangan','ibadah'].indexOf(v) >= 0) cls = 'badge-amber';
+            else if (['kegiatan','prestasi'].indexOf(v) >= 0) cls = 'badge-green';
+            else if (['fasilitas'].indexOf(v) >= 0) cls = 'badge-blue';
+            else if (['lainnya'].indexOf(v) >= 0) cls = 'badge-default';
+            return '<span class="' + cls + '">' + escapeHtml(value) + '</span>';
+        }
+
+        // ============================================================
+        // NAVIGATION
+        // ============================================================
+        function navigateTo(section) {
+            currentSection = section;
+            currentPage = 1;
+            currentSearch = '';
+            editingId = null;
+            allData = [];
+            jadwalDirty = {};
+
+            document.querySelectorAll('.menu-item').forEach(function(el) {
+                el.classList.toggle('active', el.dataset.section === section);
+            });
+
+            var config = tableConfig[section];
+            if (section === 'dashboard') {
+                topbarTitle.textContent = 'Dashboard';
+            } else if (section === 'struktur_organisasi') {
+                topbarTitle.textContent = 'Struktur Organisasi';
+            } else if (section === 'osis') {
+                topbarTitle.textContent = 'OSIS';
+            } else if (section === 'ospm') {
+                topbarTitle.textContent = 'OSPM';
+            } else if (section === 'jadwal_pelajaran') {
+                topbarTitle.textContent = 'Jadwal Pelajaran';
+            } else if (section === 'berita') {
+                topbarTitle.textContent = 'Berita';
+            } else if (section === 'pengaturan_situs') {
+                topbarTitle.textContent = 'Pengaturan Situs';
+            } else if (config) {
+                topbarTitle.textContent = config.label;
+            }
+
+            closeSidebar();
+            renderSection(section);
+        }
+
+        function renderSection(section) {
+            showLoading();
+            if (section === 'dashboard') renderDashboard();
+            else if (section === 'struktur_organisasi') renderStrukturOrganisasi();
+            else if (section === 'osis') renderStrukturOrgImage('osis', 'OSIS', 'gambar_struktur_osis');
+            else if (section === 'ospm') renderStrukturOrgImage('ospm', 'OSPM', 'gambar_struktur_ospm');
+            else if (section === 'jadwal_pelajaran') renderJadwalPelajaran();
+            else if (section === 'berita') renderBeritaList();
+            else if (section === 'pengaturan_situs') renderPengaturanSitus();
+            else if (tableConfig[section]) renderGenericCRUD(section);
+            else contentArea.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-circle"></i><h3>Halaman tidak ditemukan</h3></div>';
+        }
+
+        // ============================================================
+        // DASHBOARD HOME
+        // ============================================================
+        async function renderDashboard() {
+            try {
+                var client = await getAdminClient();
+                var counts = {};
+                var countQueries = [
+                    { table: 'berita', key: 'berita' },
+                    { table: 'galeri', key: 'galeri' },
+                    { table: 'tenaga_pendidik', key: 'pendidik' },
+                    { table: 'prestasi', key: 'prestasi' },
+                    { table: 'agenda', key: 'agenda' },
+                    { table: 'sliders', key: 'sliders' }
+                ];
+
+                for (var i = 0; i < countQueries.length; i++) {
+                    try {
+                        var result = await client.from(countQueries[i].table).select('id', { count: 'exact', head: true });
+                        counts[countQueries[i].key] = result.count || 0;
+                    } catch(e) { counts[countQueries[i].key] = 0; }
+                }
+
+                var recentBerita = [];
+                try {
+                    var br = await client.from('berita').select('id,judul,status,created_at').order('created_at', { ascending: false }).limit(5);
+                    recentBerita = br.data || [];
+                } catch(e) {}
+
+                var recentAgenda = [];
+                try {
+                    var ag = await client.from('agenda').select('id,judul,tanggal_mulai,lokasi').order('tanggal_mulai', { ascending: true }).limit(5);
+                    recentAgenda = ag.data || [];
+                } catch(e) {}
+
+                var html = '';
+                html += '<div class="stats-grid">';
+                html += '<div class="stat-card" onclick="cmsApp.navigateTo(\'berita\')"><div class="stat-icon emerald"><i class="fas fa-newspaper"></i></div><div class="stat-info"><h4>' + (counts.berita || 0) + '</h4><p>Berita</p></div></div>';
+                html += '<div class="stat-card" onclick="cmsApp.navigateTo(\'galeri\')"><div class="stat-icon blue"><i class="fas fa-images"></i></div><div class="stat-info"><h4>' + (counts.galeri || 0) + '</h4><p>Galeri</p></div></div>';
+                html += '<div class="stat-card" onclick="cmsApp.navigateTo(\'tenaga_pendidik\')"><div class="stat-icon amber"><i class="fas fa-chalkboard-user"></i></div><div class="stat-info"><h4>' + (counts.pendidik || 0) + '</h4><p>Tenaga Pendidik</p></div></div>';
+                html += '<div class="stat-card" onclick="cmsApp.navigateTo(\'prestasi\')"><div class="stat-icon purple"><i class="fas fa-trophy"></i></div><div class="stat-info"><h4>' + (counts.prestasi || 0) + '</h4><p>Prestasi</p></div></div>';
+                html += '<div class="stat-card" onclick="cmsApp.navigateTo(\'agenda\')"><div class="stat-icon rose"><i class="fas fa-calendar"></i></div><div class="stat-info"><h4>' + (counts.agenda || 0) + '</h4><p>Agenda</p></div></div>';
+                html += '<div class="stat-card" onclick="cmsApp.navigateTo(\'sliders\')"><div class="stat-icon cyan"><i class="fas fa-panorama"></i></div><div class="stat-info"><h4>' + (counts.sliders || 0) + '</h4><p>Sliders</p></div></div>';
+                html += '</div>';
+
+                html += '<div class="recent-grid">';
+                html += '<div class="recent-panel"><div class="recent-panel-header"><span><i class="fas fa-newspaper" style="color:var(--primary);margin-right:6px;"></i>Berita Terbaru</span><a onclick="cmsApp.navigateTo(\'berita\')">Lihat Semua</a></div>';
+                if (recentBerita.length === 0) {
+                    html += '<div class="empty-state" style="padding:30px;"><i class="fas fa-inbox"></i><h3>Belum ada berita</h3></div>';
+                } else {
+                    recentBerita.forEach(function(b) {
+                        html += '<div class="recent-item"><span class="recent-item-title">' + escapeHtml(b.judul) + '</span><span class="status-badge ' + (b.status || 'draft') + '">' + escapeHtml(b.status || 'draft') + '</span></div>';
+                    });
+                }
+                html += '</div>';
+
+                html += '<div class="recent-panel"><div class="recent-panel-header"><span><i class="fas fa-calendar" style="color:var(--rose);margin-right:6px;"></i>Agenda Mendatang</span><a onclick="cmsApp.navigateTo(\'agenda\')">Lihat Semua</a></div>';
+                if (recentAgenda.length === 0) {
+                    html += '<div class="empty-state" style="padding:30px;"><i class="fas fa-inbox"></i><h3>Belum ada agenda</h3></div>';
+                } else {
+                    recentAgenda.forEach(function(a) {
+                        html += '<div class="recent-item"><span class="recent-item-title">' + escapeHtml(a.judul) + '</span><span style="font-size:0.72rem;color:var(--text-muted);">' + formatDate(a.tanggal_mulai) + '</span></div>';
+                    });
+                }
+                html += '</div></div>';
+
+                html += '<div style="margin-top:20px;"><div class="quick-actions"><h3><i class="fas fa-bolt" style="color:var(--accent);"></i> Aksi Cepat</h3><div class="quick-btn-grid">';
+                html += '<div class="quick-btn" onclick="cmsApp.navigateTo(\'berita\');setTimeout(function(){cmsApp.beritaOpenEditor()},200);"><i class="fas fa-plus"></i> Tulis Berita</div>';
+                html += '<div class="quick-btn" onclick="cmsApp.navigateTo(\'jadwal_pelajaran\')"><i class="fas fa-table-cells"></i> Edit Jadwal</div>';
+                html += '<div class="quick-btn" onclick="cmsApp.navigateTo(\'galeri\')"><i class="fas fa-images"></i> Kelola Galeri</div>';
+                html += '<div class="quick-btn" onclick="cmsApp.navigateTo(\'tenaga_pendidik\')"><i class="fas fa-chalkboard-user"></i> Pendidik</div>';
+                html += '<div class="quick-btn" onclick="cmsApp.navigateTo(\'prestasi\')"><i class="fas fa-trophy"></i> Prestasi</div>';
+                html += '<div class="quick-btn" onclick="cmsApp.navigateTo(\'struktur_organisasi\')"><i class="fas fa-sitemap"></i> Struktur Org</div>';
+                html += '</div></div></div>';
+
+                contentArea.innerHTML = html;
+            } catch(e) {
+                contentArea.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Gagal memuat dashboard</h3><p>' + escapeHtml(e.message) + '</p></div>';
+            }
+        }
+
+        // ============================================================
+        // STRUKTUR ORGANISASI (Image Upload Only)
+        // ============================================================
+        async function renderStrukturOrganisasi() {
+            var currentUrl = '';
+            try {
+                var client = await getAdminClient();
+                var result = await client.from('pengaturan_situs').select('nilai').eq('key', 'gambar_struktur_organisasi').single();
+                if (result.data) currentUrl = result.data.nilai || '';
+            } catch(e) {}
+
+            var html = '<div class="section-header"><h2><i class="fas fa-sitemap" style="color:var(--primary);margin-right:8px;"></i>Struktur Organisasi</h2></div>';
+            html += '<div class="struktur-upload-area">';
+            html += '<h3><i class="fas fa-image" style="color:var(--primary);margin-right:6px;"></i>Gambar Struktur Organisasi</h3>';
+            html += '<p>Masukkan URL gambar struktur organisasi sekolah. Gambar akan ditampilkan di halaman website.</p>';
+
+            html += '<div class="form-group" style="text-align:left;margin-top:20px;">';
+            html += '<label>URL Gambar</label>';
+            html += '<input type="url" id="struktur-url-input" placeholder="https://drive.google.com/..." value="' + escapeHtml(currentUrl) + '" oninput="cmsApp.strukturPreviewImg()">';
+            html += '</div>';
+
+            html += '<div id="struktur-preview-container">';
+            if (currentUrl) {
+                html += '<img src="' + escapeHtml(getImageUrl(currentUrl)) + '" alt="Struktur Organisasi" class="struktur-preview">';
+            } else {
+                html += '<div class="struktur-preview-placeholder"><i class="fas fa-image"></i><p>Belum ada gambar</p></div>';
+            }
+            html += '</div>';
+
+            html += '<button class="btn-save" onclick="cmsApp.strukturSave()" style="margin-top:16px;"><i class="fas fa-save"></i> Simpan Gambar</button>';
+            html += '</div>';
+
+            contentArea.innerHTML = html;
+        }
+
+        function strukturPreviewImg() {
+            var url = document.getElementById('struktur-url-input').value;
+            var container = document.getElementById('struktur-preview-container');
+            if (url) {
+                container.innerHTML = '<img src="' + escapeHtml(getImageUrl(url)) + '" alt="Struktur Organisasi" class="struktur-preview" onerror="this.style.display=\'none\';this.parentNode.innerHTML=\'<div class=struktur-preview-placeholder><i class=fas\\ fa-exclamation-triangle></i><p>Gagal memuat gambar</p></div>\'">';
+            } else {
+                container.innerHTML = '<div class="struktur-preview-placeholder"><i class="fas fa-image"></i><p>Belum ada gambar</p></div>';
+            }
+        }
+
+        async function strukturSave() {
+            var url = document.getElementById('struktur-url-input').value.trim();
+            try {
+                var client = await getAdminClient();
+                var result = await client.from('pengaturan_situs').upsert({
+                    key: 'gambar_struktur_organisasi',
+                    nilai: url,
+                    kategori: 'media',
+                    deskripsi: 'Gambar struktur organisasi sekolah'
+                }, { onConflict: 'key' });
+                if (result.error) throw result.error;
+                clearCache('pengaturan_situs');
+                showToast('Gambar struktur organisasi berhasil disimpan!');
+            } catch(e) {
+                showToast('Gagal menyimpan: ' + e.message, 'error');
+            }
+        }
+
+        // ============================================================
+        // OSIS & OSPM (Image Upload Only — same as Struktur Organisasi)
+        // ============================================================
+        async function renderStrukturOrgImage(sectionId, sectionLabel, pengaturanKey) {
+            var currentUrl = '';
+            try {
+                var client = await getAdminClient();
+                var result = await client.from('pengaturan_situs').select('nilai').eq('key', pengaturanKey).single();
+                if (result.data) currentUrl = result.data.nilai || '';
+            } catch(e) {}
+
+            var html = '<div class="section-header"><h2><i class="fas fa-users" style="color:var(--primary);margin-right:8px;"></i>Struktur ' + escapeHtml(sectionLabel) + '</h2></div>';
+            html += '<div class="struktur-upload-area">';
+            html += '<h3><i class="fas fa-image" style="color:var(--primary);margin-right:6px;"></i>Gambar Struktur ' + escapeHtml(sectionLabel) + '</h3>';
+            html += '<p>Masukkan URL gambar struktur organisasi ' + escapeHtml(sectionLabel) + '. Gambar akan ditampilkan di halaman website. Cukup upload gambar yang berisi bagan struktur lengkap.</p>';
+
+            html += '<div class="form-group" style="text-align:left;margin-top:20px;">';
+            html += '<label>URL Gambar</label>';
+            html += '<input type="url" id="org-image-url-input" placeholder="https://drive.google.com/..." value="' + escapeHtml(currentUrl) + '" oninput="cmsApp.strukturOrgImagePreview()">';
+            html += '</div>';
+
+            html += '<div id="org-image-preview-container">';
+            if (currentUrl) {
+                html += '<img src="' + escapeHtml(getImageUrl(currentUrl)) + '" alt="Struktur ' + escapeHtml(sectionLabel) + '" class="struktur-preview">';
+            } else {
+                html += '<div class="struktur-preview-placeholder"><i class="fas fa-image"></i><p>Belum ada gambar</p></div>';
+            }
+            html += '</div>';
+
+            html += '<button class="btn-save" onclick="cmsApp.strukturOrgImageSave(\'' + pengaturanKey + '\', \'' + escapeHtml(sectionLabel) + '\')" style="margin-top:16px;"><i class="fas fa-save"></i> Simpan Gambar</button>';
+            html += '</div>';
+
+            // Simpan key supaya bisa diakses oleh preview
+            contentArea.innerHTML = html;
+            contentArea.setAttribute('data-pengaturan-key', pengaturanKey);
+        }
+
+        function strukturOrgImagePreview() {
+            var url = document.getElementById('org-image-url-input').value;
+            var container = document.getElementById('org-image-preview-container');
+            if (url) {
+                container.innerHTML = '<img src="' + escapeHtml(getImageUrl(url)) + '" alt="Preview" class="struktur-preview" onerror="this.style.display=\'none\';this.parentNode.innerHTML=\'<div class=struktur-preview-placeholder><i class=fas\\ fa-exclamation-triangle></i><p>Gagal memuat gambar</p></div>\'">';
+            } else {
+                container.innerHTML = '<div class="struktur-preview-placeholder"><i class="fas fa-image"></i><p>Belum ada gambar</p></div>';
+            }
+        }
+
+        async function strukturOrgImageSave(pengaturanKey, sectionLabel) {
+            var url = document.getElementById('org-image-url-input').value.trim();
+            try {
+                var client = await getAdminClient();
+                var result = await client.from('pengaturan_situs').upsert({
+                    key: pengaturanKey,
+                    nilai: url,
+                    kategori: 'gambar',
+                    deskripsi: 'Gambar struktur organisasi ' + sectionLabel
+                }, { onConflict: 'key' });
+                if (result.error) throw result.error;
+                clearCache('pengaturan_situs');
+                showToast('Gambar struktur ' + sectionLabel + ' berhasil disimpan!');
+            } catch(e) {
+                showToast('Gagal menyimpan: ' + e.message, 'error');
+            }
+        }
+
+        // ============================================================
+        // JADWAL PELAJARAN (Excel-like Spreadsheet)
+        // ============================================================
+        async function renderJadwalPelajaran() {
+            try {
+                var client = await getAdminClient();
+                var kelasResult = await client.from('kelas').select('*').eq('aktif', true).order('urutan', { ascending: true });
+                jadwalKelasList = kelasResult.data || [];
+                if (jadwalKelasList.length === 0) {
+                    contentArea.innerHTML = '<div class="section-header"><h2><i class="fas fa-table-cells" style="color:var(--primary);margin-right:8px;"></i>Jadwal Pelajaran</h2></div><div class="empty-state"><i class="fas fa-school"></i><h3>Belum ada data kelas</h3><p>Tambahkan kelas terlebih dahulu di menu Kelas.</p></div>';
+                    return;
+                }
+                jadwalActiveKelas = jadwalKelasList[0].id;
+                await loadJadwalData();
+            } catch(e) {
+                contentArea.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Gagal memuat data</h3><p>' + escapeHtml(e.message) + '</p></div>';
+            }
+        }
+
+        async function loadJadwalData() {
+            var client = await getAdminClient();
+            var result = await client.from('jadwal_pelajaran').select('*').eq('kelas_id', jadwalActiveKelas).order('urutan', { ascending: true });
+            jadwalData = result.data || [];
+            jadwalDirty = {};
+            renderJadwalGrid();
+        }
+
+        function renderJadwalGrid() {
+            var kelas = jadwalKelasList.find(function(k) { return k.id === jadwalActiveKelas; });
+            var kelasNama = kelas ? kelas.nama_kelas : '';
+
+            var html = '<div class="section-header"><h2><i class="fas fa-table-cells" style="color:var(--primary);margin-right:8px;"></i>Jadwal Pelajaran</h2></div>';
+
+            // Toolbar
+            html += '<div class="jadwal-toolbar">';
+            html += '<button class="toolbar-btn primary-btn" onclick="cmsApp.jadwalSaveAll()"><i class="fas fa-save"></i> Simpan Semua</button>';
+            html += '<button class="toolbar-btn danger-btn" onclick="cmsApp.jadwalDeleteEmptyRows()"><i class="fas fa-eraser"></i> Hapus Baris Kosong</button>';
+            html += '<span class="jadwal-saving-indicator" id="jadwal-saving-indicator" style="display:none;"><i class="fas fa-spinner fa-spin"></i> Menyimpan...</span>';
+            html += '</div>';
+
+            // Tabs
+            html += '<div class="jadwal-tabs">';
+            jadwalKelasList.forEach(function(k) {
+                html += '<button class="jadwal-tab' + (k.id === jadwalActiveKelas ? ' active' : '') + '" onclick="cmsApp.jadwalSwitchKelas(\'' + k.id + '\')">' + escapeHtml(k.nama_kelas) + '</button>';
+            });
+            html += '</div>';
+
+            // Grid
+            html += '<div class="jadwal-grid-wrapper"><table class="jadwal-grid"><thead><tr><th>Jam ke</th>';
+            HARI_LIST.forEach(function(hari) {
+                html += '<th>' + hari + '</th>';
+            });
+            html += '</tr></thead><tbody>';
+
+            for (var jamKe = 1; jamKe <= JAM_KE_MAX; jamKe++) {
+                html += '<tr>';
+                html += '<td><div>' + jamKe + '</div><div class="jam-info">' + DEFAULT_JAM[jamKe-1] + '-' + DEFAULT_JAM_AKHIR[jamKe-1] + '</div></td>';
+                HARI_LIST.forEach(function(hari) {
+                    var cell = getJadwalCell(hari, jamKe);
+                    var filled = cell.mata_pelajaran ? ' filled' : '';
+                    html += '<td>';
+                    html += '<div class="jadwal-cell-actions">';
+                    html += '<button class="jadwal-cell-action edit-action" onclick="cmsApp.jadwalOpenCellDetail(\'' + hari + '\',' + jamKe + ')" title="Detail"><i class="fas fa-pen"></i></button>';
+                    html += '<button class="jadwal-cell-action delete-action" onclick="cmsApp.jadwalClearCell(\'' + hari + '\',' + jamKe + ')" title="Hapus"><i class="fas fa-times"></i></button>';
+                    html += '</div>';
+                    html += '<textarea class="jadwal-cell' + filled + '" data-hari="' + hari + '" data-jam="' + jamKe + '" onblur="cmsApp.jadwalCellBlur(this)" onkeydown="cmsApp.jadwalCellKeydown(event,this)" oninput="cmsApp.jadwalCellInput(this)">' + escapeHtml(cell.mata_pelajaran || '') + '</textarea>';
+                    if (cell.guru) {
+                        html += '<div class="jadwal-cell-guru">' + escapeHtml(cell.guru) + '</div>';
+                    }
+                    html += '</td>';
+                });
+                html += '</tr>';
+            }
+            html += '</tbody></table></div>';
+
+            contentArea.innerHTML = html;
+        }
+
+        function getJadwalCell(hari, jamKe) {
+            var found = jadwalData.find(function(d) { return d.hari === hari && d.jam_ke === jamKe; });
+            return found || {};
+        }
+
+        function jadwalCellBlur(textarea) {
+            var hari = textarea.dataset.hari;
+            var jamKe = parseInt(textarea.dataset.jam);
+            var mapel = textarea.value.trim();
+            var cell = getJadwalCell(hari, jamKe);
+            var oldMapel = cell.mata_pelajaran || '';
+            if (mapel !== oldMapel) {
+                jadwalDirty[hari + '_' + jamKe] = { hari: hari, jam_ke: jamKe, mata_pelajaran: mapel, guru: cell.guru || '', jam_mulai: cell.jam_mulai || DEFAULT_JAM[jamKe-1], jam_selesai: cell.jam_selesai || DEFAULT_JAM_AKHIR[jamKe-1] };
+            }
+            if (mapel) {
+                textarea.classList.add('filled');
+            } else {
+                textarea.classList.remove('filled');
+            }
+            // Auto-save on blur
+            jadwalAutoSaveCell(hari, jamKe);
+        }
+
+        function jadwalCellInput(textarea) {
+            if (textarea.value.trim()) {
+                textarea.classList.add('filled');
+            } else {
+                textarea.classList.remove('filled');
+            }
+        }
+
+        function jadwalCellKeydown(event, textarea) {
+            var hari = textarea.dataset.hari;
+            var jamKe = parseInt(textarea.dataset.jam);
+            var hariIdx = HARI_LIST.indexOf(hari);
+
+            if (event.key === 'Tab') {
+                event.preventDefault();
+                var nextHariIdx = event.shiftKey ? hariIdx - 1 : hariIdx + 1;
+                var nextJam = jamKe;
+                if (nextHariIdx >= HARI_LIST.length) { nextHariIdx = 0; nextJam = jamKe + 1; }
+                if (nextHariIdx < 0) { nextHariIdx = HARI_LIST.length - 1; nextJam = jamKe - 1; }
+                if (nextJam >= 1 && nextJam <= JAM_KE_MAX) {
+                    var nextCell = document.querySelector('.jadwal-cell[data-hari="' + HARI_LIST[nextHariIdx] + '"][data-jam="' + nextJam + '"]');
+                    if (nextCell) nextCell.focus();
+                }
+            } else if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                var nextRow = jamKe + 1;
+                if (nextRow <= JAM_KE_MAX) {
+                    var nextCell = document.querySelector('.jadwal-cell[data-hari="' + hari + '"][data-jam="' + nextRow + '"]');
+                    if (nextCell) nextCell.focus();
+                }
+            }
+        }
+
+        async function jadwalAutoSaveCell(hari, jamKe) {
+            var key = hari + '_' + jamKe;
+            if (!jadwalDirty[key]) return;
+            var dirty = jadwalDirty[key];
+            delete jadwalDirty[key];
+
+            var indicator = document.getElementById('jadwal-saving-indicator');
+            if (indicator) indicator.style.display = 'flex';
+
+            try {
+                var client = await getAdminClient();
+                var existing = jadwalData.find(function(d) { return d.hari === hari && d.jam_ke === jamKe; });
+
+                if (dirty.mata_pelajaran || dirty.guru) {
+                    var payload = {
+                        kelas_id: jadwalActiveKelas,
+                        hari: hari,
+                        jam_ke: jamKe,
+                        mata_pelajaran: dirty.mata_pelajaran,
+                        guru: dirty.guru,
+                        jam_mulai: dirty.jam_mulai || DEFAULT_JAM[jamKe-1],
+                        jam_selesai: dirty.jam_selesai || DEFAULT_JAM_AKHIR[jamKe-1],
+                        urutan: (HARI_LIST.indexOf(hari) * JAM_KE_MAX) + jamKe
+                    };
+                    if (existing && existing.id) {
+                        var res = await client.from('jadwal_pelajaran').update(payload).eq('id', existing.id);
+                        if (res.error) throw res.error;
+                    } else {
+                        var res = await client.from('jadwal_pelajaran').insert(payload);
+                        if (res.error) throw res.error;
+                        if (res.data && res.data[0]) {
+                            jadwalData.push(res.data[0]);
+                        }
+                    }
+                } else {
+                    if (existing && existing.id) {
+                        var res = await client.from('jadwal_pelajaran').delete().eq('id', existing.id);
+                        if (res.error) throw res.error;
+                        jadwalData = jadwalData.filter(function(d) { return d.id !== existing.id; });
+                    }
+                }
+                clearCache('jadwal_pelajaran');
+            } catch(e) {
+                showToast('Gagal menyimpan: ' + e.message, 'error');
+            }
+
+            if (indicator) indicator.style.display = 'none';
+        }
+
+        async function jadwalSaveAll() {
+            var indicator = document.getElementById('jadwal-saving-indicator');
+            if (indicator) indicator.style.display = 'flex';
+
+            try {
+                var client = await getAdminClient();
+                var dirtyKeys = Object.keys(jadwalDirty);
+                for (var i = 0; i < dirtyKeys.length; i++) {
+                    var key = dirtyKeys[i];
+                    var dirty = jadwalDirty[key];
+                    var existing = jadwalData.find(function(d) { return d.hari === dirty.hari && d.jam_ke === dirty.jam_ke; });
+
+                    if (dirty.mata_pelajaran || dirty.guru) {
+                        var payload = {
+                            kelas_id: jadwalActiveKelas,
+                            hari: dirty.hari,
+                            jam_ke: dirty.jam_ke,
+                            mata_pelajaran: dirty.mata_pelajaran,
+                            guru: dirty.guru,
+                            jam_mulai: dirty.jam_mulai || DEFAULT_JAM[dirty.jam_ke-1],
+                            jam_selesai: dirty.jam_selesai || DEFAULT_JAM_AKHIR[dirty.jam_ke-1],
+                            urutan: (HARI_LIST.indexOf(dirty.hari) * JAM_KE_MAX) + dirty.jam_ke
+                        };
+                        if (existing && existing.id) {
+                            await client.from('jadwal_pelajaran').update(payload).eq('id', existing.id);
+                        } else {
+                            var res = await client.from('jadwal_pelajaran').insert(payload);
+                            if (res.data && res.data[0]) jadwalData.push(res.data[0]);
+                        }
+                    } else {
+                        if (existing && existing.id) {
+                            await client.from('jadwal_pelajaran').delete().eq('id', existing.id);
+                            jadwalData = jadwalData.filter(function(d) { return d.id !== existing.id; });
+                        }
+                    }
+                }
+                jadwalDirty = {};
+                clearCache('jadwal_pelajaran');
+                showToast('Semua jadwal berhasil disimpan!');
+                renderJadwalGrid();
+            } catch(e) {
+                showToast('Gagal menyimpan: ' + e.message, 'error');
+            }
+
+            if (indicator) indicator.style.display = 'none';
+        }
+
+        async function jadwalDeleteEmptyRows() {
+            try {
+                var client = await getAdminClient();
+                var emptyCells = jadwalData.filter(function(d) { return !d.mata_pelajaran && !d.guru; });
+                for (var i = 0; i < emptyCells.length; i++) {
+                    await client.from('jadwal_pelajaran').delete().eq('id', emptyCells[i].id);
+                }
+                jadwalData = jadwalData.filter(function(d) { return d.mata_pelajaran || d.guru; });
+                clearCache('jadwal_pelajaran');
+                showToast(emptyCells.length + ' sel kosong dihapus');
+                renderJadwalGrid();
+            } catch(e) {
+                showToast('Gagal menghapus: ' + e.message, 'error');
+            }
+        }
+
+        async function jadwalSwitchKelas(kelasId) {
+            jadwalActiveKelas = kelasId;
+            await loadJadwalData();
+        }
+
+        function jadwalOpenCellDetail(hari, jamKe) {
+            var cell = getJadwalCell(hari, jamKe);
+            jadwalCellDetail = { hari: hari, jam_ke: jamKe };
+
+            document.getElementById('jadwal-cell-modal-title').textContent = 'Detail: ' + hari + ' - Jam ke-' + jamKe;
+            var body = document.getElementById('jadwal-cell-modal-body');
+            body.innerHTML = '<div class="form-group"><label>Mata Pelajaran</label><input type="text" id="jadwal-detail-mapel" value="' + escapeHtml(cell.mata_pelajaran || '') + '"></div>';
+            body.innerHTML += '<div class="form-group"><label>Guru</label><input type="text" id="jadwal-detail-guru" value="' + escapeHtml(cell.guru || '') + '"></div>';
+            body.innerHTML += '<div class="form-group"><label>Jam Mulai</label><input type="text" id="jadwal-detail-mulai" value="' + escapeHtml(cell.jam_mulai || DEFAULT_JAM[jamKe-1]) + '" placeholder="07:00"></div>';
+            body.innerHTML += '<div class="form-group"><label>Jam Selesai</label><input type="text" id="jadwal-detail-selesai" value="' + escapeHtml(cell.jam_selesai || DEFAULT_JAM_AKHIR[jamKe-1]) + '" placeholder="07:45"></div>';
+
+            document.getElementById('jadwal-cell-save-btn').onclick = function() {
+                cmsApp.jadwalSaveCellDetail();
+            };
+
+            document.getElementById('jadwal-cell-overlay').classList.add('active');
+        }
+
+        async function jadwalSaveCellDetail() {
+            var mapel = document.getElementById('jadwal-detail-mapel').value.trim();
+            var guru = document.getElementById('jadwal-detail-guru').value.trim();
+            var mulai = document.getElementById('jadwal-detail-mulai').value.trim();
+            var selesai = document.getElementById('jadwal-detail-selesai').value.trim();
+
+            jadwalDirty[jadwalCellDetail.hari + '_' + jadwalCellDetail.jam_ke] = {
+                hari: jadwalCellDetail.hari,
+                jam_ke: jadwalCellDetail.jam_ke,
+                mata_pelajaran: mapel,
+                guru: guru,
+                jam_mulai: mulai,
+                jam_selesai: selesai
+            };
+
+            document.getElementById('jadwal-cell-overlay').classList.remove('active');
+            await jadwalAutoSaveCell(jadwalCellDetail.hari, jadwalCellDetail.jam_ke);
+
+            // Update the grid visually
+            var textarea = document.querySelector('.jadwal-cell[data-hari="' + jadwalCellDetail.hari + '"][data-jam="' + jadwalCellDetail.jam_ke + '"]');
+            if (textarea) {
+                textarea.value = mapel;
+                if (mapel) textarea.classList.add('filled');
+                else textarea.classList.remove('filled');
+            }
+            // Update guru text
+            var td = textarea ? textarea.parentElement : null;
+            if (td) {
+                var guruDiv = td.querySelector('.jadwal-cell-guru');
+                if (guru) {
+                    if (guruDiv) guruDiv.textContent = guru;
+                    else {
+                        var g = document.createElement('div');
+                        g.className = 'jadwal-cell-guru';
+                        g.textContent = guru;
+                        td.appendChild(g);
+                    }
+                } else if (guruDiv) {
+                    guruDiv.remove();
+                }
+            }
+
+            // Update local jadwalData
+            var existing = jadwalData.find(function(d) { return d.hari === jadwalCellDetail.hari && d.jam_ke === jadwalCellDetail.jam_ke; });
+            if (existing) {
+                existing.mata_pelajaran = mapel;
+                existing.guru = guru;
+                existing.jam_mulai = mulai;
+                existing.jam_selesai = selesai;
+            }
+
+            showToast('Detail jadwal disimpan');
+        }
+
+        async function jadwalClearCell(hari, jamKe) {
+            jadwalDirty[hari + '_' + jamKe] = {
+                hari: hari, jam_ke: jamKe, mata_pelajaran: '', guru: '', jam_mulai: '', jam_selesai: ''
+            };
+            await jadwalAutoSaveCell(hari, jamKe);
+            // Update textarea
+            var textarea = document.querySelector('.jadwal-cell[data-hari="' + hari + '"][data-jam="' + jamKe + '"]');
+            if (textarea) {
+                textarea.value = '';
+                textarea.classList.remove('filled');
+            }
+            var td = textarea ? textarea.parentElement : null;
+            if (td) {
+                var guruDiv = td.querySelector('.jadwal-cell-guru');
+                if (guruDiv) guruDiv.remove();
+            }
+            // Update local data
+            jadwalData = jadwalData.filter(function(d) { return !(d.hari === hari && d.jam_ke === jamKe); });
+            showToast('Sel dihapus');
+        }
+
+        // ============================================================
+        // BERITA (Word-like Editor)
+        // ============================================================
+        async function renderBeritaList() {
+            try {
+                var client = await getAdminClient();
+                var result = await client.from('berita').select('*').order('created_at', { ascending: false });
+                allData = result.data || [];
+
+                var html = '<div class="section-header"><h2><i class="fas fa-newspaper" style="color:var(--primary);margin-right:8px;"></i>Berita</h2>';
+                html += '<div class="section-header-actions">';
+                html += '<div class="search-wrapper"><i class="fas fa-search"></i><input class="search-input" placeholder="Cari berita..." oninput="cmsApp.beritaSearch(this.value)"></div>';
+                html += '<select class="filter-select" id="berita-filter-status" onchange="cmsApp.beritaFilterStatus(this.value)"><option value="">Semua Status</option><option value="draft">Draft</option><option value="published">Published</option></select>';
+                html += '<button class="add-btn" onclick="cmsApp.beritaOpenEditor()"><i class="fas fa-plus"></i> Tulis Berita</button>';
+                html += '</div></div>';
+
+                if (allData.length === 0) {
+                    html += '<div class="empty-state"><i class="fas fa-newspaper"></i><h3>Belum ada berita</h3><p>Klik "Tulis Berita" untuk menambah berita baru.</p></div>';
+                } else {
+                    allData.forEach(function(b) {
+                        html += '<div class="berita-list-item">';
+                        if (b.foto_link) {
+                            html += '<img src="' + escapeHtml(getImageUrl(b.foto_link)) + '" class="berita-list-thumb" alt="" onerror="this.style.display=\'none\'">';
+                        } else {
+                            html += '<div class="berita-list-thumb" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-newspaper" style="color:#d1d5db;font-size:1.2rem;"></i></div>';
+                        }
+                        html += '<div class="berita-list-info"><h4>' + escapeHtml(b.judul || 'Tanpa Judul') + '</h4><p>' + escapeHtml(b.penulis || '') + ' &bull; ' + formatDate(b.created_at) + '</p></div>';
+                        html += '<div class="berita-list-meta">';
+                        html += '<span class="status-badge ' + (b.status || 'draft') + '">' + escapeHtml(b.status || 'draft') + '</span>';
+                        html += '<button class="btn-edit" onclick="cmsApp.beritaOpenEditor(\'' + b.id + '\')"><i class="fas fa-pen"></i> Edit</button>';
+                        html += '<button class="btn-delete" onclick="cmsApp.beritaDelete(\'' + b.id + '\')"><i class="fas fa-trash"></i></button>';
+                        html += '</div></div>';
+                    });
+                }
+
+                contentArea.innerHTML = html;
+            } catch(e) {
+                contentArea.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Gagal memuat data</h3><p>' + escapeHtml(e.message) + '</p></div>';
+            }
+        }
+
+        function beritaSearch(query) {
+            currentSearch = query.toLowerCase();
+            var items = document.querySelectorAll('.berita-list-item');
+            items.forEach(function(item) {
+                var title = item.querySelector('h4').textContent.toLowerCase();
+                item.style.display = title.indexOf(currentSearch) >= 0 ? '' : 'none';
+            });
+        }
+
+        function beritaFilterStatus(status) {
+            var items = document.querySelectorAll('.berita-list-item');
+            items.forEach(function(item) {
+                var badge = item.querySelector('.status-badge');
+                var itemStatus = badge ? badge.textContent.trim().toLowerCase() : '';
+                if (!status) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = itemStatus === status ? '' : 'none';
+                }
+            });
+        }
+
+        function beritaOpenEditor(id) {
+            beritaEditingId = id || null;
+            var editorPage = document.getElementById('berita-editor-page');
+            var titleLabel = document.getElementById('berita-editor-title-label');
+
+            if (!quillEditor) {
+                quillEditor = new Quill('#berita-quill-editor', {
+                    theme: 'snow',
+                    placeholder: 'Tulis konten berita di sini...',
+                    modules: {
+                        toolbar: [
+                            [{ 'header': [1, 2, 3, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                            [{ 'align': [] }],
+                            ['blockquote', 'code-block'],
+                            ['link', 'image'],
+                            [{ 'color': [] }, { 'background': [] }],
+                            ['clean']
+                        ]
+                    }
+                });
+            }
+
+            if (id) {
+                titleLabel.textContent = 'Edit Berita';
+                var berita = allData.find(function(b) { return b.id === id; });
+                if (berita) {
+                    document.getElementById('berita-judul-input').value = berita.judul || '';
+                    document.getElementById('berita-status-select').value = berita.status || 'draft';
+                    document.getElementById('berita-penulis-input').value = berita.penulis || '';
+                    document.getElementById('berita-ringkasan-input').value = berita.ringkasan || '';
+                    document.getElementById('berita-foto-input').value = berita.foto_link || '';
+                    document.getElementById('berita-slug-input').value = berita.slug || '';
+                    document.getElementById('berita-slug-display').textContent = berita.slug ? 'Slug: ' + berita.slug : '';
+                    quillEditor.root.innerHTML = berita.konten || '';
+                    beritaFotoPreview();
+                }
+            } else {
+                titleLabel.textContent = 'Tulis Berita Baru';
+                document.getElementById('berita-judul-input').value = '';
+                document.getElementById('berita-status-select').value = 'draft';
+                document.getElementById('berita-penulis-input').value = '';
+                document.getElementById('berita-ringkasan-input').value = '';
+                document.getElementById('berita-foto-input').value = '';
+                document.getElementById('berita-slug-input').value = '';
+                document.getElementById('berita-slug-display').textContent = '';
+                quillEditor.root.innerHTML = '';
+                document.getElementById('berita-foto-preview').innerHTML = '';
+            }
+
+            // Auto-generate slug on title change
+            document.getElementById('berita-judul-input').oninput = function() {
+                var slug = slugify(this.value);
+                document.getElementById('berita-slug-input').value = slug;
+                document.getElementById('berita-slug-display').textContent = slug ? 'Slug: ' + slug : '';
+            };
+            document.getElementById('berita-foto-input').oninput = function() {
+                beritaFotoPreview();
+            };
+
+            editorPage.classList.add('active');
+        }
+
+        function beritaFotoPreview() {
+            var url = document.getElementById('berita-foto-input').value.trim();
+            var preview = document.getElementById('berita-foto-preview');
+            if (url) {
+                preview.innerHTML = '<img src="' + escapeHtml(getImageUrl(url)) + '" style="max-width:100%;max-height:100px;border-radius:6px;border:1px solid #e5e7eb;" onerror="this.style.display=\'none\'">';
+            } else {
+                preview.innerHTML = '';
+            }
+        }
+
+        function beritaCloseEditor() {
+            document.getElementById('berita-editor-page').classList.remove('active');
+            renderBeritaList();
+        }
+
+        async function beritaSave(forceStatus) {
+            var judul = document.getElementById('berita-judul-input').value.trim();
+            if (!judul) {
+                showToast('Judul berita wajib diisi', 'error');
+                return;
+            }
+
+            var konten = quillEditor.root.innerHTML;
+            var status = forceStatus || document.getElementById('berita-status-select').value;
+            var penulis = document.getElementById('berita-penulis-input').value.trim();
+            var ringkasan = document.getElementById('berita-ringkasan-input').value.trim();
+            var foto_link = document.getElementById('berita-foto-input').value.trim();
+            var slug = document.getElementById('berita-slug-input').value.trim() || slugify(judul);
+
+            try {
+                var client = await getAdminClient();
+                var payload = {
+                    judul: judul,
+                    konten: konten,
+                    status: status,
+                    penulis: penulis,
+                    ringkasan: ringkasan,
+                    foto_link: foto_link,
+                    slug: slug
+                };
+
+                if (beritaEditingId) {
+                    var res = await client.from('berita').update(payload).eq('id', beritaEditingId);
+                    if (res.error) throw res.error;
+                } else {
+                    var res = await client.from('berita').insert(payload);
+                    if (res.error) throw res.error;
+                    if (res.data && res.data[0]) beritaEditingId = res.data[0].id;
+                }
+
+                clearCache('berita');
+                showToast('Berita berhasil ' + (status === 'published' ? 'dipublikasikan' : 'disimpan') + '!');
+                beritaCloseEditor();
+            } catch(e) {
+                showToast('Gagal menyimpan: ' + e.message, 'error');
+            }
+        }
+
+        function beritaPreview() {
+            var judul = document.getElementById('berita-judul-input').value || 'Tanpa Judul';
+            var konten = quillEditor.root.innerHTML;
+            var foto = document.getElementById('berita-foto-input').value.trim();
+            var penulis = document.getElementById('berita-penulis-input').value.trim();
+            var ringkasan = document.getElementById('berita-ringkasan-input').value.trim();
+
+            var html = '<article>';
+            html += '<h1 style="font-size:1.6rem;font-weight:700;margin-bottom:8px;">' + escapeHtml(judul) + '</h1>';
+            if (penulis) html += '<p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:12px;">Oleh: ' + escapeHtml(penulis) + '</p>';
+            if (ringkasan) html += '<p style="font-style:italic;color:var(--text-muted);margin-bottom:16px;border-left:3px solid var(--primary);padding-left:12px;">' + escapeHtml(ringkasan) + '</p>';
+            if (foto) html += '<img src="' + escapeHtml(getImageUrl(foto)) + '" style="width:100%;max-height:300px;object-fit:cover;border-radius:8px;margin-bottom:16px;" onerror="this.style.display=\'none\'">';
+            html += '<div style="line-height:1.7;">' + konten + '</div>';
+            html += '</article>';
+
+            document.getElementById('berita-preview-body').innerHTML = html;
+            document.getElementById('berita-preview-overlay').classList.add('active');
+        }
+
+        function beritaDelete(id) {
+            deleteTarget = { table: 'berita', id: id };
+            confirmMessage.textContent = 'Berita yang dihapus tidak dapat dikembalikan.';
+            confirmOverlay.classList.add('active');
+        }
+
+        // ============================================================
+        // PENGATURAN SITUS (Key-Value Editor)
+        // ============================================================
+        async function renderPengaturanSitus() {
+            try {
+                var client = await getAdminClient();
+                var result = await client.from('pengaturan_situs').select('*').order('key', { ascending: true });
+                var data = result.data || [];
+
+                var html = '<div class="section-header"><h2><i class="fas fa-cog" style="color:var(--primary);margin-right:8px;"></i>Pengaturan Situs</h2>';
+                html += '<button class="add-btn" onclick="cmsApp.pengaturanAdd()"><i class="fas fa-plus"></i> Tambah Pengaturan</button></div>';
+
+                if (data.length === 0) {
+                    html += '<div class="empty-state"><i class="fas fa-cog"></i><h3>Belum ada pengaturan</h3></div>';
+                } else {
+                    data.forEach(function(d) {
+                        html += '<div class="pengaturan-card">';
+                        html += '<div><div class="key-label">' + escapeHtml(d.key) + '</div>';
+                        if (d.deskripsi) html += '<div class="desc-text">' + escapeHtml(d.deskripsi) + '</div>';
+                        html += '</div>';
+                        html += '<input class="nilai-input" data-key="' + escapeHtml(d.key) + '" value="' + escapeHtml(d.nilai || '') + '">';
+                        html += '<button class="btn-save" style="padding:7px 14px;font-size:0.76rem;" onclick="cmsApp.pengaturanSaveOne(this)" data-key="' + escapeHtml(d.key) + '"><i class="fas fa-save"></i></button>';
+                        html += '<button class="btn-delete" style="padding:7px 11px;" onclick="cmsApp.pengaturanDelete(\'' + escapeHtml(d.key) + '\')"><i class="fas fa-trash"></i></button>';
+                        html += '</div>';
+                    });
+                }
+
+                contentArea.innerHTML = html;
+            } catch(e) {
+                contentArea.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Gagal memuat data</h3><p>' + escapeHtml(e.message) + '</p></div>';
+            }
+        }
+
+        async function pengaturanSaveOne(btn) {
+            var key = btn.dataset.key;
+            var card = btn.closest('.pengaturan-card');
+            var input = card.querySelector('.nilai-input');
+            var nilai = input.value.trim();
+            try {
+                var client = await getAdminClient();
+                var res = await client.from('pengaturan_situs').update({ nilai: nilai }).eq('key', key);
+                if (res.error) throw res.error;
+                clearCache('pengaturan_situs');
+                showToast('Pengaturan "' + key + '" disimpan');
+            } catch(e) {
+                showToast('Gagal menyimpan: ' + e.message, 'error');
+            }
+        }
+
+        function pengaturanAdd() {
+            modalTitle.textContent = 'Tambah Pengaturan';
+            modalBody.innerHTML = '<div class="form-group"><label>Key <span class="req">*</span></label><input type="text" id="pengaturan-new-key" placeholder="contoh: nama_sekolah"></div>';
+            modalBody.innerHTML += '<div class="form-group"><label>Nilai</label><input type="text" id="pengaturan-new-nilai" placeholder="Nilai pengaturan"></div>';
+            modalBody.innerHTML += '<div class="form-group"><label>Kategori</label><input type="text" id="pengaturan-new-kategori" placeholder="contoh: umum"></div>';
+            modalBody.innerHTML += '<div class="form-group"><label>Deskripsi</label><input type="text" id="pengaturan-new-deskripsi" placeholder="Deskripsi singkat"></div>';
+            document.getElementById('modal-save-btn').onclick = async function() {
+                var key = document.getElementById('pengaturan-new-key').value.trim();
+                if (!key) { showToast('Key wajib diisi', 'error'); return; }
+                try {
+                    var client = await getAdminClient();
+                    var res = await client.from('pengaturan_situs').insert({
+                        key: key,
+                        nilai: document.getElementById('pengaturan-new-nilai').value.trim(),
+                        kategori: document.getElementById('pengaturan-new-kategori').value.trim(),
+                        deskripsi: document.getElementById('pengaturan-new-deskripsi').value.trim()
+                    });
+                    if (res.error) throw res.error;
+                    closeModal();
+                    clearCache('pengaturan_situs');
+                    showToast('Pengaturan ditambahkan');
+                    renderPengaturanSitus();
+                } catch(e) { showToast('Gagal: ' + e.message, 'error'); }
+            };
+            openModal();
+        }
+
+        async function pengaturanDelete(key) {
+            deleteTarget = { table: 'pengaturan_situs', id: key, isKey: true };
+            confirmMessage.textContent = 'Hapus pengaturan "' + key + '"?';
+            confirmOverlay.classList.add('active');
+        }
+
+        // ============================================================
+        // GENERIC CRUD
+        // ============================================================
+        async function renderGenericCRUD(table) {
+            var config = tableConfig[table];
+            if (!config) return;
+
+            try {
+                var client = await getAdminClient();
+                var query = client.from(table).select('*');
+                if (config.orderColumn) {
+                    query = query.order(config.orderColumn, { ascending: config.orderAsc !== false });
+                }
+                var result = await query;
+                allData = result.data || [];
+
+                var html = '<div class="section-header"><h2><i class="fas ' + config.icon + '" style="color:var(--primary);margin-right:8px;"></i>' + config.label + '</h2>';
+                html += '<div class="section-header-actions">';
+                html += '<div class="search-wrapper"><i class="fas fa-search"></i><input class="search-input" placeholder="Cari..." oninput="cmsApp.genericSearch(this.value)"></div>';
+                html += '<button class="add-btn" onclick="cmsApp.genericOpenForm(\'' + table + '\')"><i class="fas fa-plus"></i> Tambah</button>';
+                html += '</div></div>';
+
+                if (allData.length === 0) {
+                    html += '<div class="empty-state"><i class="fas ' + config.icon + '"></i><h3>Belum ada data</h3><p>Klik "Tambah" untuk menambah data baru.</p></div>';
+                } else {
+                    html += '<div class="data-table-wrapper"><table class="data-table"><thead><tr>';
+                    config.columns.forEach(function(col) {
+                        html += '<th>' + col.label + '</th>';
+                    });
+                    html += '<th style="text-align:right;">Aksi</th></tr></thead><tbody>';
+
+                    var filtered = allData;
+                    if (currentSearch) {
+                        filtered = allData.filter(function(item) {
+                            return Object.values(item).some(function(v) {
+                                return String(v || '').toLowerCase().indexOf(currentSearch) >= 0;
+                            });
+                        });
+                    }
+
+                    var totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
+                    if (currentPage > totalPages) currentPage = totalPages;
+                    var start = (currentPage - 1) * ITEMS_PER_PAGE;
+                    var paged = filtered.slice(start, start + ITEMS_PER_PAGE);
+
+                    paged.forEach(function(item) {
+                        html += '<tr>';
+                        config.columns.forEach(function(col) {
+                            html += '<td>';
+                            if (col.type === 'image') {
+                                if (item[col.key]) {
+                                    html += '<img src="' + escapeHtml(getImageUrl(item[col.key])) + '" class="thumb" alt="" onerror="this.style.display=\'none\'">';
+                                } else {
+                                    html += '<div class="thumb" style="background:#f1f5f9;display:flex;align-items:center;justify-content:center;"><i class="fas fa-image" style="color:#d1d5db;"></i></div>';
+                                }
+                            } else if (col.type === 'badge') {
+                                html += renderBadge(item[col.key]);
+                            } else {
+                                html += '<span class="text-ellipsis">' + escapeHtml(item[col.key] || '-') + '</span>';
+                            }
+                            html += '</td>';
+                        });
+                        html += '<td style="text-align:right;"><div class="table-actions" style="justify-content:flex-end;">';
+                        html += '<button class="btn-edit" onclick="cmsApp.genericOpenForm(\'' + table + '\',\'' + item.id + '\')"><i class="fas fa-pen"></i> Edit</button>';
+                        html += '<button class="btn-delete" onclick="cmsApp.genericDelete(\'' + table + '\',\'' + item.id + '\')"><i class="fas fa-trash"></i></button>';
+                        html += '</div></td></tr>';
+                    });
+
+                    html += '</tbody></table>';
+                    html += '<div class="table-footer"><span>Menampilkan ' + (start + 1) + '-' + Math.min(start + ITEMS_PER_PAGE, filtered.length) + ' dari ' + filtered.length + '</span>';
+                    html += '<div class="table-pagination">';
+                    html += '<button onclick="cmsApp.genericPage(' + (currentPage - 1) + ')"' + (currentPage <= 1 ? ' disabled' : '') + '><i class="fas fa-chevron-left"></i></button>';
+                    for (var p = 1; p <= totalPages; p++) {
+                        if (totalPages <= 7 || Math.abs(p - currentPage) <= 2 || p === 1 || p === totalPages) {
+                            html += '<button class="' + (p === currentPage ? 'active' : '') + '" onclick="cmsApp.genericPage(' + p + ')">' + p + '</button>';
+                        } else if (p === currentPage - 3 || p === currentPage + 3) {
+                            html += '<button disabled>...</button>';
+                        }
+                    }
+                    html += '<button onclick="cmsApp.genericPage(' + (currentPage + 1) + ')"' + (currentPage >= totalPages ? ' disabled' : '') + '><i class="fas fa-chevron-right"></i></button>';
+                    html += '</div></div></div>';
+                }
+
+                contentArea.innerHTML = html;
+            } catch(e) {
+                contentArea.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Gagal memuat data</h3><p>' + escapeHtml(e.message) + '</p></div>';
+            }
+        }
+
+        function genericSearch(query) {
+            currentSearch = query.toLowerCase();
+            currentPage = 1;
+            renderGenericCRUD(currentSection);
+        }
+
+        function genericPage(page) {
+            currentPage = page;
+            renderGenericCRUD(currentSection);
+        }
+
+        async function genericOpenForm(table, id) {
+            var config = tableConfig[table];
+            editingId = id || null;
+            modalTitle.textContent = id ? 'Edit ' + config.label : 'Tambah ' + config.label;
+
+            var data = {};
+            if (id) {
+                var item = allData.find(function(d) { return d.id === id; });
+                if (item) data = item;
+            }
+
+            var html = '';
+            config.formFields.forEach(function(field) {
+                html += '<div class="form-group">';
+                html += '<label>' + field.label;
+                if (field.required) html += ' <span class="req">*</span>';
+                html += '</label>';
+
+                var val = data[field.key] || '';
+                if (field.type === 'textarea') {
+                    html += '<textarea id="form-' + field.key + '"' + (field.large ? ' class="large"' : '') + '>' + escapeHtml(val) + '</textarea>';
+                } else if (field.type === 'select') {
+                    html += '<select id="form-' + field.key + '">';
+                    html += '<option value="">-- Pilih --</option>';
+                    field.options.forEach(function(opt) {
+                        html += '<option value="' + opt + '"' + (String(val) === opt ? ' selected' : '') + '>' + opt + '</option>';
+                    });
+                    html += '</select>';
+                } else if (field.type === 'date') {
+                    var dateVal = val ? val.substring(0, 10) : '';
+                    html += '<input type="date" id="form-' + field.key + '" value="' + escapeHtml(dateVal) + '">';
+                } else {
+                    html += '<input type="' + (field.type === 'number' ? 'number' : field.type === 'url' ? 'url' : 'text') + '" id="form-' + field.key + '" value="' + escapeHtml(val) + '">';
+                }
+
+                if (field.type === 'url' && val) {
+                    html += '<div class="image-preview"><img src="' + escapeHtml(getImageUrl(val)) + '" alt="Preview" onerror="this.style.display=\'none\'"></div>';
+                }
+                html += '</div>';
+            });
+
+            modalBody.innerHTML = html;
+
+            // Add URL preview listeners
+            config.formFields.forEach(function(field) {
+                if (field.type === 'url') {
+                    var input = document.getElementById('form-' + field.key);
+                    if (input) {
+                        input.addEventListener('input', function() {
+                            var preview = this.parentElement.querySelector('.image-preview');
+                            if (this.value.trim()) {
+                                if (!preview) {
+                                    preview = document.createElement('div');
+                                    preview.className = 'image-preview';
+                                    this.parentElement.appendChild(preview);
+                                }
+                                preview.innerHTML = '<img src="' + escapeHtml(getImageUrl(this.value)) + '" alt="Preview" onerror="this.style.display=\'none\'">';
+                            } else if (preview) {
+                                preview.innerHTML = '';
+                            }
+                        });
+                    }
+                }
+            });
+
+            document.getElementById('modal-save-btn').onclick = async function() {
+                var payload = {};
+                var valid = true;
+                config.formFields.forEach(function(field) {
+                    var el = document.getElementById('form-' + field.key);
+                    var val = el ? el.value.trim() : '';
+                    if (field.required && !val) {
+                        valid = false;
+                        el.style.borderColor = '#ef4444';
+                    } else {
+                        if (el) el.style.borderColor = '';
+                    }
+                    if (field.type === 'number') {
+                        payload[field.key] = val ? parseInt(val) : null;
+                    } else if (field.type === 'select' && (field.key === 'aktif' || field.key === 'status_aktif')) {
+                        payload[field.key] = val === 'true';
+                    } else {
+                        payload[field.key] = val || null;
+                    }
+                });
+                if (!valid) { showToast('Lengkapi field yang wajib diisi', 'error'); return; }
+
+                try {
+                    var client = await getAdminClient();
+                    var res;
+                    if (editingId) {
+                        res = await client.from(table).update(payload).eq('id', editingId);
+                    } else {
+                        res = await client.from(table).insert(payload);
+                    }
+                    if (res.error) throw res.error;
+                    closeModal();
+                    clearCache(table);
+                    showToast('Data berhasil ' + (editingId ? 'diperbarui' : 'ditambahkan') + '!');
+                    renderGenericCRUD(table);
+                } catch(e) {
+                    showToast('Gagal menyimpan: ' + e.message, 'error');
+                }
+            };
+
+            openModal();
+        }
+
+        function genericDelete(table, id) {
+            deleteTarget = { table: table, id: id };
+            confirmMessage.textContent = 'Data yang dihapus tidak dapat dikembalikan.';
+            confirmOverlay.classList.add('active');
+        }
+
+        // ============================================================
+        // MODAL HELPERS
+        // ============================================================
+        function openModal() {
+            modalOverlay.classList.add('active');
+        }
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            editingId = null;
+        }
+
+        // ============================================================
+        // SIDEBAR HELPERS
+        // ============================================================
+        function closeSidebar() {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+        }
+
+        // ============================================================
+        // DELETE CONFIRM HANDLER
+        // ============================================================
+        async function executeDelete() {
+            confirmOverlay.classList.remove('active');
+            try {
+                var client = await getAdminClient();
+                var res;
+                if (deleteTarget.isKey) {
+                    res = await client.from(deleteTarget.table).delete().eq('key', deleteTarget.id);
+                } else {
+                    res = await client.from(deleteTarget.table).delete().eq('id', deleteTarget.id);
+                }
+                if (res.error) throw res.error;
+                clearCache(deleteTarget.table);
+                showToast('Data berhasil dihapus!');
+                renderSection(currentSection);
+            } catch(e) {
+                showToast('Gagal menghapus: ' + e.message, 'error');
+            }
+        }
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        function init() {
+            if (!checkAuth()) return;
+
+            // Menu click handlers
+            document.querySelectorAll('.menu-item[data-section]').forEach(function(item) {
+                item.addEventListener('click', function() {
+                    navigateTo(this.dataset.section);
+                });
+            });
+
+            // Hamburger toggle
+            document.getElementById('hamburger-toggle').addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                sidebarOverlay.classList.toggle('active');
+            });
+            sidebarOverlay.addEventListener('click', closeSidebar);
+
+            // Modal close
+            document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+            document.getElementById('modal-cancel-btn').addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', function(e) { if (e.target === modalOverlay) closeModal(); });
+
+            // Confirm dialog
+            document.getElementById('confirm-cancel-btn').addEventListener('click', function() { confirmOverlay.classList.remove('active'); });
+            document.getElementById('confirm-delete-btn').addEventListener('click', executeDelete);
+
+            // Logout
+            document.getElementById('topbar-logout').addEventListener('click', logout);
+            document.getElementById('sidebar-logout').addEventListener('click', function(e) { e.preventDefault(); logout(); });
+
+            // Load initial section
+            renderDashboard();
+        }
+
+        // ============================================================
+        // EXPOSE TO GLOBAL (for inline onclick handlers)
+        // ============================================================
+        window.cmsApp = {
+            navigateTo: navigateTo,
+            strukturPreviewImg: strukturPreviewImg,
+            strukturSave: strukturSave,
+            strukturOrgImagePreview: strukturOrgImagePreview,
+            strukturOrgImageSave: strukturOrgImageSave,
+            jadwalSaveAll: jadwalSaveAll,
+            jadwalDeleteEmptyRows: jadwalDeleteEmptyRows,
+            jadwalSwitchKelas: jadwalSwitchKelas,
+            jadwalOpenCellDetail: jadwalOpenCellDetail,
+            jadwalSaveCellDetail: jadwalSaveCellDetail,
+            jadwalClearCell: jadwalClearCell,
+            jadwalCellBlur: jadwalCellBlur,
+            jadwalCellKeydown: jadwalCellKeydown,
+            jadwalCellInput: jadwalCellInput,
+            beritaSearch: beritaSearch,
+            beritaFilterStatus: beritaFilterStatus,
+            beritaOpenEditor: beritaOpenEditor,
+            beritaCloseEditor: beritaCloseEditor,
+            beritaSave: beritaSave,
+            beritaPreview: beritaPreview,
+            beritaDelete: beritaDelete,
+            pengaturanAdd: pengaturanAdd,
+            pengaturanSaveOne: pengaturanSaveOne,
+            pengaturanDelete: pengaturanDelete,
+            genericSearch: genericSearch,
+            genericPage: genericPage,
+            genericOpenForm: genericOpenForm,
+            genericDelete: genericDelete
+        };
+
+        // Wait for DOM
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+    })();
+    </script>
+</body>
+</html>
