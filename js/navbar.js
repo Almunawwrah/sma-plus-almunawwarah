@@ -828,7 +828,7 @@
       '      <div class="dropdown">',
       '        <div class="nav-link' + informasiActive + '">Informasi <i class="fa-solid fa-chevron-down" style="font-size:0.65rem;margin-left:4px"></i></div>',
       '        <div class="dropdown-menu">',
-      '          <a href="' + pages('berita.html') + '" class="dropdown-item"><i class="fa-solid fa-newspaper"></i> Berita</a>',
+      '          <a href="https://smaplusalmunawwarahsmd.blogspot.com/" class="dropdown-item"><i class="fa-solid fa-newspaper"></i> Berita</a>',
       '          <a href="' + pages('galeri.html') + '" class="dropdown-item"><i class="fa-solid fa-images"></i> Galeri</a>',
       '          <a href="' + pages('info-psb.html') + '" class="dropdown-item"><i class="fa-solid fa-clipboard-list"></i> Info PSB</a>',
       '        </div>',
