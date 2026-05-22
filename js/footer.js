@@ -286,7 +286,7 @@
       '        <li><a href="' + homeUrl + '"><i class="fas fa-chevron-right"></i>Beranda</a></li>',
       '        <li><a href="' + pages('sejarah.html') + '"><i class="fas fa-chevron-right"></i>Sejarah</a></li>',
       '        <li><a href="' + pages('kurikulum.html') + '"><i class="fas fa-chevron-right"></i>Kurikulum</a></li>',
-      '        <li><a href="' + pages('berita.html') + '"><i class="fas fa-chevron-right"></i>Berita</a></li>',
+      '        <li><a href="' + pages('https://smaplusalmunawwarahsmd.blogspot.com') + '"><i class="fas fa-chevron-right"></i>Berita</a></li>',
       '        <li><a href="' + pages('galeri.html') + '"><i class="fas fa-chevron-right"></i>Galeri</a></li>',
       '        <li><a href="' + pages('info-psb.html') + '"><i class="fas fa-chevron-right"></i>Info PSB</a></li>',
       '      </ul>',
