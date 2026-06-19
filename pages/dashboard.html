@@ -710,20 +710,23 @@
             prestasi: {
                 label: 'Prestasi', icon: 'fa-trophy',
                 columns: [
+                    { key: 'foto_link', label: 'Foto', type: 'image' },
                     { key: 'judul', label: 'Judul', type: 'text' },
                     { key: 'tingkat', label: 'Tingkat', type: 'badge' },
                     { key: 'tahun', label: 'Tahun', type: 'text' },
-                    { key: 'peserta', label: 'Peserta', type: 'text' }
+                    { key: 'peserta', label: 'Peserta', type: 'text' },
+                    { key: 'urutan', label: 'Urutan', type: 'text' }
                 ],
                 formFields: [
                     { key: 'judul', label: 'Judul', type: 'text', required: true },
                     { key: 'deskripsi', label: 'Deskripsi', type: 'textarea' },
                     { key: 'peserta', label: 'Peserta', type: 'text' },
                     { key: 'tahun', label: 'Tahun', type: 'number', required: true },
-                    { key: 'tingkat', label: 'Tingkat', type: 'select', options: ['Sekolah','Kabupaten','Provinsi','Nasional','Internasional'] },
-                    { key: 'foto_link', label: 'URL Foto', type: 'url' }
+                    { key: 'tingkat', label: 'Tingkat', type: 'select', options: ['Sekolah','Kecamatan','Kabupaten','Provinsi','Nasional','Internasional'] },
+                    { key: 'foto_link', label: 'URL Foto', type: 'url' },
+                    { key: 'urutan', label: 'Urutan', type: 'number' }
                 ],
-                orderColumn: 'tahun', orderAsc: false
+                orderColumn: 'urutan', orderAsc: true
             },
             // osis & ospm: sekarang pakai gambar full (bukan CRUD individual)
             // Dirender oleh renderStrukturOrgImage() khusus
@@ -1008,7 +1011,7 @@
             else if (['false','tidak aktif','draft'].indexOf(v) >= 0) cls = 'badge-amber';
             else if (['kabupaten','provinsi'].indexOf(v) >= 0) cls = 'badge-blue';
             else if (['internasional'].indexOf(v) >= 0) cls = 'badge-purple';
-            else if (['sekolah'].indexOf(v) >= 0) cls = 'badge-cyan';
+            else if (['sekolah','kecamatan'].indexOf(v) >= 0) cls = 'badge-cyan';
             else if (['lab','ruang'].indexOf(v) >= 0) cls = 'badge-blue';
             else if (['umum'].indexOf(v) >= 0) cls = 'badge-green';
             else if (['lapangan','ibadah'].indexOf(v) >= 0) cls = 'badge-amber';
