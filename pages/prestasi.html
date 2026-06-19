@@ -38,7 +38,7 @@
 
         .prestasi-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 24px;
         }
 
@@ -46,80 +46,67 @@
             background: white;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-md);
-            padding: 24px;
-            display: flex;
-            gap: 20px;
+            overflow: hidden;
+            text-align: center;
             transition: all 0.3s;
-            border-left: 4px solid transparent;
+            display: flex;
+            flex-direction: column;
         }
 
         .prestasi-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-6px);
             box-shadow: var(--shadow-xl);
         }
 
-        .prestasi-card[data-tingkat="Nasional"] {
-            border-left-color: #3b82f6;
-        }
-
-        .prestasi-card[data-tingkat="Provinsi"] {
-            border-left-color: #8b5cf6;
-        }
-
-        .prestasi-card[data-tingkat="Kabupaten"] {
-            border-left-color: var(--primary);
-        }
-
-        .prestasi-card[data-tingkat="Sekolah"] {
-            border-left-color: var(--accent);
-        }
-
-        .prestasi-icon {
-            min-width: 56px;
-            height: 56px;
-            border-radius: 14px;
+        .prestasi-card-photo {
+            width: 100%;
+            aspect-ratio: 3/4;
+            object-fit: cover;
             background: var(--primary-lighter);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            color: var(--primary);
         }
 
-        .prestasi-info {
+        .prestasi-card-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
             flex: 1;
         }
 
-        .prestasi-info h3 {
+        .prestasi-card-body h3 {
             font-size: 1rem;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             color: var(--gray-800);
+            line-height: 1.4;
         }
 
-        .prestasi-info p {
-            font-size: 0.875rem;
+        .prestasi-card-body .tingkat {
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .prestasi-card-body .meta {
+            font-size: 0.8rem;
             color: var(--gray-500);
-            line-height: 1.6;
-            margin-bottom: 8px;
-        }
-
-        .prestasi-meta {
             display: flex;
-            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
             flex-wrap: wrap;
         }
 
-        .prestasi-meta span {
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            color: var(--gray-500);
+        .prestasi-card-body .meta i {
+            font-size: 0.7rem;
         }
 
-        .prestasi-meta span i {
-            font-size: 0.7rem;
-            color: var(--gray-400);
+        .prestasi-card-body .meta .separator {
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: var(--gray-300);
+            display: inline-block;
         }
 
         .tingkat-badge {
@@ -155,6 +142,11 @@
             color: #9d174d;
         }
 
+        .tingkat-badge-Kecamatan {
+            background: #dcfce7;
+            color: #166534;
+        }
+
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -173,13 +165,21 @@
             color: var(--gray-500);
         }
 
+        @media (max-width: 992px) {
+            .prestasi-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .prestasi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media (max-width: 576px) {
             .prestasi-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .prestasi-card {
-                flex-direction: column;
             }
         }
     </style>
@@ -211,6 +211,7 @@
                 <div class="filter-pills" id="filter-pills" data-aos="fade-up" data-aos-delay="100">
                     <button class="filter-pill active" data-filter="Semua">Semua</button>
                     <button class="filter-pill" data-filter="Sekolah">Sekolah</button>
+                    <button class="filter-pill" data-filter="Kecamatan">Kecamatan</button>
                     <button class="filter-pill" data-filter="Kabupaten">Kabupaten</button>
                     <button class="filter-pill" data-filter="Provinsi">Provinsi</button>
                     <button class="filter-pill" data-filter="Nasional">Nasional</button>
@@ -246,9 +247,22 @@
                     'Provinsi': 'tingkat-badge-Provinsi',
                     'Kabupaten': 'tingkat-badge-Kabupaten',
                     'Sekolah': 'tingkat-badge-Sekolah',
+                    'Kecamatan': 'tingkat-badge-Kecamatan',
                     'Internasional': 'tingkat-badge-Internasional'
                 };
                 return map[tingkat] || 'tingkat-badge-Sekolah';
+            }
+
+            function buildMeta(item) {
+                var parts = [];
+                if (item.peserta) {
+                    parts.push('<span><i class="fa-solid fa-user"></i> ' + escapeHtml(item.peserta) + '</span>');
+                }
+                if (item.tahun) {
+                    parts.push('<span><i class="fa-solid fa-calendar"></i> ' + escapeHtml(String(item.tahun)) + '</span>');
+                }
+                if (parts.length === 0) return '';
+                return '<div class="meta">' + parts.join('<span class="separator"></span>') + '</div>';
             }
 
             function renderPrestasi(data) {
@@ -264,23 +278,19 @@
                 var html = '';
 
                 data.forEach(function (item, index) {
-                    var delay = (index % 2) * 100;
+                    var delay = (index % 4) * 100;
                     var tingkat = item.tingkat || 'Sekolah';
                     var badgeClass = getTingkatBadgeClass(tingkat);
+                    var fotoUrl = getImageUrl(item.foto_link);
+                    var fallback = 'https://via.placeholder.com/400x300/059669/ffffff?text=Prestasi';
 
                     html +=
                         '<div class="prestasi-card" data-tingkat="' + escapeHtml(tingkat) + '" data-aos="fade-up" data-aos-delay="' + delay + '">' +
-                        '  <div class="prestasi-icon">' +
-                        '    <i class="fa-solid fa-trophy"></i>' +
-                        '  </div>' +
-                        '  <div class="prestasi-info">' +
+                        '  <img src="' + fotoUrl + '" alt="' + escapeHtml(item.judul) + '" class="prestasi-card-photo" onerror="this.src=\'' + fallback + '\'">' +
+                        '  <div class="prestasi-card-body">' +
                         '    <h3>' + escapeHtml(item.judul) + '</h3>' +
-                        (item.deskripsi ? '    <p>' + escapeHtml(item.deskripsi) + '</p>' : '') +
-                        '    <div class="prestasi-meta">' +
-                        (item.peserta ? '      <span><i class="fa-solid fa-user"></i> ' + escapeHtml(item.peserta) + '</span>' : '') +
-                        (item.tahun ? '      <span><i class="fa-solid fa-calendar"></i> ' + escapeHtml(String(item.tahun)) + '</span>' : '') +
-                        '      <span class="tingkat-badge ' + badgeClass + '">' + escapeHtml(tingkat) + '</span>' +
-                        '    </div>' +
+                        '    <div class="tingkat"><span class="tingkat-badge ' + badgeClass + '">' + escapeHtml(tingkat) + '</span></div>' +
+                        buildMeta(item) +
                         '  </div>' +
                         '</div>';
                 });
