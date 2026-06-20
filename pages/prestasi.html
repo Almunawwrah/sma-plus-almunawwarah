@@ -351,20 +351,6 @@
         .lightbox-prev { left: 24px; }
         .lightbox-next { right: 24px; }
 
-        .lightbox-hint {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.8rem;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 8px 16px;
-            border-radius: 20px;
-            backdrop-filter: blur(6px);
-            z-index: 10000;
-        }
-
         @media (max-width: 576px) {
             .lightbox-close {
                 top: -10px;
@@ -468,7 +454,7 @@
             <div class="lightbox-caption" id="lightbox-caption"></div>
         </div>
 
-        <div class="lightbox-hint">Tekan <strong>Esc</strong> atau klik di luar gambar untuk menutup &middot; <strong>&larr; &rarr;</strong> untuk navigasi</div>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
