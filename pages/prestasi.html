@@ -58,11 +58,53 @@
             box-shadow: var(--shadow-xl);
         }
 
-        .prestasi-card-photo {
+        .prestasi-card-photo-wrap {
+            position: relative;
             width: 100%;
             aspect-ratio: 3/4;
-            object-fit: cover;
             background: var(--primary-lighter);
+            overflow: hidden;
+            cursor: zoom-in;
+        }
+
+        .prestasi-card-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .prestasi-card-photo-wrap:hover .prestasi-card-photo {
+            transform: scale(1.06);
+        }
+
+        .prestasi-card-photo-wrap::after {
+            content: "\f00e";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.92);
+            color: var(--primary, #059669);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+        }
+
+        .prestasi-card-photo-wrap:hover::after {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
         }
 
         .prestasi-card-body {
@@ -165,6 +207,187 @@
             color: var(--gray-500);
         }
 
+        /* ===== Lightbox / Photo Zoom ===== */
+        .lightbox-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            padding: 24px;
+            box-sizing: border-box;
+        }
+
+        .lightbox-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-container {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            transform: scale(0.85);
+            transition: transform 0.3s ease;
+        }
+
+        .lightbox-overlay.active .lightbox-container {
+            transform: scale(1);
+        }
+
+        .lightbox-image {
+            max-width: 90vw;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            display: block;
+            cursor: zoom-out;
+        }
+
+        .lightbox-caption {
+            color: #fff;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            max-width: 700px;
+            line-height: 1.5;
+            padding: 0 12px;
+        }
+
+        .lightbox-caption .tingkat-badge {
+            margin-top: 6px;
+        }
+
+        /* Tombol Exit (X) */
+        .lightbox-close {
+            position: absolute;
+            top: -16px;
+            right: -16px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #fff;
+            color: #1f2937;
+            border: none;
+            font-size: 1.4rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+            transition: all 0.2s ease;
+            z-index: 2;
+        }
+
+        .lightbox-close:hover {
+            background: #ef4444;
+            color: #fff;
+            transform: rotate(90deg) scale(1.05);
+        }
+
+        /* Tombol exit floating (pojok kanan atas layar) */
+        .lightbox-exit-btn {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+        }
+
+        .lightbox-exit-btn:hover {
+            background: #ef4444;
+            border-color: #ef4444;
+            transform: scale(1.08);
+        }
+
+        /* Tombol navigasi (opsional) */
+        .lightbox-nav {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+        }
+
+        .lightbox-nav:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .lightbox-prev { left: 24px; }
+        .lightbox-next { right: 24px; }
+
+        .lightbox-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 8px 16px;
+            border-radius: 20px;
+            backdrop-filter: blur(6px);
+            z-index: 10000;
+        }
+
+        @media (max-width: 576px) {
+            .lightbox-close {
+                top: -10px;
+                right: -10px;
+                width: 38px;
+                height: 38px;
+                font-size: 1.2rem;
+            }
+            .lightbox-exit-btn {
+                top: 16px;
+                right: 16px;
+                width: 42px;
+                height: 42px;
+            }
+            .lightbox-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            .lightbox-prev { left: 12px; }
+            .lightbox-next { right: 12px; }
+        }
+
         @media (max-width: 992px) {
             .prestasi-grid {
                 grid-template-columns: repeat(3, 1fr);
@@ -227,6 +450,27 @@
         </section>
     </div>
 
+    <!-- ===== Lightbox Overlay ===== -->
+    <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Pratinjau foto prestasi">
+        <button class="lightbox-exit-btn" id="lightbox-exit" aria-label="Tutup pratinjau" title="Tutup (Esc)">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <button class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="Foto sebelumnya" title="Sebelumnya">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="Foto berikutnya" title="Berikutnya">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+        <div class="lightbox-container">
+            <button class="lightbox-close" id="lightbox-close" aria-label="Tutup" title="Tutup">&times;</button>
+            <img class="lightbox-image" id="lightbox-image" src="" alt="">
+            <div class="lightbox-caption" id="lightbox-caption"></div>
+        </div>
+
+        <div class="lightbox-hint">Tekan <strong>Esc</strong> atau klik di luar gambar untuk menutup &middot; <strong>&larr; &rarr;</strong> untuk navigasi</div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/api.js"></script>
     <script src="../js/navbar.js"></script>
@@ -240,6 +484,18 @@
             var filterContainer = document.getElementById('filter-pills');
             var allData = [];
             var activeFilter = 'Semua';
+
+            // ===== Lightbox elements =====
+            var lightbox = document.getElementById('lightbox');
+            var lightboxImage = document.getElementById('lightbox-image');
+            var lightboxCaption = document.getElementById('lightbox-caption');
+            var lightboxExit = document.getElementById('lightbox-exit');
+            var lightboxClose = document.getElementById('lightbox-close');
+            var lightboxPrev = document.getElementById('lightbox-prev');
+            var lightboxNext = document.getElementById('lightbox-next');
+
+            var currentGallery = []; // list of { src, judul, tingkat, badgeClass }
+            var currentIndex = 0;
 
             function getTingkatBadgeClass(tingkat) {
                 var map = {
@@ -265,6 +521,20 @@
                 return '<div class="meta">' + parts.join('<span class="separator"></span>') + '</div>';
             }
 
+            function buildCaption(item) {
+                var tingkat = item.tingkat || 'Sekolah';
+                var badgeClass = getTingkatBadgeClass(tingkat);
+                var html = '<div>' + escapeHtml(item.judul || 'Prestasi') + '</div>';
+                html += '<span class="tingkat-badge ' + badgeClass + '">' + escapeHtml(tingkat) + '</span>';
+                if (item.peserta || item.tahun) {
+                    var meta = [];
+                    if (item.peserta) meta.push(escapeHtml(item.peserta));
+                    if (item.tahun) meta.push(escapeHtml(String(item.tahun)));
+                    html += '<div style="margin-top:6px;font-size:0.85rem;opacity:0.85;">' + meta.join(' &middot; ') + '</div>';
+                }
+                return html;
+            }
+
             function renderPrestasi(data) {
                 if (!data || data.length === 0) {
                     grid.innerHTML =
@@ -272,10 +542,12 @@
                         '  <i class="fa-solid fa-trophy"></i>' +
                         '  <p>Tidak ada prestasi yang ditampilkan untuk kategori ini.</p>' +
                         '</div>';
+                    currentGallery = [];
                     return;
                 }
 
                 var html = '';
+                currentGallery = [];
 
                 data.forEach(function (item, index) {
                     var delay = (index % 4) * 100;
@@ -284,9 +556,22 @@
                     var fotoUrl = getImageUrl(item.foto_link);
                     var fallback = 'https://via.placeholder.com/400x300/059669/ffffff?text=Prestasi';
 
+                    // Simpan untuk navigasi lightbox
+                    currentGallery.push({
+                        src: fotoUrl,
+                        fallback: fallback,
+                        judul: item.judul,
+                        tingkat: tingkat,
+                        badgeClass: badgeClass,
+                        peserta: item.peserta,
+                        tahun: item.tahun
+                    });
+
                     html +=
                         '<div class="prestasi-card" data-tingkat="' + escapeHtml(tingkat) + '" data-aos="fade-up" data-aos-delay="' + delay + '">' +
-                        '  <img src="' + fotoUrl + '" alt="' + escapeHtml(item.judul) + '" class="prestasi-card-photo" onerror="this.src=\'' + fallback + '\'">' +
+                        '  <div class="prestasi-card-photo-wrap" data-index="' + index + '" role="button" tabindex="0" aria-label="Perbesar foto: ' + escapeHtml(item.judul || 'Prestasi') + '">' +
+                        '    <img src="' + fotoUrl + '" alt="' + escapeHtml(item.judul) + '" class="prestasi-card-photo" onerror="this.src=\'' + fallback + '\'" loading="lazy">' +
+                        '  </div>' +
                         '  <div class="prestasi-card-body">' +
                         '    <h3>' + escapeHtml(item.judul) + '</h3>' +
                         '    <div class="tingkat"><span class="tingkat-badge ' + badgeClass + '">' + escapeHtml(tingkat) + '</span></div>' +
@@ -297,8 +582,102 @@
 
                 grid.innerHTML = html;
 
+                // Pasang event listener untuk klik foto
+                var photoWraps = grid.querySelectorAll('.prestasi-card-photo-wrap');
+                photoWraps.forEach(function (wrap) {
+                    wrap.addEventListener('click', function () {
+                        var idx = parseInt(wrap.getAttribute('data-index'), 10);
+                        openLightbox(idx);
+                    });
+                    wrap.addEventListener('keydown', function (e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            var idx = parseInt(wrap.getAttribute('data-index'), 10);
+                            openLightbox(idx);
+                        }
+                    });
+                });
+
                 AOS.refresh();
             }
+
+            // ===== Lightbox Logic =====
+            function openLightbox(index) {
+                if (currentGallery.length === 0) return;
+                currentIndex = index;
+                updateLightboxImage();
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                // Fokus ke tombol exit untuk aksesibilitas
+                setTimeout(function () { lightboxExit.focus(); }, 100);
+            }
+
+            function updateLightboxImage() {
+                var item = currentGallery[currentIndex];
+                if (!item) return;
+                lightboxImage.src = item.src;
+                lightboxImage.alt = item.judul || 'Prestasi';
+                lightboxImage.onerror = function () {
+                    this.onerror = null;
+                    this.src = item.fallback;
+                };
+                lightboxCaption.innerHTML = buildCaption(item);
+
+                // Sembunyikan tombol navigasi jika hanya 1 foto
+                var showNav = currentGallery.length > 1;
+                lightboxPrev.style.display = showNav ? 'flex' : 'none';
+                lightboxNext.style.display = showNav ? 'flex' : 'none';
+            }
+
+            function closeLightbox() {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+                lightboxImage.src = '';
+            }
+
+            function showPrev() {
+                if (currentGallery.length <= 1) return;
+                currentIndex = (currentIndex - 1 + currentGallery.length) % currentGallery.length;
+                updateLightboxImage();
+            }
+
+            function showNext() {
+                if (currentGallery.length <= 1) return;
+                currentIndex = (currentIndex + 1) % currentGallery.length;
+                updateLightboxImage();
+            }
+
+            // Event listeners untuk lightbox
+            lightboxExit.addEventListener('click', closeLightbox);
+            lightboxClose.addEventListener('click', closeLightbox);
+            lightboxPrev.addEventListener('click', function (e) { e.stopPropagation(); showPrev(); });
+            lightboxNext.addEventListener('click', function (e) { e.stopPropagation(); showNext(); });
+
+            // Klik backdrop (di luar gambar) untuk menutup
+            lightbox.addEventListener('click', function (e) {
+                if (e.target === lightbox || e.target.classList.contains('lightbox-container')) {
+                    closeLightbox();
+                }
+            });
+
+            // Klik gambar juga menutup (zoom-out)
+            lightboxImage.addEventListener('click', closeLightbox);
+
+            // Keyboard navigation
+            document.addEventListener('keydown', function (e) {
+                if (!lightbox.classList.contains('active')) return;
+                switch (e.key) {
+                    case 'Escape':
+                        closeLightbox();
+                        break;
+                    case 'ArrowLeft':
+                        showPrev();
+                        break;
+                    case 'ArrowRight':
+                        showNext();
+                        break;
+                }
+            });
 
             function filterData(tingkat) {
                 if (tingkat === 'Semua') {
