@@ -768,20 +768,22 @@
                 label: 'Info PSB', icon: 'fa-clipboard-list',
                 columns: [
                     { key: 'judul', label: 'Judul', type: 'text' },
-                    { key: 'status_aktif', label: 'Aktif', type: 'badge' },
-                    { key: 'tanggal_mulai', label: 'Mulai', type: 'text' }
+                    { key: 'gambar_psb', label: 'Gambar Info', type: 'image' },
+                    { key: 'link_pendaftaran', label: 'Link Pendaftaran', type: 'text' },
+                    { key: 'tanggal_mulai', label: 'Mulai', type: 'text' },
+                    { key: 'tanggal_selesai', label: 'Selesai', type: 'text' },
+                    { key: 'status_aktif', label: 'Aktif', type: 'badge' }
                 ],
                 formFields: [
                     { key: 'judul', label: 'Judul', type: 'text', required: true },
-                    { key: 'deskripsi', label: 'Deskripsi', type: 'textarea' },
-                    { key: 'syarat', label: 'Syarat', type: 'textarea' },
-                    { key: 'tanggal_mulai', label: 'Tanggal Mulai', type: 'date' },
-                    { key: 'tanggal_selesai', label: 'Tanggal Selesai', type: 'date' },
-                    { key: 'link_pendaftaran', label: 'Link Pendaftaran', type: 'url' },
-                    { key: 'kontak', label: 'Kontak', type: 'text' },
+                    { key: 'gambar_psb', label: 'URL Gambar Info PSB', type: 'url', required: true },
+                    { key: 'link_pendaftaran', label: 'Link Pendaftaran (URL formulir)', type: 'url', required: true },
+                    { key: 'tanggal_mulai', label: 'Tanggal Mulai Pendaftaran', type: 'datetime-local', required: true },
+                    { key: 'tanggal_selesai', label: 'Tanggal Selesai Pendaftaran', type: 'datetime-local', required: true },
+                    { key: 'tahun_ajaran', label: 'Tahun Ajaran', type: 'text' },
                     { key: 'status_aktif', label: 'Aktif', type: 'select', options: ['true','false'] }
                 ],
-                orderColumn: 'tanggal_mulai', orderAsc: false
+                orderColumn: 'created_at', orderAsc: false
             },
             sliders: {
                 label: 'Sliders', icon: 'fa-images',
@@ -2048,6 +2050,19 @@
                 } else if (field.type === 'date') {
                     var dateVal = val ? val.substring(0, 10) : '';
                     html += '<input type="date" id="form-' + field.key + '" value="' + escapeHtml(dateVal) + '">';
+                } else if (field.type === 'datetime-local') {
+                    // Convert ISO timestamp (e.g. '2026-01-01T00:00:00+00:00') to 'YYYY-MM-DDTHH:MM' in local time
+                    var dtVal = '';
+                    if (val) {
+                        try {
+                            var d = new Date(val);
+                            if (!isNaN(d.getTime())) {
+                                var pad = function(n) { return String(n).padStart(2, '0'); };
+                                dtVal = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+                            }
+                        } catch (e) { dtVal = ''; }
+                    }
+                    html += '<input type="datetime-local" id="form-' + field.key + '" value="' + escapeHtml(dtVal) + '">';
                 } else {
                     html += '<input type="' + (field.type === 'number' ? 'number' : field.type === 'url' ? 'url' : 'text') + '" id="form-' + field.key + '" value="' + escapeHtml(val) + '">';
                 }
@@ -2098,6 +2113,9 @@
                         payload[field.key] = val ? parseInt(val) : null;
                     } else if (field.type === 'select' && (field.key === 'aktif' || field.key === 'status_aktif')) {
                         payload[field.key] = val === 'true';
+                    } else if (field.type === 'datetime-local') {
+                        // Convert 'YYYY-MM-DDTHH:MM' (local) -> ISO 8601 with timezone
+                        payload[field.key] = val ? new Date(val).toISOString() : null;
                     } else {
                         payload[field.key] = val || null;
                     }

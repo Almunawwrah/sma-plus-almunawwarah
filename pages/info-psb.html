@@ -7,33 +7,35 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        .psb-content{max-width:800px;margin:0 auto}
+        .psb-content{max-width:900px;margin:0 auto}
         .psb-card{background:#fff;border-radius:16px;box-shadow:0 4px 6px rgba(0,0,0,0.07);padding:32px;margin-bottom:24px}
         .psb-card h2{font-size:1.3rem;margin-bottom:16px;display:flex;align-items:center;gap:10px}
         .psb-card h2 i{color:var(--primary)}
         .psb-card p{font-size:0.9rem;color:var(--gray-600);line-height:1.7}
-        .syarat-list{list-style:none;padding:0}
-        .syarat-list li{padding:10px 0;border-bottom:1px solid var(--gray-100);display:flex;align-items:flex-start;gap:10px;font-size:0.9rem;color:var(--gray-700)}
-        .syarat-list li i{color:var(--primary);margin-top:3px;min-width:16px}
-        .alur-steps{display:flex;flex-direction:column;gap:0}
-        .alur-step{display:flex;gap:16px;padding:16px 0}
-        .alur-step-number{min-width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;position:relative}
-        .alur-step:not(:last-child) .alur-step-number::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);width:2px;height:calc(100% + 16px);background:var(--primary-light)}
-        .alur-step-text{padding-top:8px}
-        .alur-step-text h4{font-size:0.95rem;margin-bottom:4px}
-        .alur-step-text p{font-size:0.85rem;color:var(--gray-500)}
-        .biaya-table{width:100%;border-collapse:collapse}
-        .biaya-table th,.biaya-table td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--gray-100);font-size:0.9rem}
-        .biaya-table th{background:var(--primary-lighter);color:var(--primary-dark);font-weight:600}
+        /* Wrapper gambar info PSB */
+        .psb-image-wrapper{margin:0;background:#fff;border-radius:16px;box-shadow:0 4px 6px rgba(0,0,0,0.07);overflow:hidden}
+        .psb-image-wrapper .psb-image-header{padding:24px 32px 16px;border-bottom:1px solid var(--gray-100)}
+        .psb-image-wrapper .psb-image-header h2{font-size:1.3rem;display:flex;align-items:center;gap:10px;margin:0 0 6px}
+        .psb-image-wrapper .psb-image-header h2 i{color:var(--primary)}
+        .psb-image-wrapper .psb-image-header .tahun{font-size:0.82rem;color:var(--gray-500)}
+        .psb-image-figure{margin:0;padding:24px 32px;text-align:center;background:var(--primary-lighter,#ecfdf5)}
+        .psb-image-figure img{max-width:100%;height:auto;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);display:block;margin:0 auto;cursor:zoom-in;transition:transform 0.3s}
+        .psb-image-figure img:hover{transform:scale(1.01)}
+        .psb-image-figure a{display:inline-block;margin-top:16px;font-size:0.82rem;color:var(--primary);text-decoration:none}
+        .psb-image-figure a:hover{text-decoration:underline}
+        .psb-image-empty{padding:80px 32px;text-align:center;color:var(--gray-500)}
+        .psb-image-empty i{font-size:3rem;color:var(--gray-300);margin-bottom:16px;display:block}
+        .psb-image-empty p{font-size:0.95rem}
         .psb-cta{background:linear-gradient(135deg,var(--primary-darker),var(--primary));color:#fff;border-radius:16px;padding:40px;text-align:center;margin-top:30px}
         .psb-cta h2{color:#fff;font-size:1.5rem;margin-bottom:12px;display:block}
         .psb-cta p{opacity:0.9;margin-bottom:24px}
         .btn-psb{background:#fff;color:var(--primary-dark);padding:14px 36px;border-radius:50px;font-weight:700;font-size:1rem;border:none;cursor:pointer;transition:all 0.3s;display:inline-flex;align-items:center;gap:8px;font-family:inherit;text-decoration:none}
         .btn-psb:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.2)}
+        .btn-psb.disabled,.btn-psb[disabled]{background:rgba(255,255,255,0.5);color:rgba(4,120,87,0.6);cursor:not-allowed;pointer-events:none}
         .psb-empty{text-align:center;padding:60px 20px}
         .psb-empty i{font-size:3rem;color:var(--gray-300);margin-bottom:16px;display:block}
         .psb-empty p{color:var(--gray-500);font-size:1rem}
-        .psb-empty .btn-psb{margin-top:20px}
+        .psb-empty .btn-psb{margin-top:20px;background:var(--primary);color:#fff}
     </style>
 </head>
 <body>
@@ -88,82 +90,77 @@
                 }
 
                 var item = data[0];
+                var judul = item.judul || 'Informasi PSB';
+                var gambar = item.gambar_psb || '';
+                var link = item.link_pendaftaran || '#';
+                var tahun = item.tahun_ajaran || '';
+                var tglMulai = item.tanggal_mulai ? new Date(item.tanggal_mulai) : null;
+                var tglSelesai = item.tanggal_selesai ? new Date(item.tanggal_selesai) : null;
+
+                function fmtDate(d) {
+                    if (!d) return '';
+                    var days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+                    var months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+                    return days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() +
+                        ' — ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0') + ' WIB';
+                }
+
                 var html = '';
 
-                // 1. Info card
-                if (item.konten) {
-                    html +=
-                        '<div class="psb-card" data-aos="fade-up">' +
-                        '  <h2><i class="fa-solid fa-info-circle"></i> ' + escapeHtml(item.judul || 'Informasi PSB') + '</h2>' +
-                        '  <p>' + escapeHtml(item.konten) + '</p>' +
-                        '</div>';
-                }
-
-                // 2. Syarat Pendaftaran
-                if (item.syarat && Array.isArray(item.syarat) && item.syarat.length > 0) {
-                    html +=
-                        '<div class="psb-card" data-aos="fade-up" data-aos-delay="100">' +
-                        '  <h2><i class="fa-solid fa-list-check"></i> Syarat Pendaftaran</h2>' +
-                        '  <ul class="syarat-list">';
-                    for (var i = 0; i < item.syarat.length; i++) {
-                        html +=
-                            '    <li><i class="fa-solid fa-check"></i> ' + escapeHtml(item.syarat[i]) + '</li>';
-                    }
-                    html +=
-                        '  </ul>' +
-                        '</div>';
-                }
-
-                // 3. Alur Pendaftaran
-                if (item.alur_pendaftaran) {
-                    var alurLines = item.alur_pendaftaran.split('\n').filter(function (line) {
-                        return line.trim() !== '';
-                    });
-
-                    html +=
-                        '<div class="psb-card" data-aos="fade-up" data-aos-delay="200">' +
-                        '  <h2><i class="fa-solid fa-route"></i> Alur Pendaftaran</h2>' +
-                        '  <div class="alur-steps">';
-
-                    for (var j = 0; j < alurLines.length; j++) {
-                        html +=
-                            '    <div class="alur-step">' +
-                            '      <div class="alur-step-number">' + (j + 1) + '</div>' +
-                            '      <div class="alur-step-text">' +
-                            '        <h4>' + escapeHtml(alurLines[j].trim()) + '</h4>' +
-                            '      </div>' +
-                            '    </div>';
-                    }
-
-                    html +=
-                        '  </div>' +
-                        '</div>';
-                }
-
-                // 4. Biaya
-                if (item.biaya) {
-                    html +=
-                        '<div class="psb-card" data-aos="fade-up" data-aos-delay="300">' +
-                        '  <h2><i class="fa-solid fa-money-bill"></i> Biaya Pendaftaran</h2>' +
-                        '  <p>' + escapeHtml(item.biaya) + '</p>' +
-                        '</div>';
-                }
-
-                // 5. Kontak
-                if (item.kontak) {
-                    html +=
-                        '<div class="psb-card" data-aos="fade-up" data-aos-delay="400">' +
-                        '  <h2><i class="fa-solid fa-phone"></i> Kontak PSB</h2>' +
-                        '  <p>' + escapeHtml(item.kontak) + '</p>' +
-                        '</div>';
-                }
-
-                // 6. CTA Section
+                // 1. Header + Gambar info PSB (menggantikan semua text konten lama)
                 html +=
-                    '<div class="psb-cta" data-aos="fade-up" data-aos-delay="500">' +
+                    '<div class="psb-image-wrapper" data-aos="fade-up">' +
+                    '  <div class="psb-image-header">' +
+                    '    <h2><i class="fa-solid fa-image"></i> ' + escapeHtml(judul) + '</h2>' +
+                    (tahun ? '    <div class="tahun">Tahun Ajaran ' + escapeHtml(tahun) + '</div>' : '') +
+                    '  </div>' +
+                    '  <div class="psb-image-figure">';
+
+                if (gambar) {
+                    html +=
+                        '    <img src="' + escapeHtml(gambar) + '" alt="' + escapeHtml(judul) + '" onerror="this.parentElement.innerHTML=\'' +
+                        '<div class=&quot;psb-image-empty&quot;><i class=&quot;fa-solid fa-image&quot;></i><p>Gambar gagal dimuat. Silakan hubungi panitia PSB.</p></div>\'">' +
+                        '    <a href="' + escapeHtml(gambar) + '" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-and-down-left-from-center"></i> Lihat gambar penuh</a>';
+                } else {
+                    html +=
+                        '    <div class="psb-image-empty">' +
+                        '      <i class="fa-solid fa-image"></i>' +
+                        '      <p>Gambar info PSB belum diunggah oleh panitia. Silakan kembali lagi nanti.</p>' +
+                        '    </div>';
+                }
+
+                html +=
+                    '  </div>' +
+                    '</div>';
+
+                // 1b. Periode pendaftaran (timer diatur via CMS Dashboard)
+                if (tglMulai || tglSelesai) {
+                    html +=
+                        '<div class="psb-card" data-aos="fade-up" data-aos-delay="50">' +
+                        '  <h2><i class="fa-solid fa-calendar-days"></i> Periode Pendaftaran</h2>';
+                    if (tglMulai) {
+                        html += '<p><strong>Mulai:</strong> ' + escapeHtml(fmtDate(tglMulai)) + '</p>';
+                    }
+                    if (tglSelesai) {
+                        html += '<p><strong>Selesai:</strong> ' + escapeHtml(fmtDate(tglSelesai)) + '</p>';
+                    }
+                    html +=
+                        '  <p style="margin-top:12px;font-size:0.82rem;color:var(--gray-500);">' +
+                        '    <i class="fa-solid fa-info-circle"></i> Hitung mundur pendaftaran dapat dilihat di halaman ' +
+                        '    <a href="link-psb.html" style="color:var(--primary);font-weight:600;">Pendaftaran</a>.' +
+                        '  </p>' +
+                        '</div>';
+                }
+
+                // 2. CTA Section — tombol menuju link pendaftaran (dinamis dari DB)
+                var linkValid = link && link !== '#';
+                html +=
+                    '<div class="psb-cta" data-aos="fade-up" data-aos-delay="100">' +
                     '  <h2>Siap Mendaftar?</h2>' +
                     '  <p>Jangan lewatkan kesempatan bergabung bersama SMA Plus Almunawwarah. Daftar sekarang dan raih masa depan yang lebih baik!</p>' +
-                    '  <a href="link-psb.html" class="btn-psb"><i class="fa-solid fa-pen-to-square"></i> Daftar Sekarang</a>' +
+                    (linkValid
+                        ? '  <a href="' + escapeHtml(link) + '" target="_blank" rel="noopener" class="btn-psb"><i class="fa-solid fa-pen-to-square"></i> Daftar Sekarang</a>'
+                        : '  <span class="btn-psb disabled" disabled><i class="fa-solid fa-pen-to-square"></i> Link pendaftaran belum tersedia</span>') +
                     '</div>';
 
                 container.innerHTML = html;

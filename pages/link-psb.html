@@ -15,14 +15,24 @@
         .psb-link-card .icon-circle{width:80px;height:80px;border-radius:50%;background:var(--primary-lighter);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:2rem;color:var(--primary)}
         .psb-link-card h2{font-size:1.3rem;margin-bottom:8px;color:var(--gray-800)}
         .psb-link-card>p{font-size:0.9rem;color:var(--gray-500);margin-bottom:24px;line-height:1.6}
+        /* Gambar poster PSB (dinamis dari DB) */
+        .psb-poster{margin:0 auto 24px;max-width:100%;border-radius:12px;overflow:hidden;background:var(--primary-lighter,#ecfdf5)}
+        .psb-poster img{display:block;width:100%;height:auto;max-height:520px;object-fit:contain;background:#fff}
+        .psb-poster-empty{padding:48px 24px;color:var(--gray-500);text-align:center}
+        .psb-poster-empty i{font-size:2.5rem;color:var(--gray-300);margin-bottom:12px;display:block}
+        .psb-poster-empty p{font-size:0.9rem;margin:0}
         .btn-daftar{display:inline-flex;align-items:center;gap:8px;padding:16px 40px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border-radius:50px;font-size:1.05rem;font-weight:700;border:none;cursor:pointer;transition:all 0.3s;text-decoration:none;font-family:inherit}
         .btn-daftar:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(5,150,105,0.4)}
+        .btn-daftar.disabled,.btn-daftar[disabled]{background:#cbd5e1;color:#64748b;cursor:not-allowed;pointer-events:none;box-shadow:none;transform:none}
         .countdown-section{text-align:center;margin:40px 0}
-        .countdown-section h3{margin-bottom:20px;font-size:1.1rem;color:var(--gray-600)}
-        .countdown-grid{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
-        .countdown-item{background:#fff;border-radius:12px;padding:20px 24px;box-shadow:0 4px 6px rgba(0,0,0,0.07);min-width:80px}
-        .countdown-item .number{font-size:2rem;font-weight:800;color:var(--primary)}
-        .countdown-item .label{font-size:0.75rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.5px}
+        .countdown-section h3{margin-bottom:8px;font-size:1.1rem;color:var(--gray-600)}
+        .countdown-section .countdown-status{font-size:0.9rem;color:var(--primary);font-weight:600;margin-bottom:20px;display:block}
+        .countdown-grid{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+        .countdown-item{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 4px 6px rgba(0,0,0,0.07);min-width:72px}
+        .countdown-item .number{font-size:1.85rem;font-weight:800;color:var(--primary);line-height:1}
+        .countdown-item .label{font-size:0.7rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.5px;margin-top:6px;display:block}
+        .countdown-done{font-size:1.2rem;font-weight:700;color:var(--primary);padding:20px}
+        .countdown-notice{font-size:0.95rem;color:var(--gray-600);padding:24px 20px;background:#fff;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.07);max-width:500px;margin:0 auto}
         .psb-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:800px;margin:40px auto 0}
         .psb-info-item{text-align:center;padding:24px;background:var(--primary-lighter);border-radius:12px;transition:all 0.3s}
         .psb-info-item:hover{transform:translateY(-4px);box-shadow:0 4px 6px rgba(0,0,0,0.07)}
@@ -67,8 +77,17 @@
                         <i class="fas fa-pen-to-square"></i>
                     </div>
                     <h2>Formulir Pendaftaran Online</h2>
-                    <p>Silakan klik tombol di bawah untuk mengisi formulir pendaftaran online. Pastikan Anda telah menyiapkan semua dokumen yang diperlukan sebelum memulai pendaftaran.</p>
-                    <a href="https://tally.so/r/mOJKb7" class="btn-daftar">
+                    <p>Silakan lihat poster informasi pendaftaran di bawah ini, lalu klik tombol "Daftar Sekarang" untuk mengisi formulir pendaftaran online.</p>
+
+                    <!-- Poster gambar PSB (dinamis dari DB — menggantikan text keterangan lama) -->
+                    <div class="psb-poster" id="psb-poster">
+                        <div class="psb-poster-empty">
+                            <i class="fas fa-image"></i>
+                            <p>Memuat poster pendaftaran...</p>
+                        </div>
+                    </div>
+
+                    <a href="#" id="btn-daftar" class="btn-daftar disabled" disabled>
                         Daftar Sekarang <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
@@ -76,7 +95,12 @@
                 <!-- Countdown -->
                 <div class="countdown-section" data-aos="fade-up" data-aos-delay="200">
                     <h3><i class="fas fa-clock" style="color:var(--primary);margin-right:8px"></i>Hitung Mundur Pendaftaran</h3>
+                    <span class="countdown-status" id="cd-status">Memuat jadwal pendaftaran...</span>
                     <div class="countdown-grid" id="countdown">
+                        <div class="countdown-item">
+                            <div class="number" id="cd-months">00</div>
+                            <div class="label">Bulan</div>
+                        </div>
                         <div class="countdown-item">
                             <div class="number" id="cd-days">00</div>
                             <div class="label">Hari</div>
@@ -130,37 +154,233 @@
         // Initialize AOS
         AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 50 });
 
-        // Countdown Timer
+        // ============================================================
+        // DYNAMIC COUNTDOWN TIMER
+        // Target tanggal diambil dari DB (info_psb.tanggal_mulai &
+        // info_psb.tanggal_selesai) — diatur via CMS Dashboard.
+        // Logika:
+        //   - now < tanggal_mulai  -> hitung mundur ke PEMBUKAAN
+        //   - mulai <= now < selesai -> hitung mundur ke PENUTUPAN
+        //   - now >= tanggal_selesai -> tampilkan "Pendaftaran Ditutup"
+        // Display: Bulan, Hari, Jam, Menit, Detik
+        // ============================================================
         (function() {
-            const targetDate = new Date('2026-06-30T00:00:00+07:00').getTime();
-            const daysEl = document.getElementById('cd-days');
-            const hoursEl = document.getElementById('cd-hours');
-            const minutesEl = document.getElementById('cd-minutes');
-            const secondsEl = document.getElementById('cd-seconds');
-            const countdownEl = document.getElementById('countdown');
+            var statusEl = document.getElementById('cd-status');
+            var countdownEl = document.getElementById('countdown');
+            var monthsEl = document.getElementById('cd-months');
+            var daysEl = document.getElementById('cd-days');
+            var hoursEl = document.getElementById('cd-hours');
+            var minutesEl = document.getElementById('cd-minutes');
+            var secondsEl = document.getElementById('cd-seconds');
 
-            function updateCountdown() {
-                const now = new Date().getTime();
-                const diff = targetDate - now;
+            // State periode pendaftaran (diisi dari API)
+            var periodState = {
+                loaded: false,
+                tanggal_mulai: null,    // Date object
+                tanggal_selesai: null   // Date object
+            };
+
+            function pad(n) { return String(n).padStart(2, '0'); }
+
+            // Hitung selisih pecah menjadi Bulan/Hari/Jam/Menit/Detik
+            // Pendekatan kalender: hitung bulan kalender lalu sisa hari.
+            function diffBreakdown(fromMs, toMs) {
+                if (toMs <= fromMs) return { months: 0, days: 0, hours: 0, minutes: 0, seconds: 0 };
+
+                var from = new Date(fromMs);
+                var to = new Date(toMs);
+
+                // Hitung bulan penuh antara from dan to
+                var months = (to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth());
+                // Jika tanggal 'to' lebih kecil dari 'from', kurangi 1 bulan
+                var anchor = new Date(from.getTime());
+                if (months > 0) {
+                    anchor.setMonth(anchor.getMonth() + months);
+                    if (anchor > to) {
+                        months -= 1;
+                        anchor.setMonth(anchor.getMonth() - 1);
+                    }
+                } else {
+                    months = 0;
+                    anchor = new Date(from.getTime());
+                }
+
+                // Sisa ms setelah dikurangi bulan penuh
+                var remainingMs = to.getTime() - anchor.getTime();
+                if (remainingMs < 0) remainingMs = 0;
+
+                var days = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((remainingMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((remainingMs % (1000 * 60)) / 1000);
+
+                return { months: months, days: days, hours: hours, minutes: minutes, seconds: seconds };
+            }
+
+            function renderCountdown(targetMs, label) {
+                var now = new Date().getTime();
+                var diff = targetMs - now;
 
                 if (diff <= 0) {
-                    countdownEl.innerHTML = '<div class="countdown-done"><i class="fas fa-check-circle"></i> Pendaftaran Telah Dibuka!</div>';
+                    // Seharusnya tidak dipanggil di sini karena ditangani oleh updateState,
+                    // tapi untuk safety:
+                    countdownEl.style.display = 'block';
+                    monthsEl.textContent = '00';
+                    daysEl.textContent = '00';
+                    hoursEl.textContent = '00';
+                    minutesEl.textContent = '00';
+                    secondsEl.textContent = '00';
                     return;
                 }
 
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-                daysEl.textContent = String(days).padStart(2, '0');
-                hoursEl.textContent = String(hours).padStart(2, '0');
-                minutesEl.textContent = String(minutes).padStart(2, '0');
-                secondsEl.textContent = String(seconds).padStart(2, '0');
+                var b = diffBreakdown(now, targetMs);
+                countdownEl.style.display = 'flex';
+                statusEl.textContent = label;
+                statusEl.style.color = 'var(--primary)';
+                monthsEl.textContent = pad(b.months);
+                daysEl.textContent = pad(b.days);
+                hoursEl.textContent = pad(b.hours);
+                minutesEl.textContent = pad(b.minutes);
+                secondsEl.textContent = pad(b.seconds);
             }
 
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
+            function renderClosed(message) {
+                countdownEl.innerHTML = '<div class="countdown-done"><i class="fas fa-check-circle"></i> ' + message + '</div>';
+                statusEl.textContent = '';
+            }
+
+            function renderNotice(message) {
+                countdownEl.innerHTML = '<div class="countdown-notice"><i class="fas fa-info-circle" style="color:var(--primary);margin-right:6px;"></i>' + message + '</div>';
+                statusEl.textContent = '';
+            }
+
+            function updateState() {
+                if (!periodState.loaded) return;
+
+                var now = new Date().getTime();
+                var startMs = periodState.tanggal_mulai ? periodState.tanggal_mulai.getTime() : null;
+                var endMs = periodState.tanggal_selesai ? periodState.tanggal_selesai.getTime() : null;
+
+                // Kasus 1: periode belum diatur sama sekali
+                if (!startMs && !endMs) {
+                    renderNotice('Jadwal pendaftaran belum diatur. Silakan hubungi panitia PSB.');
+                    return;
+                }
+
+                // Kasus 2: belum dibuka — countdown ke pembukaan
+                if (startMs && now < startMs) {
+                    renderCountdown(startMs, 'Menuju Pembukaan Pendaftaran');
+                    return;
+                }
+
+                // Kasus 3: sudah dibuka, belum ditutup — countdown ke penutupan
+                if (endMs && now < endMs) {
+                    renderCountdown(endMs, 'Pendaftaran Sedang Dibuka — Akan Ditutup Dalam');
+                    return;
+                }
+
+                // Kasus 4: sudah ditutup
+                renderClosed('Pendaftaran Telah Ditutup');
+            }
+
+            // Fetch periode pendaftaran dari API
+            async function loadPeriod() {
+                if (typeof SMAPlusAPI === 'undefined' || !SMAPlusAPI.fetchInfoPSB) {
+                    renderNotice('Gagal memuat jadwal pendaftaran (API tidak tersedia).');
+                    return;
+                }
+                try {
+                    var data = await SMAPlusAPI.fetchInfoPSB();
+                    if (data && data.length > 0) {
+                        var item = data[0];
+                        if (item.tanggal_mulai) {
+                            periodState.tanggal_mulai = new Date(item.tanggal_mulai);
+                        }
+                        if (item.tanggal_selesai) {
+                            periodState.tanggal_selesai = new Date(item.tanggal_selesai);
+                        }
+                    }
+                    periodState.loaded = true;
+                    updateState();
+                } catch (err) {
+                    console.error('Gagal memuat periode PSB:', err);
+                    renderNotice('Gagal memuat jadwal pendaftaran. Silakan coba lagi nanti.');
+                }
+            }
+
+            // Mulai: load data sekali, lalu update tampilan setiap detik
+            loadPeriod();
+            setInterval(updateState, 1000);
+        })();
+
+        // ============================================================
+        // Load info PSB dari DB (gambar_psb + link_pendaftaran)
+        // Blok ini hanya menangani poster gambar & tombol "Daftar
+        // Sekarang". Timer hitung mundur ditangani oleh blok di atas
+        // (juga dari DB — tanggal_mulai & tanggal_selesai).
+        // ============================================================
+        (function () {
+            'use strict';
+
+            var posterEl = document.getElementById('psb-poster');
+            var btnEl = document.getElementById('btn-daftar');
+
+            function renderEmpty(message) {
+                posterEl.innerHTML =
+                    '<div class="psb-poster-empty">' +
+                    '  <i class="fas fa-image"></i>' +
+                    '  <p>' + (message || 'Poster pendaftaran belum tersedia.') + '</p>' +
+                    '</div>';
+            }
+
+            function applyData(item) {
+                // 1. Render gambar poster
+                var gambar = (item && item.gambar_psb) ? item.gambar_psb : '';
+                if (gambar) {
+                    posterEl.innerHTML =
+                        '<img src="' + escapeHtml(gambar) + '" alt="Poster Pendaftaran Siswa Baru" ' +
+                        'onerror="this.parentElement.innerHTML=\'<div class=&quot;psb-poster-empty&quot;><i class=&quot;fas fa-image&quot;></i><p>Gambar gagal dimuat. Silakan hubungi panitia PSB.</p></div>\'">';
+                } else {
+                    renderEmpty('Poster pendaftaran belum diunggah oleh panitia.');
+                }
+
+                // 2. Update link tombol "Daftar Sekarang"
+                var link = (item && item.link_pendaftaran) ? item.link_pendaftaran : '';
+                if (link && link !== '#' && link !== '') {
+                    btnEl.setAttribute('href', link);
+                    btnEl.setAttribute('target', '_blank');
+                    btnEl.setAttribute('rel', 'noopener');
+                    btnEl.classList.remove('disabled');
+                    btnEl.removeAttribute('disabled');
+                } else {
+                    btnEl.setAttribute('href', '#');
+                    btnEl.classList.add('disabled');
+                    btnEl.setAttribute('disabled', 'disabled');
+                    btnEl.addEventListener('click', function (e) {
+                        e.preventDefault();
+                    });
+                }
+            }
+
+            async function loadPSBInfo() {
+                if (typeof SMAPlusAPI === 'undefined' || !SMAPlusAPI.fetchInfoPSB) {
+                    renderEmpty('Gagal memuat data PSB (API tidak tersedia).');
+                    return;
+                }
+                try {
+                    var data = await SMAPlusAPI.fetchInfoPSB();
+                    if (data && data.length > 0) {
+                        applyData(data[0]);
+                    } else {
+                        renderEmpty('Belum ada data pendaftaran aktif.');
+                    }
+                } catch (err) {
+                    console.error('Gagal memuat info PSB:', err);
+                    renderEmpty('Gagal memuat poster pendaftaran. Silakan coba lagi nanti.');
+                }
+            }
+
+            loadPSBInfo();
         })();
     </script>
     <script>
