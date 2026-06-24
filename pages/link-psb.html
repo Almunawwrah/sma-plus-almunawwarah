@@ -17,7 +17,8 @@
         .psb-link-card>p{font-size:0.9rem;color:var(--gray-500);margin-bottom:24px;line-height:1.6}
         /* Gambar poster PSB (dinamis dari DB) */
         .psb-poster{margin:0 auto 24px;max-width:100%;border-radius:12px;overflow:hidden;background:var(--primary-lighter,#ecfdf5)}
-        .psb-poster img{display:block;width:100%;height:auto;max-height:520px;object-fit:contain;background:#fff}
+        .psb-poster img{display:block;width:100%;height:auto;max-height:520px;object-fit:contain;background:#fff;cursor:zoom-in;transition:transform 0.3s}
+        .psb-poster img:hover{transform:scale(1.01)}
         .psb-poster-empty{padding:48px 24px;color:var(--gray-500);text-align:center}
         .psb-poster-empty i{font-size:2.5rem;color:var(--gray-300);margin-bottom:12px;display:block}
         .psb-poster-empty p{font-size:0.9rem;margin:0}
@@ -44,6 +45,58 @@
         .countdown-done{font-size:1.2rem;font-weight:700;color:var(--primary);padding:20px}
         @media(max-width:768px){.psb-info-grid{grid-template-columns:1fr}}
         @media(max-width:576px){.countdown-grid{gap:10px}.countdown-item{min-width:60px;padding:14px 16px}.countdown-item .number{font-size:1.5rem}.psb-hero h1{font-size:1.75rem}}
+
+        /* ============================================================
+           IMAGE ZOOM MODAL (Lightbox)
+           ============================================================ */
+        .img-zoom-overlay{
+            position:fixed;inset:0;z-index:9999;
+            background:rgba(0,0,0,0.92);
+            display:none;align-items:center;justify-content:center;
+            opacity:0;transition:opacity 0.25s ease;
+            touch-action:none;
+        }
+        .img-zoom-overlay.active{display:flex;opacity:1}
+        .img-zoom-stage{
+            position:relative;width:100%;height:100%;
+            display:flex;align-items:center;justify-content:center;
+            overflow:hidden;
+        }
+        .img-zoom-stage img{
+            max-width:90vw;max-height:90vh;
+            transform-origin:center center;
+            transition:transform 0.15s ease-out;
+            user-select:none;-webkit-user-drag:none;
+            will-change:transform;
+            cursor:grab;
+        }
+        .img-zoom-stage img.dragging{cursor:grabbing;transition:none}
+        .img-zoom-toolbar{
+            position:fixed;top:20px;right:20px;z-index:10000;
+            display:flex;gap:8px;
+        }
+        .img-zoom-btn{
+            width:44px;height:44px;border-radius:50%;
+            background:rgba(255,255,255,0.15);color:#fff;
+            border:none;cursor:pointer;font-size:1.1rem;
+            display:flex;align-items:center;justify-content:center;
+            transition:background 0.2s,transform 0.1s;
+            backdrop-filter:blur(8px);
+        }
+        .img-zoom-btn:hover{background:rgba(255,255,255,0.3)}
+        .img-zoom-btn:active{transform:scale(0.92)}
+        .img-zoom-hint{
+            position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+            color:rgba(255,255,255,0.7);font-size:0.82rem;
+            background:rgba(0,0,0,0.4);padding:8px 16px;border-radius:20px;
+            backdrop-filter:blur(8px);z-index:10000;
+            pointer-events:none;
+        }
+        @media(max-width:576px){
+            .img-zoom-hint{font-size:0.72rem;bottom:16px}
+            .img-zoom-toolbar{top:12px;right:12px}
+            .img-zoom-btn{width:40px;height:40px;font-size:1rem}
+        }
     </style>
 </head>
 <body>
@@ -79,7 +132,7 @@
                     <h2>Formulir Pendaftaran Online</h2>
                     <p>Silakan lihat poster informasi pendaftaran di bawah ini, lalu klik tombol "Daftar Sekarang" untuk mengisi formulir pendaftaran online.</p>
 
-                    <!-- Poster gambar PSB (dinamis dari DB — menggantikan text keterangan lama) -->
+                    <!-- Poster gambar PSB (dinamis dari DB) -->
                     <div class="psb-poster" id="psb-poster">
                         <div class="psb-poster-empty">
                             <i class="fas fa-image"></i>
@@ -138,11 +191,27 @@
                         <i class="fas fa-phone"></i>
                         <h4>Hubungi Kami</h4>
                         <p>Hubungi panitia PSB untuk informasi lebih lanjut</p>
-                        <a href="tel:0481123456">Hubungi Sekarang <i class="fas fa-arrow-right" style="font-size:0.7rem"></i></a>
+                        <a href="https://api.whatsapp.com/send/?phone=%2B6283178710191&text&type=phone_number&app_absent=0">Hubungi Sekarang <i class="fas fa-arrow-right" style="font-size:0.7rem"></i></a>
                     </div>
                 </div>
             </div>
         </section>
+    </div>
+
+    <!-- ============================================================
+         IMAGE ZOOM MODAL (Lightbox)
+         ============================================================ -->
+    <div class="img-zoom-overlay" id="imgZoomOverlay" aria-hidden="true" role="dialog" aria-label="Pratinjau gambar">
+        <div class="img-zoom-toolbar">
+            <button class="img-zoom-btn" id="zoomInBtn" title="Perbesar" aria-label="Perbesar"><i class="fa-solid fa-plus"></i></button>
+            <button class="img-zoom-btn" id="zoomOutBtn" title="Perkecil" aria-label="Perkecil"><i class="fa-solid fa-minus"></i></button>
+            <button class="img-zoom-btn" id="zoomResetBtn" title="Reset" aria-label="Reset"><i class="fa-solid fa-rotate-left"></i></button>
+            <button class="img-zoom-btn" id="zoomCloseBtn" title="Tutup (ESC)" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="img-zoom-stage" id="imgZoomStage">
+            <img id="imgZoomImg" src="" alt="Pratinjau gambar">
+        </div>
+        <div class="img-zoom-hint" id="imgZoomHint">Scroll untuk zoom • Drag untuk geser • ESC untuk tutup</div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -155,14 +224,149 @@
         AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 50 });
 
         // ============================================================
+        // KONVERSI URL GAMBAR (Google Drive share link → direct image)
+        // Pendekatan A: tangani di frontend supaya CMS tetap bisa
+        // menerima share link Google Drive dari panitia.
+        // ============================================================
+        function normalizeImageUrl(url) {
+            if (!url) return '';
+            url = String(url).trim();
+
+            // Format 1: drive.google.com/file/d/FILE_ID/view?usp=sharing
+            var match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+            if (match) {
+                return 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w1000';
+            }
+            // Format 2: drive.google.com/open?id=FILE_ID
+            var match2 = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+            if (match2) {
+                return 'https://drive.google.com/thumbnail?id=' + match2[1] + '&sz=w1000';
+            }
+            // Format 3: drive.google.com/uc?id=FILE_ID (lama)
+            var match3 = url.match(/drive\.google\.com\/uc\?id=([a-zA-Z0-9_-]+)/);
+            if (match3) {
+                return 'https://drive.google.com/thumbnail?id=' + match3[1] + '&sz=w1000';
+            }
+            return url;
+        }
+
+        // ============================================================
+        // IMAGE ZOOM MODAL CONTROLLER
+        // ============================================================
+        (function () {
+            var overlay = document.getElementById('imgZoomOverlay');
+            var stage    = document.getElementById('imgZoomStage');
+            var img      = document.getElementById('imgZoomImg');
+            var btnIn    = document.getElementById('zoomInBtn');
+            var btnOut   = document.getElementById('zoomOutBtn');
+            var btnReset = document.getElementById('zoomResetBtn');
+            var btnClose = document.getElementById('zoomCloseBtn');
+            var hint     = document.getElementById('imgZoomHint');
+
+            var scale = 1, minScale = 1, maxScale = 5;
+            var tx = 0, ty = 0;
+            var isDragging = false;
+            var lastX = 0, lastY = 0;
+            var hintTimer = null;
+
+            function applyTransform() {
+                img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+            }
+            function reset() {
+                scale = 1; tx = 0; ty = 0;
+                applyTransform();
+                img.classList.remove('dragging');
+            }
+            function open(src, alt) {
+                if (!src) return;
+                img.src = src;
+                img.alt = alt || 'Pratinjau gambar';
+                reset();
+                overlay.classList.add('active');
+                overlay.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+                showHint();
+            }
+            function close() {
+                overlay.classList.remove('active');
+                overlay.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+                img.src = '';
+            }
+            function setScale(s) {
+                scale = Math.max(minScale, Math.min(maxScale, s));
+                if (scale <= 1) { tx = 0; ty = 0; }
+                applyTransform();
+            }
+            function showHint() {
+                hint.style.opacity = '1';
+                if (hintTimer) clearTimeout(hintTimer);
+                hintTimer = setTimeout(function () {
+                    hint.style.opacity = '0';
+                }, 3500);
+            }
+
+            // Wheel zoom (desktop)
+            stage.addEventListener('wheel', function (e) {
+                e.preventDefault();
+                var delta = e.deltaY < 0 ? 0.2 : -0.2;
+                setScale(scale + delta);
+            }, { passive: false });
+
+            // Drag pan
+            stage.addEventListener('pointerdown', function (e) {
+                if (e.target !== img && e.target !== stage) return;
+                if (scale <= 1) return;
+                isDragging = true;
+                lastX = e.clientX; lastY = e.clientY;
+                img.classList.add('dragging');
+                stage.setPointerCapture(e.pointerId);
+            });
+            stage.addEventListener('pointermove', function (e) {
+                if (!isDragging) return;
+                tx += (e.clientX - lastX);
+                ty += (e.clientY - lastY);
+                lastX = e.clientX; lastY = e.clientY;
+                applyTransform();
+            });
+            function endDrag(e) {
+                if (!isDragging) return;
+                isDragging = false;
+                img.classList.remove('dragging');
+                try { stage.releasePointerCapture(e.pointerId); } catch (_) {}
+            }
+            stage.addEventListener('pointerup', endDrag);
+            stage.addEventListener('pointercancel', endDrag);
+            stage.addEventListener('pointerleave', endDrag);
+
+            // Double-click / double-tap
+            stage.addEventListener('dblclick', function (e) {
+                if (e.target === stage) { close(); return; }
+                setScale(scale >= 2 ? 1 : 2);
+            });
+
+            btnIn.addEventListener('click', function () { setScale(scale + 0.3); });
+            btnOut.addEventListener('click', function () { setScale(scale - 0.3); });
+            btnReset.addEventListener('click', reset);
+            btnClose.addEventListener('click', close);
+
+            stage.addEventListener('click', function (e) {
+                if (e.target === stage) close();
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (!overlay.classList.contains('active')) return;
+                if (e.key === 'Escape') close();
+                else if (e.key === '+' || e.key === '=') setScale(scale + 0.3);
+                else if (e.key === '-' || e.key === '_') setScale(scale - 0.3);
+                else if (e.key === '0') reset();
+            });
+
+            window.ImageZoom = { open: open, close: close };
+        })();
+
+        // ============================================================
         // DYNAMIC COUNTDOWN TIMER
-        // Target tanggal diambil dari DB (info_psb.tanggal_mulai &
-        // info_psb.tanggal_selesai) — diatur via CMS Dashboard.
-        // Logika:
-        //   - now < tanggal_mulai  -> hitung mundur ke PEMBUKAAN
-        //   - mulai <= now < selesai -> hitung mundur ke PENUTUPAN
-        //   - now >= tanggal_selesai -> tampilkan "Pendaftaran Ditutup"
-        // Display: Bulan, Hari, Jam, Menit, Detik
         // ============================================================
         (function() {
             var statusEl = document.getElementById('cd-status');
@@ -173,26 +377,21 @@
             var minutesEl = document.getElementById('cd-minutes');
             var secondsEl = document.getElementById('cd-seconds');
 
-            // State periode pendaftaran (diisi dari API)
             var periodState = {
                 loaded: false,
-                tanggal_mulai: null,    // Date object
-                tanggal_selesai: null   // Date object
+                tanggal_mulai: null,
+                tanggal_selesai: null
             };
 
             function pad(n) { return String(n).padStart(2, '0'); }
 
-            // Hitung selisih pecah menjadi Bulan/Hari/Jam/Menit/Detik
-            // Pendekatan kalender: hitung bulan kalender lalu sisa hari.
             function diffBreakdown(fromMs, toMs) {
                 if (toMs <= fromMs) return { months: 0, days: 0, hours: 0, minutes: 0, seconds: 0 };
 
                 var from = new Date(fromMs);
                 var to = new Date(toMs);
 
-                // Hitung bulan penuh antara from dan to
                 var months = (to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth());
-                // Jika tanggal 'to' lebih kecil dari 'from', kurangi 1 bulan
                 var anchor = new Date(from.getTime());
                 if (months > 0) {
                     anchor.setMonth(anchor.getMonth() + months);
@@ -205,7 +404,6 @@
                     anchor = new Date(from.getTime());
                 }
 
-                // Sisa ms setelah dikurangi bulan penuh
                 var remainingMs = to.getTime() - anchor.getTime();
                 if (remainingMs < 0) remainingMs = 0;
 
@@ -222,8 +420,6 @@
                 var diff = targetMs - now;
 
                 if (diff <= 0) {
-                    // Seharusnya tidak dipanggil di sini karena ditangani oleh updateState,
-                    // tapi untuk safety:
                     countdownEl.style.display = 'block';
                     monthsEl.textContent = '00';
                     daysEl.textContent = '00';
@@ -261,29 +457,21 @@
                 var startMs = periodState.tanggal_mulai ? periodState.tanggal_mulai.getTime() : null;
                 var endMs = periodState.tanggal_selesai ? periodState.tanggal_selesai.getTime() : null;
 
-                // Kasus 1: periode belum diatur sama sekali
                 if (!startMs && !endMs) {
                     renderNotice('Jadwal pendaftaran belum diatur. Silakan hubungi panitia PSB.');
                     return;
                 }
-
-                // Kasus 2: belum dibuka — countdown ke pembukaan
                 if (startMs && now < startMs) {
                     renderCountdown(startMs, 'Menuju Pembukaan Pendaftaran');
                     return;
                 }
-
-                // Kasus 3: sudah dibuka, belum ditutup — countdown ke penutupan
                 if (endMs && now < endMs) {
                     renderCountdown(endMs, 'Pendaftaran Sedang Dibuka — Akan Ditutup Dalam');
                     return;
                 }
-
-                // Kasus 4: sudah ditutup
                 renderClosed('Pendaftaran Telah Ditutup');
             }
 
-            // Fetch periode pendaftaran dari API
             async function loadPeriod() {
                 if (typeof SMAPlusAPI === 'undefined' || !SMAPlusAPI.fetchInfoPSB) {
                     renderNotice('Gagal memuat jadwal pendaftaran (API tidak tersedia).');
@@ -308,16 +496,13 @@
                 }
             }
 
-            // Mulai: load data sekali, lalu update tampilan setiap detik
             loadPeriod();
             setInterval(updateState, 1000);
         })();
 
         // ============================================================
         // Load info PSB dari DB (gambar_psb + link_pendaftaran)
-        // Blok ini hanya menangani poster gambar & tombol "Daftar
-        // Sekarang". Timer hitung mundur ditangani oleh blok di atas
-        // (juga dari DB — tanggal_mulai & tanggal_selesai).
+        // Poster gambar & tombol "Daftar Sekarang"
         // ============================================================
         (function () {
             'use strict';
@@ -334,12 +519,33 @@
             }
 
             function applyData(item) {
-                // 1. Render gambar poster
-                var gambar = (item && item.gambar_psb) ? item.gambar_psb : '';
+                // 1. Render gambar poster — normalisasi Google Drive URL dulu!
+                var gambarRaw = (item && item.gambar_psb) ? item.gambar_psb : '';
+                var gambar = normalizeImageUrl(gambarRaw);
+
                 if (gambar) {
                     posterEl.innerHTML =
-                        '<img src="' + escapeHtml(gambar) + '" alt="Poster Pendaftaran Siswa Baru" ' +
-                        'onerror="this.parentElement.innerHTML=\'<div class=&quot;psb-poster-empty&quot;><i class=&quot;fas fa-image&quot;></i><p>Gambar gagal dimuat. Silakan hubungi panitia PSB.</p></div>\'">';
+                        '<img id="psb-poster-img" src="' + gambar + '" alt="Poster Pendaftaran Siswa Baru" loading="lazy">';
+
+                    var imgEl = document.getElementById('psb-poster-img');
+                    if (imgEl) {
+                        // Klik untuk zoom
+                        imgEl.addEventListener('click', function () {
+                            if (window.ImageZoom) window.ImageZoom.open(gambar, 'Poster Pendaftaran Siswa Baru');
+                        });
+                        // Error handler aman (tanpa inline onerror bersarang)
+                        imgEl.addEventListener('error', function () {
+                            posterEl.innerHTML =
+                                '<div class="psb-poster-empty">' +
+                                '  <i class="fas fa-triangle-exclamation"></i>' +
+                                '  <p>Gambar gagal dimuat. URL: ' + escapeHtml(gambarRaw) + '</p>' +
+                                '  <p style="font-size:0.78rem;margin-top:8px;color:var(--gray-400);">' +
+                                '    Jika ini Google Drive, pastikan file berupa <strong>gambar</strong> ' +
+                                '    dan izin sharing-nya "Anyone with the link".' +
+                                '  </p>' +
+                                '</div>';
+                        });
+                    }
                 } else {
                     renderEmpty('Poster pendaftaran belum diunggah oleh panitia.');
                 }
@@ -384,8 +590,8 @@
         })();
     </script>
     <script>
-        // Register Service Worker for caching
-        if ('serviceWorker' in navigator) {
+        // Register Service Worker — hanya via http/https (bukan file://)
+        if ('serviceWorker' in navigator && window.location.protocol.indexOf('http') === 0) {
             window.addEventListener('load', function() {
                 var swPath = (window.location.pathname.includes('/pages/') || window.location.pathname.includes('/admincms/')) ? '../sw.js' : 'sw.js';
                 navigator.serviceWorker.register(swPath).then(function(reg) {
@@ -394,6 +600,8 @@
                     console.warn('SW registration failed:', err);
                 });
             });
+        } else {
+            console.info('SW dilewati: protocol tidak didukung (file://) atau SW tidak tersedia.');
         }
     </script>
 </body>

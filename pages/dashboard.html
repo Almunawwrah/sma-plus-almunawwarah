@@ -702,7 +702,7 @@
                     { key: 'nama', label: 'Nama', type: 'text', required: true },
                     { key: 'deskripsi', label: 'Deskripsi', type: 'textarea' },
                     { key: 'foto_link', label: 'URL Foto', type: 'url' },
-                    { key: 'kategori', label: 'Kategori', type: 'select', options: ['Umum','Lab','Ruang','Lapangan','Ibadah'] },
+                    { key: 'kategori', label: 'Kategori', type: 'select', options: ['Sarana','Prasarana'] },
                     { key: 'urutan', label: 'Urutan', type: 'number' }
                 ],
                 orderColumn: 'urutan', orderAsc: true
@@ -1017,6 +1017,9 @@
             else if (['lab','ruang'].indexOf(v) >= 0) cls = 'badge-blue';
             else if (['umum'].indexOf(v) >= 0) cls = 'badge-green';
             else if (['lapangan','ibadah'].indexOf(v) >= 0) cls = 'badge-amber';
+            // Sarana & Prasarana (kategori baru yang disederhanakan)
+            else if (v === 'sarana') cls = 'badge-blue';
+            else if (v === 'prasarana') cls = 'badge-green';
             else if (['kegiatan','prestasi'].indexOf(v) >= 0) cls = 'badge-green';
             else if (['fasilitas'].indexOf(v) >= 0) cls = 'badge-blue';
             else if (['lainnya'].indexOf(v) >= 0) cls = 'badge-default';

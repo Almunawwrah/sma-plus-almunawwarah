@@ -146,13 +146,9 @@
                 </div>
 
                 <div class="filter-pills" id="filter-pills" data-aos="fade-up" data-aos-delay="100">
-                    <button class="filter-pill" data-filter="Lab">Semua</button>
-                    <button class="filter-pill" data-filter="Lab">Lab</button>
-                    <button class="filter-pill" data-filter="Ruang">Ruang</button>
-                    <button class="filter-pill" data-filter="Lapangan">Lapangan</button>
-                    <button class="filter-pill" data-filter="Ibadah">Ibadah</button>
-                    <button class="filter-pill" data-filter="Umum">Umum</button>
-                    <button class="filter-pill" data-filter="Umum">Sarana Prasarana</button
+                    <button class="filter-pill active" data-filter="Semua">Semua</button>
+                    <button class="filter-pill" data-filter="Sarana">Sarana</button>
+                    <button class="filter-pill" data-filter="Prasarana">Prasarana</button>
                 </div>
 
                 <div class="fasilitas-grid" id="fasilitas-grid">
@@ -255,7 +251,9 @@
                         return;
                     }
 
-                    renderFasilitas(allData);
+                    // Tampilkan sesuai filter aktif (default: Semua)
+                    setActivePill(activeFilter);
+                    renderFasilitas(filterData(activeFilter));
                 } catch (err) {
                     console.error('Gagal memuat sarana prasarana:', err);
                     grid.innerHTML =

@@ -36,6 +36,62 @@
         .psb-empty i{font-size:3rem;color:var(--gray-300);margin-bottom:16px;display:block}
         .psb-empty p{color:var(--gray-500);font-size:1rem}
         .psb-empty .btn-psb{margin-top:20px;background:var(--primary);color:#fff}
+
+        /* ============================================================
+           IMAGE ZOOM MODAL (Lightbox)
+           - Klik gambar untuk membuka modal zoom
+           - Wheel / pinch untuk zoom in/out
+           - Drag untuk pan
+           - Klik outside / tombol X / ESC untuk tutup
+           ============================================================ */
+        .img-zoom-overlay{
+            position:fixed;inset:0;z-index:9999;
+            background:rgba(0,0,0,0.92);
+            display:none;align-items:center;justify-content:center;
+            opacity:0;transition:opacity 0.25s ease;
+            touch-action:none;          /* izinkan gesture pan saat desktop */
+        }
+        .img-zoom-overlay.active{display:flex;opacity:1}
+        .img-zoom-stage{
+            position:relative;width:100%;height:100%;
+            display:flex;align-items:center;justify-content:center;
+            overflow:hidden;
+        }
+        .img-zoom-stage img{
+            max-width:90vw;max-height:90vh;
+            transform-origin:center center;
+            transition:transform 0.15s ease-out;
+            user-select:none;-webkit-user-drag:none;
+            will-change:transform;
+            cursor:grab;
+        }
+        .img-zoom-stage img.dragging{cursor:grabbing;transition:none}
+        .img-zoom-toolbar{
+            position:fixed;top:20px;right:20px;z-index:10000;
+            display:flex;gap:8px;
+        }
+        .img-zoom-btn{
+            width:44px;height:44px;border-radius:50%;
+            background:rgba(255,255,255,0.15);color:#fff;
+            border:none;cursor:pointer;font-size:1.1rem;
+            display:flex;align-items:center;justify-content:center;
+            transition:background 0.2s,transform 0.1s;
+            backdrop-filter:blur(8px);
+        }
+        .img-zoom-btn:hover{background:rgba(255,255,255,0.3)}
+        .img-zoom-btn:active{transform:scale(0.92)}
+        .img-zoom-hint{
+            position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+            color:rgba(255,255,255,0.7);font-size:0.82rem;
+            background:rgba(0,0,0,0.4);padding:8px 16px;border-radius:20px;
+            backdrop-filter:blur(8px);z-index:10000;
+            pointer-events:none;
+        }
+        @media(max-width:576px){
+            .img-zoom-hint{font-size:0.72rem;bottom:16px}
+            .img-zoom-toolbar{top:12px;right:12px}
+            .img-zoom-btn{width:40px;height:40px;font-size:1rem}
+        }
     </style>
 </head>
 <body>
@@ -67,6 +123,22 @@
 
     </div>
 
+    <!-- ============================================================
+         IMAGE ZOOM MODAL (Lightbox)
+         ============================================================ -->
+    <div class="img-zoom-overlay" id="imgZoomOverlay" aria-hidden="true" role="dialog" aria-label="Pratinjau gambar">
+        <div class="img-zoom-toolbar">
+            <button class="img-zoom-btn" id="zoomInBtn" title="Perbesar" aria-label="Perbesar"><i class="fa-solid fa-plus"></i></button>
+            <button class="img-zoom-btn" id="zoomOutBtn" title="Perkecil" aria-label="Perkecil"><i class="fa-solid fa-minus"></i></button>
+            <button class="img-zoom-btn" id="zoomResetBtn" title="Reset" aria-label="Reset"><i class="fa-solid fa-rotate-left"></i></button>
+            <button class="img-zoom-btn" id="zoomCloseBtn" title="Tutup (ESC)" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="img-zoom-stage" id="imgZoomStage">
+            <img id="imgZoomImg" src="" alt="Pratinjau gambar">
+        </div>
+        <div class="img-zoom-hint" id="imgZoomHint">Scroll untuk zoom • Drag untuk geser • ESC untuk tutup</div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/api.js"></script>
     <script src="../js/navbar.js"></script>
@@ -77,6 +149,168 @@
             'use strict';
 
             var container = document.getElementById('psb-container');
+
+            // ============================================================
+            // KONVERSI URL GAMBAR (Google Drive share link → direct image)
+            // Pendekatan A: tangani di frontend supaya CMS tetap bisa
+            // menerima share link Google Drive dari panitia.
+            // ============================================================
+            function normalizeImageUrl(url) {
+                if (!url) return '';
+                url = String(url).trim();
+
+                // Format 1: drive.google.com/file/d/FILE_ID/view?usp=sharing
+                var match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+                if (match) {
+                    // Endpoint thumbnail paling reliable utk <img>, sz=w1000 = max width 1000px
+                    return 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w1000';
+                }
+
+                // Format 2: drive.google.com/open?id=FILE_ID
+                var match2 = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+                if (match2) {
+                    return 'https://drive.google.com/thumbnail?id=' + match2[1] + '&sz=w1000';
+                }
+
+                // Format 3: drive.google.com/uc?id=FILE_ID (lama)
+                var match3 = url.match(/drive\.google\.com\/uc\?id=([a-zA-Z0-9_-]+)/);
+                if (match3) {
+                    return 'https://drive.google.com/thumbnail?id=' + match3[1] + '&sz=w1000';
+                }
+
+                // URL lain (Supabase Storage, dsb.) — pakai apa adanya
+                return url;
+            }
+
+            // ============================================================
+            // IMAGE ZOOM MODAL CONTROLLER
+            // ============================================================
+            var ImageZoom = (function () {
+                var overlay = document.getElementById('imgZoomOverlay');
+                var stage    = document.getElementById('imgZoomStage');
+                var img      = document.getElementById('imgZoomImg');
+                var btnIn    = document.getElementById('zoomInBtn');
+                var btnOut   = document.getElementById('zoomOutBtn');
+                var btnReset = document.getElementById('zoomResetBtn');
+                var btnClose = document.getElementById('zoomCloseBtn');
+                var hint     = document.getElementById('imgZoomHint');
+
+                var scale = 1, minScale = 1, maxScale = 5;
+                var tx = 0, ty = 0;          // translasi (pan)
+                var isDragging = false;
+                var lastX = 0, lastY = 0;
+                var hintTimer = null;
+
+                function applyTransform() {
+                    img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+                }
+
+                function reset() {
+                    scale = 1; tx = 0; ty = 0;
+                    applyTransform();
+                    img.classList.remove('dragging');
+                }
+
+                function open(src, alt) {
+                    if (!src) return;
+                    img.src = src;
+                    img.alt = alt || 'Pratinjau gambar';
+                    reset();
+                    overlay.classList.add('active');
+                    overlay.setAttribute('aria-hidden', 'false');
+                    document.body.style.overflow = 'hidden';
+                    showHint();
+                }
+
+                function close() {
+                    overlay.classList.remove('active');
+                    overlay.setAttribute('aria-hidden', 'true');
+                    document.body.style.overflow = '';
+                    img.src = '';
+                }
+
+                function zoomIn()  { setScale(scale + 0.3); }
+                function zoomOut() { setScale(scale - 0.3); }
+
+                function setScale(s) {
+                    scale = Math.max(minScale, Math.min(maxScale, s));
+                    if (scale <= 1) { tx = 0; ty = 0; }
+                    applyTransform();
+                }
+
+                function showHint() {
+                    hint.style.opacity = '1';
+                    if (hintTimer) clearTimeout(hintTimer);
+                    hintTimer = setTimeout(function () {
+                        hint.style.opacity = '0';
+                    }, 3500);
+                }
+
+                // ----- Wheel zoom (desktop) -----
+                stage.addEventListener('wheel', function (e) {
+                    e.preventDefault();
+                    var delta = e.deltaY < 0 ? 0.2 : -0.2;
+                    setScale(scale + delta);
+                }, { passive: false });
+
+                // ----- Drag pan -----
+                stage.addEventListener('pointerdown', function (e) {
+                    if (e.target !== img && e.target !== stage) return;
+                    if (scale <= 1) return;
+                    isDragging = true;
+                    lastX = e.clientX; lastY = e.clientY;
+                    img.classList.add('dragging');
+                    stage.setPointerCapture(e.pointerId);
+                });
+                stage.addEventListener('pointermove', function (e) {
+                    if (!isDragging) return;
+                    tx += (e.clientX - lastX);
+                    ty += (e.clientY - lastY);
+                    lastX = e.clientX; lastY = e.clientY;
+                    applyTransform();
+                });
+                function endDrag(e) {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    img.classList.remove('dragging');
+                    try { stage.releasePointerCapture(e.pointerId); } catch (_) {}
+                }
+                stage.addEventListener('pointerup', endDrag);
+                stage.addEventListener('pointercancel', endDrag);
+                stage.addEventListener('pointerleave', endDrag);
+
+                // ----- Double-click / double-tap zoom -----
+                stage.addEventListener('dblclick', function (e) {
+                    if (e.target === stage) { close(); return; }
+                    setScale(scale >= 2 ? 1 : 2);
+                });
+
+                // ----- Tombol toolbar -----
+                btnIn.addEventListener('click', zoomIn);
+                btnOut.addEventListener('click', zoomOut);
+                btnReset.addEventListener('click', reset);
+                btnClose.addEventListener('click', close);
+
+                // ----- Klik area gelap untuk tutup (tapi bukan gambar) -----
+                stage.addEventListener('click', function (e) {
+                    // Hanya tutup jika klik kosong (bukan pada gambar)
+                    if (e.target === stage) close();
+                });
+
+                // ----- ESC untuk tutup -----
+                document.addEventListener('keydown', function (e) {
+                    if (!overlay.classList.contains('active')) return;
+                    if (e.key === 'Escape') close();
+                    else if (e.key === '+' || e.key === '=') zoomIn();
+                    else if (e.key === '-' || e.key === '_') zoomOut();
+                    else if (e.key === '0') reset();
+                });
+
+                return { open: open, close: close };
+            })();
+
+            // Buka fungsi zoom global supaya bisa dipakai inline
+            window.ImageZoom = ImageZoom;
 
             function renderPSB(data) {
                 if (!data || data.length === 0) {
@@ -91,7 +325,9 @@
 
                 var item = data[0];
                 var judul = item.judul || 'Informasi PSB';
-                var gambar = item.gambar_psb || '';
+                // ⚠️ Penting: normalize Google Drive URL dulu sebelum dipakai di <img>
+                var gambarRaw = item.gambar_psb || '';
+                var gambar = normalizeImageUrl(gambarRaw);
                 var link = item.link_pendaftaran || '#';
                 var tahun = item.tahun_ajaran || '';
                 var tglMulai = item.tanggal_mulai ? new Date(item.tanggal_mulai) : null;
@@ -107,7 +343,7 @@
 
                 var html = '';
 
-                // 1. Header + Gambar info PSB (menggantikan semua text konten lama)
+                // 1. Header + Gambar info PSB
                 html +=
                     '<div class="psb-image-wrapper" data-aos="fade-up">' +
                     '  <div class="psb-image-header">' +
@@ -117,10 +353,14 @@
                     '  <div class="psb-image-figure">';
 
                 if (gambar) {
+                    // ⚠️ JANGAN escapeHtml URL gambar — cukup escape quote untuk atribut
+                    // Pakai addEventListener (bukan inline onerror) supaya tidak rapuh
                     html +=
-                        '    <img src="' + escapeHtml(gambar) + '" alt="' + escapeHtml(judul) + '" onerror="this.parentElement.innerHTML=\'' +
-                        '<div class=&quot;psb-image-empty&quot;><i class=&quot;fa-solid fa-image&quot;></i><p>Gambar gagal dimuat. Silakan hubungi panitia PSB.</p></div>\'">' +
-                        '    <a href="' + escapeHtml(gambar) + '" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-and-down-left-from-center"></i> Lihat gambar penuh</a>';
+                        '    <img id="psb-img" src="' + gambar + '" alt="' + escapeHtml(judul) + '" ' +
+                        '         style="cursor:zoom-in;" loading="lazy">' +
+                        '    <a href="' + gambar + '" target="_blank" rel="noopener" id="psb-img-full">' +
+                        '      <i class="fa-solid fa-up-right-and-down-left-from-center"></i> Lihat gambar penuh' +
+                        '    </a>';
                 } else {
                     html +=
                         '    <div class="psb-image-empty">' +
@@ -133,7 +373,7 @@
                     '  </div>' +
                     '</div>';
 
-                // 1b. Periode pendaftaran (timer diatur via CMS Dashboard)
+                // 1b. Periode pendaftaran
                 if (tglMulai || tglSelesai) {
                     html +=
                         '<div class="psb-card" data-aos="fade-up" data-aos-delay="50">' +
@@ -152,7 +392,7 @@
                         '</div>';
                 }
 
-                // 2. CTA Section — tombol menuju link pendaftaran (dinamis dari DB)
+                // 2. CTA Section
                 var linkValid = link && link !== '#';
                 html +=
                     '<div class="psb-cta" data-aos="fade-up" data-aos-delay="100">' +
@@ -165,6 +405,30 @@
 
                 container.innerHTML = html;
                 AOS.refresh();
+
+                // ===== Pasang event handler SETELAH innerHTML dirender =====
+                if (gambar) {
+                    var imgEl = document.getElementById('psb-img');
+                    if (imgEl) {
+                        // Klik gambar → buka zoom modal
+                        imgEl.addEventListener('click', function () {
+                            ImageZoom.open(gambar, judul);
+                        });
+                        // Error handler aman (tanpa inline onerror bersarang)
+                        imgEl.addEventListener('error', function () {
+                            var parent = imgEl.parentElement;
+                            parent.innerHTML =
+                                '<div class="psb-image-empty">' +
+                                '  <i class="fa-solid fa-triangle-exclamation"></i>' +
+                                '  <p>Gambar gagal dimuat. URL: ' + escapeHtml(gambarRaw) + '</p>' +
+                                '  <p style="font-size:0.78rem;margin-top:8px;color:var(--gray-400);">' +
+                                '    Jika ini Google Drive, pastikan file berupa <strong>gambar</strong> (bukan dokumen) ' +
+                                '    dan izin sharing-nya "Anyone with the link".' +
+                                '  </p>' +
+                                '</div>';
+                        });
+                    }
+                }
             }
 
             async function loadPSB() {
@@ -192,8 +456,8 @@
         })();
     </script>
     <script>
-        // Register Service Worker for caching
-        if ('serviceWorker' in navigator) {
+        // Register Service Worker for caching — hanya via http/https (bukan file://)
+        if ('serviceWorker' in navigator && window.location.protocol.indexOf('http') === 0) {
             window.addEventListener('load', function() {
                 var swPath = (window.location.pathname.includes('/pages/') || window.location.pathname.includes('/admincms/')) ? '../sw.js' : 'sw.js';
                 navigator.serviceWorker.register(swPath).then(function(reg) {
@@ -202,6 +466,8 @@
                     console.warn('SW registration failed:', err);
                 });
             });
+        } else {
+            console.info('SW dilewati: protocol tidak didukung (file://) atau SW tidak tersedia.');
         }
     </script>
 </body>
