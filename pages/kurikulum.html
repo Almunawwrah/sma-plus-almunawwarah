@@ -6,238 +6,400 @@
     <title>Kurikulum - SMA Plus Almunawwarah</title>
     <meta name="description" content="Kurikulum Merdeka yang diterapkan di SMA Plus Almunawwarah, mengintegrasikan pendidikan akademik dan karakter Islami.">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Page-specific CSS */
+        /* ============================================================
+           KURIKULUM PAGE — MODERNIZED STYLES
+           ============================================================ */
         .kurikulum-intro {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            grid-template-columns: 1.05fr 1fr;
+            gap: 56px;
             align-items: center;
         }
-        .kurikulum-intro-text {
-            padding-right: 20px;
-        }
+        .kurikulum-intro-text { padding-right: 20px; }
         .kurikulum-intro-image {
-            border-radius: var(--radius-lg);
+            border-radius: 24px;
             overflow: hidden;
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 30px 60px -20px rgba(5,150,105,0.35), 0 12px 24px -12px rgba(0,0,0,0.12);
+            position: relative;
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            aspect-ratio: 4 / 3;
+        }
+        .kurikulum-intro-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 60%, rgba(6,78,59,0.18));
+            pointer-events: none;
         }
         .kurikulum-intro-image img {
             width: 100%;
-            height: 350px;
+            height: 100%;
             object-fit: cover;
+            transition: transform 0.6s ease;
         }
+        .kurikulum-intro-image:hover img { transform: scale(1.04); }
         .mapel-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            gap: 22px;
         }
         .mapel-card {
             background: white;
-            border-radius: var(--radius);
-            padding: 24px;
-            box-shadow: var(--shadow);
-            border-left: 4px solid var(--primary);
-            transition: all 0.3s;
+            border-radius: 20px;
+            padding: 28px 24px;
+            box-shadow: 0 4px 16px -6px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
+            border: 1px solid rgba(5,150,105,0.06);
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            position: relative;
+            overflow: hidden;
+        }
+        .mapel-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            opacity: 0.85;
         }
         .mapel-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px -12px rgba(5,150,105,0.25), 0 4px 12px rgba(0,0,0,0.06);
+            border-color: rgba(5,150,105,0.18);
         }
         .mapel-card h4 {
-            font-size: 0.95rem;
-            margin-bottom: 6px;
+            font-size: 1rem;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            color: var(--gray-800);
+            font-weight: 700;
         }
         .mapel-card h4 i {
             color: var(--primary);
+            width: 32px; height: 32px;
+            background: var(--primary-lighter);
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
         }
         .mapel-card p {
-            font-size: 0.85rem;
+            font-size: 0.875rem;
             color: var(--gray-500);
+            line-height: 1.65;
         }
         .tahfidz-section {
-            background: linear-gradient(135deg, var(--primary-lighter), white);
-            border-radius: var(--radius-lg);
-            padding: 40px;
+            background: linear-gradient(135deg, var(--primary-lighter) 0%, #ffffff 60%, #fffbeb 100%);
+            border-radius: 28px;
+            padding: 56px 48px;
+            position: relative;
+            overflow: hidden;
+        }
+        .tahfidz-section::before {
+            content: '';
+            position: absolute;
+            top: -80px; right: -80px;
+            width: 240px; height: 240px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(245,158,11,0.12), transparent 70%);
+            pointer-events: none;
         }
         .tahfidz-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            gap: 32px;
+            position: relative;
         }
         .tahfidz-item {
             display: flex;
-            gap: 16px;
+            gap: 18px;
             align-items: flex-start;
+            padding: 18px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(6px);
+            transition: all 0.3s ease;
+        }
+        .tahfidz-item:hover {
+            background: white;
+            box-shadow: 0 8px 24px -8px rgba(5,150,105,0.18);
+            transform: translateX(4px);
         }
         .tahfidz-number {
-            min-width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--primary);
+            min-width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            font-size: 1.1rem;
+            font-weight: 800;
+            font-size: 1.2rem;
+            box-shadow: 0 6px 14px -4px rgba(5,150,105,0.4);
         }
         .tahfidz-item h4 {
-            font-size: 0.95rem;
+            font-size: 1rem;
             margin-bottom: 4px;
+            color: var(--gray-800);
+            font-weight: 700;
         }
         .tahfidz-item p {
-            font-size: 0.85rem;
+            font-size: 0.875rem;
             color: var(--gray-500);
+            line-height: 1.6;
+            margin: 0;
         }
-        /* ── Jadwal Tabs ── */
+
+        /* ============================================================
+           JADWAL TABS — MODERN PILLS
+           ============================================================ */
         .jadwal-tabs-wrapper {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
-            padding-bottom: 4px;
+            padding-bottom: 6px;
         }
         .jadwal-tabs-wrapper::-webkit-scrollbar { display: none; }
         .jadwal-tabs {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             min-width: max-content;
-            padding: 4px;
-            background: var(--gray-100);
-            border-radius: 12px;
+            padding: 6px;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 4px 20px -4px rgba(0,0,0,0.06), inset 0 0 0 1px rgba(5,150,105,0.06);
         }
         .kelas-tab {
-            padding: 10px 22px;
-            border-radius: 10px;
+            padding: 12px 24px;
+            border-radius: 12px;
             border: none;
             background: transparent;
-            font-size: 0.85rem;
+            font-size: 0.875rem;
             cursor: pointer;
-            transition: all 0.25s;
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
             font-family: inherit;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--gray-500);
             white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
+        .kelas-tab i { font-size: 0.78rem; opacity: 0.7; }
         .kelas-tab:hover {
             color: var(--primary-dark);
-            background: white;
+            background: var(--primary-lighter);
         }
         .kelas-tab.active {
-            background: #059669;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
-            box-shadow: 0 2px 8px rgba(5,150,105,0.3);
+            box-shadow: 0 6px 16px -4px rgba(5,150,105,0.45);
         }
+        .kelas-tab.active i { opacity: 1; }
 
-        /* ── Jadwal Grid Table ── */
-        .jadwal-grid-wrapper {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-        }
-        .jadwal-grid {
-            width: 100%;
-            min-width: 700px;
-            border-collapse: separate;
-            border-spacing: 0;
+        /* ============================================================
+           JADWAL IMAGE — NEW IMAGE-BASED DISPLAY
+           ============================================================ */
+        .jadwal-image-frame {
             background: white;
-            border-radius: var(--radius-lg);
+            border-radius: 24px;
+            padding: 18px;
+            box-shadow: 0 20px 50px -20px rgba(5,150,105,0.25), 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid rgba(5,150,105,0.08);
+            position: relative;
             overflow: hidden;
         }
-        .jadwal-grid thead th {
-            background: #059669;
+        .jadwal-image-frame::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+        .jadwal-image-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px 18px 12px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .jadwal-image-meta-left {
+            display: flex; align-items: center; gap: 12px;
+        }
+        .jadwal-image-meta-icon {
+            width: 44px; height: 44px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
-            padding: 14px 12px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 0.85rem;
-            letter-spacing: 0.01em;
-            border-right: 1px solid rgba(255,255,255,0.15);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            box-shadow: 0 6px 14px -4px rgba(5,150,105,0.4);
         }
-        .jadwal-grid thead th:last-child { border-right: none; }
-        .jadwal-grid thead th.col-jam {
-            width: 60px;
-            text-align: center;
-        }
-        .jadwal-grid thead th.col-waktu {
-            width: 130px;
-            text-align: center;
-        }
-        .jadwal-grid thead th.col-hari {
-            min-width: 130px;
-        }
-        .jadwal-grid tbody td {
-            padding: 12px 12px;
-            border-bottom: 1px solid var(--gray-100);
-            border-right: 1px solid var(--gray-100);
-            font-size: 0.82rem;
-            vertical-align: top;
-            text-align: center;
-        }
-        .jadwal-grid tbody td:last-child { border-right: none; }
-        .jadwal-grid tbody td.cell-jam {
-            font-weight: 700;
-            color: #059669;
-            font-size: 0.9rem;
-            vertical-align: middle;
-        }
-        .jadwal-grid tbody td.cell-waktu {
-            color: var(--gray-500);
-            font-size: 0.78rem;
-            vertical-align: middle;
-            white-space: nowrap;
-        }
-        .jadwal-grid tbody td.cell-hari {
-            text-align: left;
-        }
-        .jadwal-grid tbody td.cell-hari .mapel-name {
-            font-weight: 600;
+        .jadwal-image-meta-text h3 {
+            font-size: 1.05rem;
             color: var(--gray-800);
-            display: block;
-            margin-bottom: 2px;
+            font-weight: 700;
+            margin: 0;
         }
-        .jadwal-grid tbody td.cell-hari .guru-name {
-            font-size: 0.75rem;
-            color: var(--gray-400);
-            display: block;
+        .jadwal-image-meta-text span {
+            font-size: 0.78rem;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-        .jadwal-grid tbody td.cell-empty {
-            color: var(--gray-300);
-            font-style: italic;
+        .jadwal-image-actions { display: flex; gap: 8px; }
+        .jadwal-image-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--primary-lighter);
+            color: var(--primary-dark);
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-family: inherit;
+        }
+        .jadwal-image-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-1px);
+        }
+        .jadwal-image-container {
+            position: relative;
+            background: var(--gray-50);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(5,150,105,0.05);
+        }
+        .jadwal-image-container img {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 1100px;
+            object-fit: contain;
+            background: white;
+            transition: transform 0.5s ease;
+        }
+        .jadwal-image-container:hover img { transform: scale(1.01); }
+        .jadwal-image-placeholder {
+            padding: 80px 24px;
             text-align: center;
-            vertical-align: middle;
+            color: var(--gray-400);
+            background: linear-gradient(135deg, #f9fafb, #ecfdf5);
         }
-        .jadwal-grid tbody tr:last-child td { border-bottom: none; }
-        .jadwal-grid tbody tr:hover td {
-            background: rgba(5,150,105,0.04);
+        .jadwal-image-placeholder .ph-icon {
+            width: 96px; height: 96px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.4rem;
+            color: var(--primary);
+            box-shadow: 0 8px 24px -8px rgba(5,150,105,0.18);
+        }
+        .jadwal-image-placeholder h4 {
+            color: var(--gray-700);
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .jadwal-image-placeholder p {
+            color: var(--gray-500);
+            font-size: 0.9rem;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+        .jadwal-image-caption {
+            padding: 14px 12px 6px;
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            justify-content: center;
+        }
+        .jadwal-image-caption i { color: var(--primary); }
+
+        /* Fullscreen lightbox */
+        .jadwal-lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(6,78,59,0.92);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            animation: jadwalLightboxFade 0.25s ease;
+        }
+        .jadwal-lightbox.active { display: flex; }
+        @keyframes jadwalLightboxFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .jadwal-lightbox img {
+            max-width: 95%;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+        }
+        .jadwal-lightbox-close {
+            position: absolute;
+            top: 24px; right: 24px;
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .jadwal-lightbox-close:hover {
+            background: rgba(255,255,255,0.25);
+            transform: rotate(90deg);
         }
 
-        /* ── Loading & Empty States ── */
-        .jadwal-loading { text-align: center; padding: 30px; }
+        /* Loading & empty states */
+        .jadwal-loading {
+            text-align: center;
+            padding: 64px 24px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 4px 16px -6px rgba(0,0,0,0.06);
+        }
         .jadwal-empty-state {
             text-align: center;
-            padding: 48px 20px;
+            padding: 64px 24px;
             background: white;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow);
+            border-radius: 24px;
+            box-shadow: 0 4px 16px -6px rgba(0,0,0,0.06);
         }
         .jadwal-empty-state i {
-            font-size: 2.5rem;
+            font-size: 3rem;
             color: var(--gray-300);
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             display: block;
         }
         .jadwal-empty-state p {
             color: var(--gray-500);
             font-size: 0.95rem;
         }
-
-        /* ── Kelas Title ── */
         .jadwal-kelas-title {
             font-size: 1.05rem;
             margin-bottom: 20px;
@@ -246,24 +408,20 @@
             gap: 8px;
             font-weight: 600;
         }
-        .jadwal-kelas-title i {
-            color: #059669;
-        }
+        .jadwal-kelas-title i { color: var(--primary); }
+
         @media (max-width: 768px) {
-            .kurikulum-intro {
-                grid-template-columns: 1fr;
-            }
-            .mapel-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .tahfidz-grid {
-                grid-template-columns: 1fr;
-            }
+            .kurikulum-intro { grid-template-columns: 1fr; gap: 32px; }
+            .mapel-grid { grid-template-columns: repeat(2, 1fr); }
+            .tahfidz-grid { grid-template-columns: 1fr; }
+            .tahfidz-section { padding: 36px 24px; }
+            .jadwal-image-frame { padding: 12px; }
+            .jadwal-image-meta { padding: 6px 6px 12px; }
         }
         @media (max-width: 576px) {
-            .mapel-grid {
-                grid-template-columns: 1fr;
-            }
+            .mapel-grid { grid-template-columns: 1fr; }
+            .kelas-tab { padding: 10px 18px; font-size: 0.82rem; }
+            .jadwal-image-meta { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
@@ -310,7 +468,7 @@
                         </div>
                     </div>
                     <div class="kurikulum-intro-image" data-aos="fade-left">
-                        <img src="https://via.placeholder.com/800x600/059669/ffffff?text=Kurikulum+Merdeka" alt="Kurikulum SMA Plus Almunawwarah">
+                        <img src="https://drive.google.com/thumbnail?id=1mDozw55gGOmlcwV6aG_zLbL_KQfq4RiW&sz=w1200" alt="Kurikulum SMA Plus Almunawwarah" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -410,14 +568,14 @@
                 <div class="text-center" style="margin-bottom: 40px;" data-aos="fade-up">
                     <span class="section-badge">Jadwal Pelajaran</span>
                     <h2 class="section-title" style="display: block; text-align: center;">Jadwal Pelajaran Harian</h2>
-                    <p class="section-subtitle">Rencana distribusi mata pelajaran per kelas untuk semester berjalan</p>
+                    <p class="section-subtitle">Pilih kelas untuk melihat gambar jadwal pelajaran lengkap untuk semester berjalan</p>
                 </div>
                 <!-- Kelas Tabs -->
                 <div style="margin-bottom: 28px;" data-aos="fade-up">
-                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;color:var(--gray-500);font-size:0.9rem;justify-content:center;">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;color:var(--gray-500);font-size:0.9rem;justify-content:center;">
                         <i class="fa-solid fa-school"></i> Pilih Kelas
                     </div>
-                    <div class="jadwal-tabs-wrapper" style="max-width:520px;margin:0 auto;">
+                    <div class="jadwal-tabs-wrapper" style="max-width:560px;margin:0 auto;">
                         <div class="jadwal-tabs" id="kelas-tabs">
                             <!-- Tabs rendered by JS -->
                         </div>
@@ -435,6 +593,14 @@
                 </div>
             </div>
         </section>
+
+        <!-- Lightbox for fullscreen image -->
+        <div class="jadwal-lightbox" id="jadwal-lightbox">
+            <button class="jadwal-lightbox-close" id="jadwal-lightbox-close" aria-label="Tutup">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <img id="jadwal-lightbox-img" src="" alt="Jadwal Pelajaran">
+        </div>
 
     </div>
 
@@ -458,8 +624,6 @@
             var allKelas = [];
             var activeKelasId = null;
 
-            var HARI_ORDER = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
-
             /**
              * Render kelas tabs
              */
@@ -473,11 +637,12 @@
                 for (var i = 0; i < kelasList.length; i++) {
                     var k = kelasList[i];
                     var isActive = k.id === activeKelasId ? ' active' : '';
-                    html += '<button class="kelas-tab' + isActive + '" data-kelas-id="' + escapeHtml(k.id) + '">' + escapeHtml(k.nama_kelas) + '</button>';
+                    html += '<button class="kelas-tab' + isActive + '" data-kelas-id="' + escapeHtml(k.id) + '">' +
+                        '<i class="fa-solid fa-graduation-cap"></i> ' + escapeHtml(k.nama_kelas) +
+                    '</button>';
                 }
                 kelasTabsEl.innerHTML = html;
 
-                // Add click listeners
                 var tabs = kelasTabsEl.querySelectorAll('.kelas-tab');
                 tabs.forEach(function(tab) {
                     tab.addEventListener('click', function() {
@@ -491,130 +656,90 @@
             }
 
             /**
-             * Build a lookup map: key = "hari|jam_ke" → item
-             */
-            function buildLookup(jadwalData) {
-                var lookup = {};
-                for (var i = 0; i < jadwalData.length; i++) {
-                    var item = jadwalData[i];
-                    var hari = item.hari || 'Lainnya';
-                    var jamKe = item.jam_ke || 0;
-                    lookup[hari + '|' + jamKe] = item;
-                }
-                return lookup;
-            }
-
-            /**
-             * Get sorted unique jam_ke values from data
-             */
-            function getJamKeList(jadwalData) {
-                var set = {};
-                for (var i = 0; i < jadwalData.length; i++) {
-                    var jk = jadwalData[i].jam_ke || 0;
-                    set[jk] = true;
-                }
-                var list = Object.keys(set).map(Number);
-                list.sort(function(a, b) { return a - b; });
-                return list;
-            }
-
-            /**
-             * Get the time string for a given jam_ke from lookup
-             */
-            function getWaktuForJamKe(lookup, jamKe) {
-                for (var h = 0; h < HARI_ORDER.length; h++) {
-                    var key = HARI_ORDER[h] + '|' + jamKe;
-                    if (lookup[key]) {
-                        var item = lookup[key];
-                        if (item.jam_mulai && item.jam_selesai) {
-                            return escapeHtml(item.jam_mulai) + ' - ' + escapeHtml(item.jam_selesai);
-                        } else if (item.jam_mulai) {
-                            return escapeHtml(item.jam_mulai);
-                        }
-                    }
-                }
-                return '';
-            }
-
-            /**
-             * Load and render jadwal pelajaran as a grid table
+             * Load and render jadwal pelajaran as an IMAGE per kelas.
+             * Image URL is stored in kelas.jadwal_image_link (Google Drive share URL).
+             * Uses getImageUrl() to convert to a displayable thumbnail URL.
              */
             async function loadJadwal(kelasId) {
-                // Show loading spinner
-                jadwalContainerEl.innerHTML = '<div class="jadwal-loading"><div style="display:flex;justify-content:center;padding:2rem;"><div style="width:40px;height:40px;border:4px solid #e5e7eb;border-top-color:#059669;border-radius:50%;animation:smaplus-spin 0.8s linear infinite;"></div></div><p style="text-align:center;margin-top:12px;color:var(--gray-500);font-size:0.9rem">Memuat jadwal...</p></div>';
+                jadwalContainerEl.innerHTML =
+                    '<div class="jadwal-loading">' +
+                    '<div style="display:flex;justify-content:center;padding:2rem;">' +
+                    '<div style="width:40px;height:40px;border:4px solid #e5e7eb;border-top-color:#059669;border-radius:50%;animation:smaplus-spin 0.8s linear infinite;"></div>' +
+                    '</div>' +
+                    '<p style="text-align:center;margin-top:12px;color:var(--gray-500);font-size:0.9rem">Memuat jadwal...</p>' +
+                    '</div>';
 
                 try {
-                    var jadwalData = await SMAPlusAPI.fetchJadwalPelajaran(kelasId);
-
-                    if (!jadwalData || jadwalData.length === 0) {
-                        jadwalContainerEl.innerHTML = '<div class="jadwal-empty-state" data-aos="fade-up"><i class="fa-regular fa-calendar-xmark"></i><p>Belum ada jadwal untuk kelas ini.</p></div>';
-                        AOS.refresh();
+                    var selectedKelas = allKelas.find(function(k) { return k.id === kelasId; });
+                    if (!selectedKelas) {
+                        jadwalContainerEl.innerHTML = '<div class="jadwal-empty-state"><i class="fa-regular fa-calendar-xmark"></i><p>Data kelas tidak ditemukan.</p></div>';
                         return;
                     }
 
-                    // Get the selected kelas name
-                    var selectedKelas = allKelas.find(function(k) { return k.id === kelasId; });
-                    var kelasNama = selectedKelas ? selectedKelas.nama_kelas : '';
-
-                    // Build lookup and jam_ke list
-                    var lookup = buildLookup(jadwalData);
-                    var jamKeList = getJamKeList(jadwalData);
-
-                    // Determine which days have data
-                    var activeHari = [];
-                    for (var h = 0; h < HARI_ORDER.length; h++) {
-                        for (var j = 0; j < jamKeList.length; j++) {
-                            if (lookup[HARI_ORDER[h] + '|' + jamKeList[j]]) {
-                                activeHari.push(HARI_ORDER[h]);
-                                break;
-                            }
-                        }
+                    var kelasNama = selectedKelas.nama_kelas || '';
+                    var imageLink = selectedKelas.jadwal_image_link || '';
+                    var imgUrl = imageLink ? getImageUrl(imageLink) : ''
+                        .replace('sz=w800', 'sz=w1600'); // bigger for schedule legibility
+                    if (imageLink) {
+                        // Override to use a larger thumbnail for the schedule image
+                        imgUrl = getImageUrl(imageLink);
+                        // Try to bump the size param if it's a drive thumbnail
+                        imgUrl = imgUrl.replace('sz=w800', 'sz=w1600');
                     }
 
-                    // Build grid table HTML
                     var html = '';
                     html += '<div class="jadwal-kelas-title" data-aos="fade-up"><i class="fa-solid fa-table-cells-large"></i> Jadwal Kelas ' + escapeHtml(kelasNama) + '</div>';
-                    html += '<div class="jadwal-grid-wrapper" data-aos="fade-up">';
-                    html += '<table class="jadwal-grid">';
-
-                    // Table header
-                    html += '<thead><tr>';
-                    html += '<th class="col-jam">Jam ke</th>';
-                    html += '<th class="col-waktu">Waktu</th>';
-                    for (var h = 0; h < activeHari.length; h++) {
-                        html += '<th class="col-hari">' + escapeHtml(activeHari[h]) + '</th>';
+                    html += '<div class="jadwal-image-frame" data-aos="fade-up">';
+                    html += '  <div class="jadwal-image-meta">';
+                    html += '    <div class="jadwal-image-meta-left">';
+                    html += '      <div class="jadwal-image-meta-icon"><i class="fa-solid fa-calendar-days"></i></div>';
+                    html += '      <div class="jadwal-image-meta-text">';
+                    html += '        <h3>Kelas ' + escapeHtml(kelasNama) + '</h3>';
+                    html += '        <span><i class="fa-solid fa-circle" style="font-size:0.45rem;color:var(--primary);"></i> Semester Berjalan</span>';
+                    html += '      </div>';
+                    html += '    </div>';
+                    if (imageLink) {
+                        html += '    <div class="jadwal-image-actions">';
+                        html += '      <button class="jadwal-image-btn" id="jadwal-zoom-btn"><i class="fa-solid fa-expand"></i> Perbesar</button>';
+                        html += '    </div>';
                     }
-                    html += '</tr></thead>';
+                    html += '  </div>';
 
-                    // Table body
-                    html += '<tbody>';
-                    for (var j = 0; j < jamKeList.length; j++) {
-                        var jamKe = jamKeList[j];
-                        var waktu = getWaktuForJamKe(lookup, jamKe);
-
-                        html += '<tr>';
-                        html += '<td class="cell-jam">' + jamKe + '</td>';
-                        html += '<td class="cell-waktu">' + waktu + '</td>';
-
-                        for (var h = 0; h < activeHari.length; h++) {
-                            var key = activeHari[h] + '|' + jamKe;
-                            var item = lookup[key];
-                            if (item) {
-                                html += '<td class="cell-hari">';
-                                html += '<span class="mapel-name">' + escapeHtml(item.mata_pelajaran || '-') + '</span>';
-                                html += '<span class="guru-name">' + escapeHtml(item.guru || '') + '</span>';
-                                html += '</td>';
-                            } else {
-                                html += '<td class="cell-empty">-</td>';
-                            }
-                        }
-                        html += '</tr>';
+                    if (imageLink) {
+                        html += '  <div class="jadwal-image-container">';
+                        html += '    <img src="' + escapeHtml(imgUrl) + '" alt="Jadwal Pelajaran Kelas ' + escapeHtml(kelasNama) + '" id="jadwal-image" loading="lazy">';
+                        html += '  </div>';
+                        html += '  <div class="jadwal-image-caption">';
+                        html += '    <i class="fa-solid fa-circle-info"></i>';
+                        html += '    Klik gambar untuk memperbesar. Jadwal dapat berubah menyesuaikan kegiatan sekolah.';
+                        html += '  </div>';
+                    } else {
+                        html += '  <div class="jadwal-image-placeholder">';
+                        html += '    <div class="ph-icon"><i class="fa-regular fa-image"></i></div>';
+                        html += '    <h4>Belum ada gambar jadwal</h4>';
+                        html += '    <p>Admin belum mengunggah gambar jadwal untuk kelas <strong>' + escapeHtml(kelasNama) + '</strong>. Silakan hubungi pihak sekolah atau periksa kembali nanti.</p>';
+                        html += '  </div>';
                     }
-                    html += '</tbody></table></div>';
+                    html += '</div>';
 
                     jadwalContainerEl.innerHTML = html;
                     AOS.refresh();
 
+                    // Wire up zoom button + click on image to open lightbox
+                    var zoomBtn = document.getElementById('jadwal-zoom-btn');
+                    var imgEl = document.getElementById('jadwal-image');
+                    if (imgEl) {
+                        var openLightbox = function() {
+                            var lb = document.getElementById('jadwal-lightbox');
+                            var lbImg = document.getElementById('jadwal-lightbox-img');
+                            if (lb && lbImg) {
+                                lbImg.src = imgUrl;
+                                lb.classList.add('active');
+                            }
+                        };
+                        if (zoomBtn) zoomBtn.addEventListener('click', openLightbox);
+                        imgEl.addEventListener('click', openLightbox);
+                    }
                 } catch (err) {
                     console.error('Gagal memuat jadwal:', err);
                     jadwalContainerEl.innerHTML = '<div class="jadwal-empty-state"><i class="fa-solid fa-triangle-exclamation" style="color:#ef4444"></i><p>Gagal memuat jadwal pelajaran. Silakan coba lagi nanti.</p></div>';
@@ -634,22 +759,34 @@
                         return;
                     }
 
-                    // Set first kelas as active
                     activeKelasId = allKelas[0].id;
-
-                    // Render tabs
                     renderKelasTabs(allKelas);
-
-                    // Load jadwal for first kelas
                     loadJadwal(activeKelasId);
-
                 } catch (err) {
                     console.error('Gagal memuat data kelas:', err);
                     kelasTabsEl.innerHTML = '<span style="color:var(--gray-400);font-size:0.85rem;padding:10px;">Gagal memuat data kelas</span>';
                 }
             }
 
-            // Load data when DOM is ready
+            // Lightbox close handlers
+            (function setupLightbox() {
+                function closeLightbox() {
+                    var lb = document.getElementById('jadwal-lightbox');
+                    if (lb) lb.classList.remove('active');
+                }
+                document.addEventListener('DOMContentLoaded', function() {
+                    var closeBtn = document.getElementById('jadwal-lightbox-close');
+                    var lb = document.getElementById('jadwal-lightbox');
+                    if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
+                    if (lb) lb.addEventListener('click', function(e) {
+                        if (e.target === lb) closeLightbox();
+                    });
+                    document.addEventListener('keydown', function(e) {
+                        if (e.key === 'Escape') closeLightbox();
+                    });
+                });
+            })();
+
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', init);
             } else {
