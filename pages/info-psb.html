@@ -4,93 +4,907 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Informasi PSB - SMA Plus Almunawwarah</title>
+    <meta name="description" content="Informasi lengkap Penerimaan Peserta Didik Baru (PSB) SMA Plus Almunawwarah — persyaratan, biaya, alur pendaftaran, dan tautan formulir online.">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        .psb-content{max-width:900px;margin:0 auto}
-        .psb-card{background:#fff;border-radius:16px;box-shadow:0 4px 6px rgba(0,0,0,0.07);padding:32px;margin-bottom:24px}
-        .psb-card h2{font-size:1.3rem;margin-bottom:16px;display:flex;align-items:center;gap:10px}
-        .psb-card h2 i{color:var(--primary)}
-        .psb-card p{font-size:0.9rem;color:var(--gray-600);line-height:1.7}
-        /* Wrapper gambar info PSB */
-        .psb-image-wrapper{margin:0;background:#fff;border-radius:16px;box-shadow:0 4px 6px rgba(0,0,0,0.07);overflow:hidden}
-        .psb-image-wrapper .psb-image-header{padding:24px 32px 16px;border-bottom:1px solid var(--gray-100)}
-        .psb-image-wrapper .psb-image-header h2{font-size:1.3rem;display:flex;align-items:center;gap:10px;margin:0 0 6px}
-        .psb-image-wrapper .psb-image-header h2 i{color:var(--primary)}
-        .psb-image-wrapper .psb-image-header .tahun{font-size:0.82rem;color:var(--gray-500)}
-        .psb-image-figure{margin:0;padding:24px 32px;text-align:center;background:var(--primary-lighter,#ecfdf5)}
-        .psb-image-figure img{max-width:100%;height:auto;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);display:block;margin:0 auto;cursor:zoom-in;transition:transform 0.3s}
-        .psb-image-figure img:hover{transform:scale(1.01)}
-        .psb-image-figure a{display:inline-block;margin-top:16px;font-size:0.82rem;color:var(--primary);text-decoration:none}
-        .psb-image-figure a:hover{text-decoration:underline}
-        .psb-image-empty{padding:80px 32px;text-align:center;color:var(--gray-500)}
-        .psb-image-empty i{font-size:3rem;color:var(--gray-300);margin-bottom:16px;display:block}
-        .psb-image-empty p{font-size:0.95rem}
-        .psb-cta{background:linear-gradient(135deg,var(--primary-darker),var(--primary));color:#fff;border-radius:16px;padding:40px;text-align:center;margin-top:30px}
-        .psb-cta h2{color:#fff;font-size:1.5rem;margin-bottom:12px;display:block}
-        .psb-cta p{opacity:0.9;margin-bottom:24px}
-        .btn-psb{background:#fff;color:var(--primary-dark);padding:14px 36px;border-radius:50px;font-weight:700;font-size:1rem;border:none;cursor:pointer;transition:all 0.3s;display:inline-flex;align-items:center;gap:8px;font-family:inherit;text-decoration:none}
-        .btn-psb:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.2)}
-        .btn-psb.disabled,.btn-psb[disabled]{background:rgba(255,255,255,0.5);color:rgba(4,120,87,0.6);cursor:not-allowed;pointer-events:none}
-        .psb-empty{text-align:center;padding:60px 20px}
-        .psb-empty i{font-size:3rem;color:var(--gray-300);margin-bottom:16px;display:block}
-        .psb-empty p{color:var(--gray-500);font-size:1rem}
-        .psb-empty .btn-psb{margin-top:20px;background:var(--primary);color:#fff}
+        .psb-content { max-width: 1080px; margin: 0 auto; }
 
-        /* ============================================================
+        /* ─────────────────────────────────────────────
+           STATUS HERO — countdown + status badge
+           ───────────────────────────────────────────── */
+        .psb-status-hero {
+            background: linear-gradient(135deg, var(--primary-deepest) 0%, var(--primary) 55%, var(--secondary) 100%);
+            color: white;
+            border-radius: var(--radius-xl);
+            padding: 48px 40px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 36px;
+            box-shadow: 0 20px 50px -20px rgba(5, 150, 105, 0.4);
+        }
+        .psb-status-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background:
+                radial-gradient(circle at 18% 50%, rgba(255,255,255,0.10) 0%, transparent 50%),
+                radial-gradient(circle at 82% 25%, rgba(245,158,11,0.10) 0%, transparent 40%);
+            pointer-events: none;
+        }
+        .psb-status-hero > * { position: relative; z-index: 1; }
+        .psb-status-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .psb-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 18px;
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            background: rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(8px);
+            margin-bottom: 16px;
+        }
+        .psb-status-badge .dot {
+            width: 9px; height: 9px;
+            border-radius: 50%;
+            background: #fbbf24;
+            box-shadow: 0 0 12px #fbbf24;
+            animation: pulse 1.8s ease-in-out infinite;
+        }
+        .psb-status-badge.open .dot { background: #34d399; box-shadow: 0 0 12px #34d399; }
+        .psb-status-badge.closed .dot { background: #f87171; box-shadow: 0 0 8px #f87171; animation: none; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.55; transform: scale(0.85); }
+        }
+        .psb-status-hero h1 {
+            color: white;
+            font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+            margin-bottom: 8px;
+            line-height: 1.15;
+            letter-spacing: -0.025em;
+        }
+        .psb-status-hero .tahun-ajaran {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 24px;
+        }
+
+        /* mini countdown */
+        .psb-mini-countdown {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+        .psb-mini-cd-item {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.18);
+            backdrop-filter: blur(8px);
+            border-radius: 14px;
+            padding: 12px 18px;
+            text-align: center;
+            min-width: 68px;
+        }
+        .psb-mini-cd-item .num {
+            font-size: 1.55rem;
+            font-weight: 800;
+            color: white;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+        .psb-mini-cd-item .lbl {
+            font-size: 0.7rem;
+            opacity: 0.85;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+        .psb-status-cta-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+        .btn-daftar-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 28px;
+            background: white;
+            color: var(--primary-dark);
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.3s var(--ease);
+            box-shadow: 0 8px 20px -6px rgba(0,0,0,0.25);
+        }
+        .btn-daftar-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px -8px rgba(0,0,0,0.35);
+            color: var(--primary-dark);
+        }
+        .btn-daftar-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 28px;
+            background: rgba(255,255,255,0.12);
+            color: white;
+            border: 1.5px solid rgba(255,255,255,0.5);
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.3s var(--ease);
+            backdrop-filter: blur(8px);
+        }
+        .btn-daftar-secondary:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border-color: white;
+        }
+
+        /* ─────────────────────────────────────────────
+           QUICK INFO GRID — 4 cards
+           ───────────────────────────────────────────── */
+        .psb-quick-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 40px;
+        }
+        .psb-quick-card {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 22px 20px;
+            box-shadow: 0 4px 16px -6px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.03);
+            border: 1px solid rgba(15, 23, 42, 0.04);
+            transition: all 0.3s var(--ease);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .psb-quick-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 28px -8px rgba(5,150,105,0.18);
+            border-color: rgba(5,150,105,0.12);
+        }
+        .psb-quick-card .icon {
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-lighter), var(--primary-light));
+            color: var(--primary-dark);
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 1.05rem;
+        }
+        .psb-quick-card .label {
+            font-size: 0.74rem;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+        .psb-quick-card .value {
+            font-size: 0.92rem;
+            color: var(--gray-800);
+            font-weight: 700;
+            line-height: 1.35;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .psb-quick-card .sub {
+            font-size: 0.78rem;
+            color: var(--gray-500);
+            line-height: 1.4;
+        }
+
+        /* ─────────────────────────────────────────────
+           SECTION HEADER (Info PSB shared)
+           ───────────────────────────────────────────── */
+        .psb-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 36px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px -6px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.03);
+            border: 1px solid rgba(15, 23, 42, 0.04);
+        }
+        .psb-section-head {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .psb-section-head .icon-box {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: 0 6px 14px -4px rgba(5,150,105,0.35);
+            flex-shrink: 0;
+        }
+        .psb-section-head h2 {
+            font-size: 1.35rem;
+            color: var(--gray-900);
+            margin: 0;
+            font-weight: 800;
+            letter-spacing: -0.015em;
+        }
+        .psb-section-head .sub {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        /* ─────────────────────────────────────────────
+           POSTER IMAGE
+           ───────────────────────────────────────────── */
+        .psb-poster-wrap {
+            position: relative;
+            background: linear-gradient(135deg, var(--primary-lighter), #ffffff);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            text-align: center;
+            border: 1px solid rgba(5,150,105,0.08);
+        }
+        .psb-poster-wrap img {
+            max-width: 100%;
+            height: auto;
+            max-height: 760px;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 12px 28px -10px rgba(0,0,0,0.18);
+            cursor: zoom-in;
+            transition: transform 0.4s var(--ease);
+            display: block;
+            margin: 0 auto;
+            background: white;
+        }
+        .psb-poster-wrap img:hover { transform: scale(1.005); }
+        .psb-poster-actions {
+            margin-top: 14px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .psb-poster-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: white;
+            color: var(--primary-dark);
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1px solid rgba(5,150,105,0.15);
+            transition: all 0.25s var(--ease);
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .psb-poster-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+        .psb-poster-btn.primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px -2px rgba(5,150,105,0.3);
+        }
+        .psb-poster-btn.primary:hover {
+            filter: brightness(1.05);
+            box-shadow: 0 8px 18px -4px rgba(5,150,105,0.45);
+        }
+        .psb-poster-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ─────────────────────────────────────────────
+           BROSUR DOWNLOAD SECTION
+           ───────────────────────────────────────────── */
+        .psb-brosur-card {
+            background: linear-gradient(135deg, #fffbeb 0%, #ffffff 60%, var(--primary-lighter) 100%);
+            border-radius: var(--radius-md);
+            padding: 28px;
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            border: 1px solid rgba(245,158,11,0.18);
+            flex-wrap: wrap;
+            position: relative;
+            overflow: hidden;
+        }
+        .psb-brosur-card::before {
+            content: '';
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(245,158,11,0.15), transparent 70%);
+            pointer-events: none;
+        }
+        .psb-brosur-icon {
+            width: 64px; height: 64px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, var(--accent), #d97706);
+            color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.7rem;
+            box-shadow: 0 8px 18px -4px rgba(245,158,11,0.4);
+            flex-shrink: 0;
+        }
+        .psb-brosur-info {
+            flex: 1;
+            min-width: 240px;
+        }
+        .psb-brosur-info h4 {
+            font-size: 1.1rem;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+        .psb-brosur-info p {
+            font-size: 0.88rem;
+            color: var(--gray-600);
+            margin: 0;
+            line-height: 1.55;
+        }
+        .psb-brosur-info .meta {
+            margin-top: 6px;
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .psb-brosur-info .meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .psb-brosur-info .meta i { color: var(--accent); font-size: 0.7rem; }
+        .btn-download-brosur {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--accent), #d97706);
+            color: white;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: 0.92rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+            font-family: inherit;
+            box-shadow: 0 6px 14px -4px rgba(245,158,11,0.45);
+            flex-shrink: 0;
+        }
+        .btn-download-brosur:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 22px -6px rgba(245,158,11,0.55);
+            color: white;
+            filter: brightness(1.05);
+        }
+        .btn-download-brosur:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .btn-download-brosur.loading {
+            pointer-events: none;
+        }
+        .btn-download-brosur.loading i.fa-download { display: none; }
+        .btn-download-brosur.loading::after {
+            content: '';
+            display: inline-block;
+            width: 14px; height: 14px;
+            border: 2px solid rgba(255,255,255,0.4);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: btn-spin 0.7s linear infinite;
+            margin-left: 2px;
+        }
+        @keyframes btn-spin { to { transform: rotate(360deg); } }
+
+        .psb-brosur-empty {
+            padding: 28px;
+            text-align: center;
+            color: var(--gray-500);
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+            border: 1px dashed var(--gray-300);
+        }
+        .psb-brosur-empty i {
+            font-size: 2rem;
+            color: var(--gray-300);
+            margin-bottom: 8px;
+            display: block;
+        }
+        .psb-brosur-empty p {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .psb-poster-empty {
+            padding: 56px 20px;
+            text-align: center;
+            color: var(--gray-500);
+        }
+        .psb-poster-empty .ph-icon {
+            width: 88px; height: 88px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            background: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.2rem;
+            color: var(--primary);
+            box-shadow: 0 8px 24px -8px rgba(5,150,105,0.18);
+        }
+        .psb-poster-empty h4 {
+            color: var(--gray-700);
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+        .psb-poster-empty p {
+            color: var(--gray-500);
+            font-size: 0.88rem;
+            max-width: 380px;
+            margin: 0 auto;
+        }
+
+        /* ─────────────────────────────────────────────
+           DESCRIPTION / KONTEN
+           ───────────────────────────────────────────── */
+        .psb-description {
+            color: var(--gray-600);
+            line-height: 1.8;
+            font-size: 0.96rem;
+        }
+        .psb-description p { margin-bottom: 14px; }
+        .psb-description p:last-child { margin-bottom: 0; }
+
+        /* ─────────────────────────────────────────────
+           ALUR PENDAFTARAN — STEPPER
+           ───────────────────────────────────────────── */
+        .psb-stepper {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            scrollbar-width: thin;
+        }
+        .psb-stepper::-webkit-scrollbar { height: 6px; }
+        .psb-stepper::-webkit-scrollbar-track { background: var(--gray-100); border-radius: 3px; }
+        .psb-stepper::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+        .psb-step {
+            flex: 1;
+            min-width: 220px;
+            background: linear-gradient(135deg, var(--primary-lighter), #ffffff);
+            border: 1px solid rgba(5,150,105,0.1);
+            border-radius: var(--radius-md);
+            padding: 22px 20px;
+            position: relative;
+            transition: all 0.3s var(--ease);
+        }
+        .psb-step:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px -8px rgba(5,150,105,0.2);
+            border-color: rgba(5,150,105,0.18);
+        }
+        .psb-step-num {
+            width: 38px; height: 38px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800;
+            font-size: 1.05rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            box-shadow: 0 4px 10px -2px rgba(5,150,105,0.35);
+            margin-bottom: 12px;
+        }
+        .psb-step h4 {
+            font-size: 0.98rem;
+            color: var(--gray-800);
+            font-weight: 700;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        .psb-step p {
+            font-size: 0.82rem;
+            color: var(--gray-500);
+            margin: 0;
+            line-height: 1.55;
+        }
+
+        /* ─────────────────────────────────────────────
+           PERSYARATAN — CHECKLIST
+           ───────────────────────────────────────────── */
+        .psb-syarat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .psb-syarat-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 16px;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            border: 1px solid rgba(15, 23, 42, 0.04);
+            transition: all 0.25s var(--ease);
+        }
+        .psb-syarat-item:hover {
+            background: var(--primary-lighter);
+            border-color: rgba(5,150,105,0.12);
+            transform: translateX(3px);
+        }
+        .psb-syarat-item .check {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.7rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+            box-shadow: 0 2px 6px -1px rgba(5,150,105,0.4);
+        }
+        .psb-syarat-item span {
+            font-size: 0.92rem;
+            color: var(--gray-700);
+            line-height: 1.5;
+        }
+
+        /* ─────────────────────────────────────────────
+           BIAYA — CARD
+           ───────────────────────────────────────────── */
+        .psb-biaya-card {
+            background: linear-gradient(135deg, var(--primary-lighter) 0%, #ffffff 60%, var(--accent-light) 100%);
+            border-radius: var(--radius-md);
+            padding: 24px 28px;
+            border: 1px solid rgba(5,150,105,0.12);
+            position: relative;
+            overflow: hidden;
+        }
+        .psb-biaya-card::before {
+            content: '';
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(245,158,11,0.15), transparent 70%);
+            pointer-events: none;
+        }
+        .psb-biaya-card p {
+            color: var(--gray-700);
+            font-size: 0.95rem;
+            line-height: 1.75;
+            margin: 0;
+            position: relative;
+        }
+        .psb-biaya-note {
+            margin-top: 14px;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.6);
+            border-radius: var(--radius);
+            font-size: 0.82rem;
+            color: var(--gray-600);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(5,150,105,0.08);
+        }
+        .psb-biaya-note i { color: var(--accent); }
+
+        /* ─────────────────────────────────────────────
+           KONTAK — CARD with WhatsApp
+           ───────────────────────────────────────────── */
+        .psb-kontak-card {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 22px 24px;
+            background: linear-gradient(135deg, #ecfdf5, #ffffff);
+            border: 1px solid rgba(5,150,105,0.12);
+            border-radius: var(--radius-md);
+            flex-wrap: wrap;
+        }
+        .psb-kontak-card .wa-icon {
+            width: 56px; height: 56px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.6rem;
+            box-shadow: 0 8px 18px -4px rgba(37,211,102,0.4);
+            flex-shrink: 0;
+        }
+        .psb-kontak-card .info { flex: 1; min-width: 200px; }
+        .psb-kontak-card .info h4 {
+            font-size: 1rem;
+            color: var(--gray-800);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+        .psb-kontak-card .info p {
+            font-size: 0.88rem;
+            color: var(--gray-500);
+            margin: 0;
+            line-height: 1.5;
+        }
+        .btn-wa {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 22px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s var(--ease);
+            box-shadow: 0 6px 14px -4px rgba(37,211,102,0.35);
+        }
+        .btn-wa:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -6px rgba(37,211,102,0.5);
+            color: white;
+        }
+
+        /* ─────────────────────────────────────────────
+           FAQ — ACCORDION
+           ───────────────────────────────────────────── */
+        .psb-faq-list { display: flex; flex-direction: column; gap: 10px; }
+        .psb-faq-item {
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            border: 1px solid rgba(15, 23, 42, 0.05);
+            overflow: hidden;
+            transition: all 0.25s var(--ease);
+        }
+        .psb-faq-item.active {
+            background: white;
+            border-color: rgba(5,150,105,0.18);
+            box-shadow: 0 6px 16px -6px rgba(5,150,105,0.15);
+        }
+        .psb-faq-q {
+            width: 100%;
+            text-align: left;
+            padding: 18px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            font-family: inherit;
+            font-size: 0.96rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            transition: color 0.2s var(--ease);
+        }
+        .psb-faq-q:hover { color: var(--primary-dark); }
+        .psb-faq-q .chev {
+            font-size: 0.85rem;
+            color: var(--primary);
+            transition: transform 0.3s var(--ease);
+            flex-shrink: 0;
+        }
+        .psb-faq-item.active .psb-faq-q .chev { transform: rotate(180deg); }
+        .psb-faq-a {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s var(--ease), padding 0.3s var(--ease);
+            padding: 0 20px;
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            line-height: 1.75;
+        }
+        .psb-faq-item.active .psb-faq-a {
+            max-height: 400px;
+            padding: 0 20px 18px;
+        }
+
+        /* ─────────────────────────────────────────────
+           FINAL CTA
+           ───────────────────────────────────────────── */
+        .psb-cta {
+            background: linear-gradient(135deg, var(--primary-deepest) 0%, var(--primary) 55%, var(--secondary) 100%);
+            color: white;
+            border-radius: var(--radius-xl);
+            padding: 48px 40px;
+            text-align: center;
+            margin-top: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        .psb-cta::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(255,255,255,0.10) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(245,158,11,0.12) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .psb-cta > * { position: relative; z-index: 1; }
+        .psb-cta h2 {
+            color: white;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+        .psb-cta p {
+            opacity: 0.92;
+            margin-bottom: 24px;
+            max-width: 580px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 1.02rem;
+            line-height: 1.7;
+        }
+
+        /* ─────────────────────────────────────────────
+           STICKY MOBILE CTA
+           ───────────────────────────────────────────── */
+        .psb-sticky-cta {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(5,150,105,0.1);
+            z-index: 998;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 -8px 24px -8px rgba(0,0,0,0.12);
+        }
+        .psb-sticky-cta .info-mini {
+            flex: 1;
+            font-size: 0.78rem;
+            color: var(--gray-600);
+            line-height: 1.4;
+        }
+        .psb-sticky-cta .info-mini strong {
+            color: var(--gray-900);
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+        .psb-sticky-cta .btn-daftar-primary {
+            padding: 11px 22px;
+            font-size: 0.88rem;
+            box-shadow: 0 4px 10px -2px rgba(5,150,105,0.4);
+        }
+
+        /* ─────────────────────────────────────────────
            IMAGE ZOOM MODAL (Lightbox)
-           - Klik gambar untuk membuka modal zoom
-           - Wheel / pinch untuk zoom in/out
-           - Drag untuk pan
-           - Klik outside / tombol X / ESC untuk tutup
-           ============================================================ */
-        .img-zoom-overlay{
-            position:fixed;inset:0;z-index:9999;
-            background:rgba(0,0,0,0.92);
-            display:none;align-items:center;justify-content:center;
-            opacity:0;transition:opacity 0.25s ease;
-            touch-action:none;          /* izinkan gesture pan saat desktop */
+           ───────────────────────────────────────────── */
+        .img-zoom-overlay {
+            position: fixed; inset: 0; z-index: 9999;
+            background: rgba(0,0,0,0.92);
+            display: none; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.25s ease;
+            touch-action: none;
         }
-        .img-zoom-overlay.active{display:flex;opacity:1}
-        .img-zoom-stage{
-            position:relative;width:100%;height:100%;
-            display:flex;align-items:center;justify-content:center;
-            overflow:hidden;
+        .img-zoom-overlay.active { display: flex; opacity: 1; }
+        .img-zoom-stage {
+            position: relative; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
         }
-        .img-zoom-stage img{
-            max-width:90vw;max-height:90vh;
-            transform-origin:center center;
-            transition:transform 0.15s ease-out;
-            user-select:none;-webkit-user-drag:none;
-            will-change:transform;
-            cursor:grab;
+        .img-zoom-stage img {
+            max-width: 90vw; max-height: 90vh;
+            transform-origin: center center;
+            transition: transform 0.15s ease-out;
+            user-select: none; -webkit-user-drag: none;
+            will-change: transform;
+            cursor: grab;
         }
-        .img-zoom-stage img.dragging{cursor:grabbing;transition:none}
-        .img-zoom-toolbar{
-            position:fixed;top:20px;right:20px;z-index:10000;
-            display:flex;gap:8px;
+        .img-zoom-stage img.dragging { cursor: grabbing; transition: none; }
+        .img-zoom-toolbar {
+            position: fixed; top: 20px; right: 20px; z-index: 10000;
+            display: flex; gap: 8px;
         }
-        .img-zoom-btn{
-            width:44px;height:44px;border-radius:50%;
-            background:rgba(255,255,255,0.15);color:#fff;
-            border:none;cursor:pointer;font-size:1.1rem;
-            display:flex;align-items:center;justify-content:center;
-            transition:background 0.2s,transform 0.1s;
-            backdrop-filter:blur(8px);
+        .img-zoom-btn {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(255,255,255,0.15); color: #fff;
+            border: none; cursor: pointer; font-size: 1.1rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s, transform 0.1s;
+            backdrop-filter: blur(8px);
         }
-        .img-zoom-btn:hover{background:rgba(255,255,255,0.3)}
-        .img-zoom-btn:active{transform:scale(0.92)}
-        .img-zoom-hint{
-            position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
-            color:rgba(255,255,255,0.7);font-size:0.82rem;
-            background:rgba(0,0,0,0.4);padding:8px 16px;border-radius:20px;
-            backdrop-filter:blur(8px);z-index:10000;
-            pointer-events:none;
+        .img-zoom-btn:hover { background: rgba(255,255,255,0.3); }
+        .img-zoom-btn:active { transform: scale(0.92); }
+        .img-zoom-hint {
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+            color: rgba(255,255,255,0.7); font-size: 0.82rem;
+            background: rgba(0,0,0,0.4); padding: 8px 16px; border-radius: 20px;
+            backdrop-filter: blur(8px); z-index: 10000;
+            pointer-events: none;
         }
-        @media(max-width:576px){
-            .img-zoom-hint{font-size:0.72rem;bottom:16px}
-            .img-zoom-toolbar{top:12px;right:12px}
-            .img-zoom-btn{width:40px;height:40px;font-size:1rem}
+
+        /* ─────────────────────────────────────────────
+           LOADING + EMPTY STATE
+           ───────────────────────────────────────────── */
+        .psb-empty {
+            text-align: center;
+            padding: 80px 24px;
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 4px 16px -6px rgba(0,0,0,0.06);
+        }
+        .psb-empty i {
+            font-size: 3rem;
+            color: var(--gray-300);
+            margin-bottom: 16px;
+            display: block;
+        }
+        .psb-empty p {
+            color: var(--gray-500);
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        /* ─────────────────────────────────────────────
+           RESPONSIVE
+           ───────────────────────────────────────────── */
+        @media (max-width: 992px) {
+            .psb-quick-grid { grid-template-columns: repeat(2, 1fr); }
+            .psb-syarat-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .psb-status-hero, .psb-cta { padding: 36px 24px; }
+            .psb-section { padding: 28px 22px; }
+            .psb-status-row { flex-direction: column; align-items: flex-start; }
+            .psb-mini-cd-item { padding: 10px 14px; min-width: 60px; }
+            .psb-mini-cd-item .num { font-size: 1.3rem; }
+            .psb-sticky-cta { display: flex; }
+            body { padding-bottom: 78px; } /* space for sticky CTA */
+        }
+        @media (max-width: 576px) {
+            .psb-quick-grid { grid-template-columns: 1fr; }
+            .psb-mini-countdown { gap: 8px; }
+            .psb-mini-cd-item { padding: 8px 10px; min-width: 56px; }
+            .psb-mini-cd-item .num { font-size: 1.15rem; }
+            .psb-mini-cd-item .lbl { font-size: 0.62rem; }
+            .psb-status-cta-row { flex-direction: column; align-items: stretch; }
+            .btn-daftar-primary, .btn-daftar-secondary { justify-content: center; }
+            .psb-kontak-card { flex-direction: column; text-align: center; align-items: center; }
         }
     </style>
 </head>
@@ -112,7 +926,7 @@
             </div>
         </section>
 
-        <!-- PSB Content Section -->
+        <!-- PSB Content -->
         <section class="section">
             <div class="container">
                 <div class="psb-content" id="psb-container">
@@ -120,12 +934,20 @@
                 </div>
             </div>
         </section>
-
     </div>
 
-    <!-- ============================================================
-         IMAGE ZOOM MODAL (Lightbox)
-         ============================================================ -->
+    <!-- Sticky Mobile CTA (hidden by default, populated by JS) -->
+    <div class="psb-sticky-cta" id="psb-sticky-cta" style="display:none;">
+        <div class="info-mini">
+            <span id="sticky-cta-status">Pendaftaran Dibuka</span>
+            <strong>Tahun Ajaran <span id="sticky-cta-tahun">2025/2026</span></strong>
+        </div>
+        <a href="#" id="sticky-cta-btn" class="btn-daftar-primary" target="_blank" rel="noopener">
+            <i class="fa-solid fa-pen-to-square"></i> Daftar
+        </a>
+    </div>
+
+    <!-- Image Zoom Modal -->
     <div class="img-zoom-overlay" id="imgZoomOverlay" aria-hidden="true" role="dialog" aria-label="Pratinjau gambar">
         <div class="img-zoom-toolbar">
             <button class="img-zoom-btn" id="zoomInBtn" title="Perbesar" aria-label="Perbesar"><i class="fa-solid fa-plus"></i></button>
@@ -148,38 +970,334 @@
         (function () {
             'use strict';
 
+            // ============================================================
+            // KONFIGURASI
+            // ============================================================
+
+            // Link fallback untuk formulir pendaftaran online.
+            // Dipakai jika admin belum mengisi link_pendaftaran di CMS.
+            var DEFAULT_LINK_PENDAFTARAN = 'https://psb-ponpesalmunawwarah.vercel.app/';
+
+            // Nomor WhatsApp panitia (untuk tombol "Hubungi Panitia")
+            var DEFAULT_WA_NUMBER = '6283178710191';
+            var DEFAULT_WA_TEXT = 'Halo Panitia PSB SMA Plus Almunawwarah, saya ingin bertanya tentang pendaftaran siswa baru.';
+
+            // FAQ default (tidak dari DB, relatif statis)
+            var DEFAULT_FAQ = [
+                {
+                    q: 'Program apa saja yang ditawarkan SMA Plus Almunawwarah?',
+                    a: 'Kami menyediakan tiga program utama: Kelas Reguler, Kelas Tahfidz (unggulan), dan Kelas Bilingual. Seluruh program mengintegrasikan kurikulum nasional dengan pendidikan karakter berbasis Islam, termasuk sistem boarding school yang terstruktur.'
+                },
+                {
+                    q: 'Bagaimana sistem seleksi penerimaan siswa baru?',
+                    a: 'Seleksi meliputi verifikasi berkas, tes akademik (Matematika, B. Indonesia, B. Inggris, IPA), tes potensi akademik, dan wawancara calon siswa serta orang tua/wali. Hasil seleksi diumumkan maksimal 7 hari kerja setelah seluruh tahap selesai.'
+                },
+                {
+                    q: 'Apakah tersedia asrama (boarding school)?',
+                    a: 'Ya. SMA Plus Almunawwarah adalah boarding school islami. Seluruh siswa wajib tinggal di asrama yang telah disediakan. Sistem asrama dirancang untuk pembinaan karakter, hafalan Al-Quran, dan pembiasaan ibadah secara intensif.'
+                },
+                {
+                    q: 'Bagaimana sistem pembayaran dana pendidikan?',
+                    a: 'Dana pendidikan tahunan dapat dibayar lunas atau dicicil hingga 2 kali pembayaran dalam satu tahun ajaran. Tersedia juga program keringanan/beasiswa untuk calon siswa berprestasi akademik atau hafizh Al-Quran. Hubungi panitia untuk informasi detail.'
+                },
+                {
+                    q: 'Apakah calon siswa harus sudah bisa hafalan Al-Quran?',
+                    a: 'Tidak menjadi syarat wajib, namun menjadi nilai tambah pada tahap seleksi. Kami memiliki program Tahfidz yang akan membimbing siswa hingga target hafalan minimal 3 juz selama 3 tahun studi, dengan pembimbing bersertifikat sanad.'
+                },
+                {
+                    q: 'Kapan pengumuman hasil seleksi diumumkan?',
+                    a: 'Pengumuman hasil seleksi akan diumumkan maksimal 7 hari kerja setelah seluruh tahap seleksi (tes & wawancara) selesai. Hasil dapat dilihat di papan pengumuman sekolah dan akan diberitahukan via WhatsApp calon siswa yang terdaftar.'
+                },
+                {
+                    q: 'Apakah ada program beasiswa?',
+                    a: 'Ya, tersedia beberapa jenis beasiswa: Beasiswa Prestasi Akademik (untuk nilai raport tinggi), Beasiswa Tahfidz (untuk hafizh Al-Quran minimal 5 juz), dan Beasiswa Ekonomi (untuk keluarga kurang mampu). Silakan tanyakan detailnya ke panitia PSB.'
+                },
+                {
+                    q: 'Bagaimana jika calon siswa berasal dari luar daerah?',
+                    a: 'Kami menerima calon siswa dari seluruh Indonesia. Karena sistem boarding, calon siswa dari luar daerah justru sangat cocok. Pendampingan orang tua saat tes & wawancara dapat dilakukan via daring (video call) jika tidak memungkinkan hadir langsung.'
+                }
+            ];
+
             var container = document.getElementById('psb-container');
+            var stickyCta = document.getElementById('psb-sticky-cta');
+            var stickyStatus = document.getElementById('sticky-cta-status');
+            var stickyTahun = document.getElementById('sticky-cta-tahun');
+            var stickyBtn = document.getElementById('sticky-cta-btn');
 
             // ============================================================
-            // KONVERSI URL GAMBAR (Google Drive share link → direct image)
-            // Pendekatan A: tangani di frontend supaya CMS tetap bisa
-            // menerima share link Google Drive dari panitia.
+            // UTIL: Konversi URL gambar Google Drive → direct thumbnail
             // ============================================================
             function normalizeImageUrl(url) {
                 if (!url) return '';
                 url = String(url).trim();
-
-                // Format 1: drive.google.com/file/d/FILE_ID/view?usp=sharing
                 var match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
-                if (match) {
-                    // Endpoint thumbnail paling reliable utk <img>, sz=w1000 = max width 1000px
-                    return 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w1000';
-                }
-
-                // Format 2: drive.google.com/open?id=FILE_ID
+                if (match) return 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w1200';
                 var match2 = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
-                if (match2) {
-                    return 'https://drive.google.com/thumbnail?id=' + match2[1] + '&sz=w1000';
-                }
-
-                // Format 3: drive.google.com/uc?id=FILE_ID (lama)
+                if (match2) return 'https://drive.google.com/thumbnail?id=' + match2[1] + '&sz=w1200';
                 var match3 = url.match(/drive\.google\.com\/uc\?id=([a-zA-Z0-9_-]+)/);
-                if (match3) {
-                    return 'https://drive.google.com/thumbnail?id=' + match3[1] + '&sz=w1000';
+                if (match3) return 'https://drive.google.com/thumbnail?id=' + match3[1] + '&sz=w1200';
+                return url;
+            }
+
+            // ============================================================
+            // UTIL: Format tanggal lengkap (Senin, 1 Januari 2026 — 07:30 WIB)
+            // ============================================================
+            function fmtDateFull(iso) {
+                if (!iso) return '';
+                try {
+                    var d = new Date(iso);
+                    if (isNaN(d.getTime())) return '';
+                    var days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+                    var months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+                    return days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() +
+                        ' — ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0') + ' WIB';
+                } catch (e) { return ''; }
+            }
+
+            function fmtDateShort(iso) {
+                if (!iso) return '';
+                try {
+                    var d = new Date(iso);
+                    if (isNaN(d.getTime())) return '';
+                    var months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+                    return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+                } catch (e) { return ''; }
+            }
+
+            // ============================================================
+            // UTIL: Parse string alur pendaftaran → array step
+            // "1. Pendaftaran -> 2. Verifikasi -> ..." → [{num, title, desc}]
+            // ============================================================
+            function parseAlurPendaftaran(text) {
+                if (!text) {
+                    return [
+                        { num: 1, title: 'Pendaftaran Online', desc: 'Isi formulir pendaftaran online di link yang disediakan dan unggah berkas persyaratan.' },
+                        { num: 2, title: 'Verifikasi Berkas', desc: 'Panitia memverifikasi kelengkapan & keaslian berkas yang diunggah.' },
+                        { num: 3, title: 'Tes Akademik & Wawancara', desc: 'Calon siswa mengikuti tes akademik dan wawancara bersama orang tua/wali.' },
+                        { num: 4, title: 'Pengumuman', desc: 'Hasil seleksi diumumkan maksimal 7 hari kerja setelah seluruh tahap selesai.' },
+                        { num: 5, title: 'Daftar Ulang', desc: 'Calon siswa yang diterima melakukan daftar ulang sesuai jadwal yang ditentukan.' }
+                    ];
+                }
+                // Pisahkan dengan "->" atau newline dengan pola "1. ... 2. ..."
+                var parts = text.split(/\s*->\s*|\n/).map(function(s){ return s.trim(); }).filter(Boolean);
+                if (parts.length === 0) return [];
+                return parts.map(function(p, i) {
+                    // Hilangkan prefix "1." "2." dst
+                    var clean = p.replace(/^\d+[\.\)]\s*/, '');
+                    return { num: i + 1, title: clean, desc: '' };
+                });
+            }
+
+            // ============================================================
+            // UTIL: Ekstrak nomor telepon dari teks kontak untuk WA
+            // ============================================================
+            function extractPhone(text) {
+                if (!text) return DEFAULT_WA_NUMBER;
+                var match = String(text).match(/(\+?\d[\d\s\-]{8,}\d)/);
+                if (match) {
+                    var phone = match[1].replace(/[\s\-]/g, '').replace(/^\+/, '');
+                    if (phone.startsWith('0')) phone = '62' + phone.slice(1);
+                    if (!phone.startsWith('62')) phone = '62' + phone;
+                    return phone;
+                }
+                return DEFAULT_WA_NUMBER;
+            }
+
+            // ============================================================
+            // UTIL: Ekstrak file ID dari berbagai format URL Google Drive
+            // ============================================================
+            function extractDriveFileId(url) {
+                if (!url) return '';
+                url = String(url).trim();
+                // Format: drive.google.com/file/d/FILE_ID/view
+                var m1 = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+                if (m1) return m1[1];
+                // Format: drive.google.com/open?id=FILE_ID
+                var m2 = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+                if (m2) return m2[1];
+                // Format: drive.google.com/uc?id=FILE_ID
+                var m3 = url.match(/drive\.google\.com\/uc\?id=([a-zA-Z0-9_-]+)/);
+                if (m3) return m3[1];
+                // Format: drive.google.com/thumbnail?id=FILE_ID
+                var m4 = url.match(/drive\.google\.com\/thumbnail\?id=([a-zA-Z0-9_-]+)/);
+                if (m4) return m4[1];
+                return '';
+            }
+
+            // ============================================================
+            // UTIL: Deteksi tipe file dari URL (image / pdf / unknown)
+            // ============================================================
+            function detectFileExtension(url) {
+                if (!url) return 'unknown';
+                var lower = String(url).toLowerCase();
+                // Deteksi dari ekstensi file di URL
+                if (/\.(pdf)(\?|$|&)/.test(lower)) return 'pdf';
+                if (/\.(jpg|jpeg|png|gif|webp|bmp|svg)(\?|$|&)/.test(lower)) return 'image';
+                if (/\.(doc|docx)(\?|$|&)/.test(lower)) return 'doc';
+                if (/\.(xls|xlsx)(\?|$|&)/.test(lower)) return 'xls';
+                // Fallback: kalau URL Google Drive tanpa ekstensi, asumsikan PDF (paling umum untuk brosur)
+                if (/drive\.google\.com/.test(lower)) return 'pdf';
+                return 'unknown';
+            }
+
+            // ============================================================
+            // BROSUR DOWNLOAD LOGIC
+            // ============================================================
+            // Strategi:
+            // 1. Jika URL Google Drive dengan ID → untuk gambar, fetch blob lalu trigger download
+            //    (CORS Google Drive thumbnail biasanya diizinkan).
+            // 2. Untuk PDF / file lain → pakai URL `uc?export=download&id=FILE_ID`
+            //    yang otomatis mengirim header `Content-Disposition: attachment`,
+            //    sehingga browser langsung mengunduh TANPA membuka Drive UI.
+            // 3. Fallback: jika bukan Google Drive, pakai URL as-is dengan atribut `download`.
+            // ============================================================
+
+            function showToastInline(message, type) {
+                // Buat toast sederhana muncul di pojok kanan bawah
+                var existing = document.getElementById('psb-toast-inline');
+                if (existing) existing.remove();
+                var toast = document.createElement('div');
+                toast.id = 'psb-toast-inline';
+                toast.style.cssText = [
+                    'position:fixed',
+                    'bottom:24px',
+                    'right:24px',
+                    'z-index:99999',
+                    'padding:14px 22px',
+                    'border-radius:12px',
+                    'background:' + (type === 'error' ? '#dc2626' : type === 'success' ? '#059669' : '#3b82f6'),
+                    'color:white',
+                    'font-size:0.88rem',
+                    'font-weight:600',
+                    'box-shadow:0 12px 28px -8px rgba(0,0,0,0.25)',
+                    'opacity:0',
+                    'transform:translateY(10px)',
+                    'transition:all 0.3s ease',
+                    'display:flex',
+                    'align-items:center',
+                    'gap:8px',
+                    'max-width:340px'
+                ].join(';');
+                toast.innerHTML = '<i class="fa-solid ' + (type === 'error' ? 'fa-circle-xmark' : type === 'success' ? 'fa-circle-check' : 'fa-circle-info') + '"></i> ' + message;
+                document.body.appendChild(toast);
+                requestAnimationFrame(function () {
+                    toast.style.opacity = '1';
+                    toast.style.transform = 'translateY(0)';
+                });
+                setTimeout(function () {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateY(10px)';
+                    setTimeout(function () { toast.remove(); }, 300);
+                }, 3500);
+            }
+
+            function triggerBrowserDownload(href, downloadAttr) {
+                var a = document.createElement('a');
+                a.href = href;
+                if (downloadAttr) a.download = downloadAttr;
+                a.target = '_blank';
+                a.rel = 'noopener';
+                // Tidak append ke body untuk anchor cross-origin dengan download
+                // — browser akan menangani respons Content-Disposition secara native
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(function () {
+                    document.body.removeChild(a);
+                }, 1000);
+            }
+
+            function triggerBlobDownload(blob, filename) {
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(function () {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 1500);
+            }
+
+            async function downloadBrosur(url, tahunAjaran, btnEl) {
+                if (!url) {
+                    showToastInline('URL brosur tidak tersedia', 'error');
+                    return;
                 }
 
-                // URL lain (Supabase Storage, dsb.) — pakai apa adanya
-                return url;
+                var fileId = extractDriveFileId(url);
+                var ext = detectFileExtension(url);
+                var fileName = 'Brosur-PSB-' + (tahunAjaran || 'SMA-Plus-Almunawwarah').replace(/[\/\\]/g, '-');
+
+                // Tampilkan loading state
+                var originalHTML = '';
+                if (btnEl) {
+                    originalHTML = btnEl.innerHTML;
+                    btnEl.classList.add('loading');
+                    btnEl.disabled = true;
+                }
+
+                // ── KASUS 1: Gambar dari Google Drive → fetch blob + download ──
+                if (fileId && ext === 'image') {
+                    var thumbUrl = 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w2000';
+                    showToastInline('Mengunduh brosur...', 'info');
+                    try {
+                        var response = await fetch(thumbUrl, { mode: 'cors' });
+                        if (!response.ok) throw new Error('HTTP ' + response.status);
+                        var blob = await response.blob();
+                        var ext2 = (thumbUrl.match(/sz=w\d+/) ? 'jpg' : 'jpg');
+                        triggerBlobDownload(blob, fileName + '.' + ext2);
+                        showToastInline('Brosur berhasil diunduh ✓', 'success');
+                        if (btnEl) {
+                            btnEl.classList.remove('loading');
+                            btnEl.disabled = false;
+                        }
+                        return;
+                    } catch (err) {
+                        console.warn('Fetch blob gagal, fallback ke direct download URL:', err);
+                        // Fallback ke direct download URL (uc?export=download)
+                        var directUrl = 'https://drive.google.com/uc?export=download&id=' + fileId;
+                        triggerBrowserDownload(directUrl, fileName + '.jpg');
+                        showToastInline('Mengunduh brosur... (mode langsung)', 'info');
+                        if (btnEl) {
+                            btnEl.classList.remove('loading');
+                            btnEl.disabled = false;
+                        }
+                        return;
+                    }
+                }
+
+                // ── KASUS 2: PDF / dokumen dari Google Drive → direct download URL ──
+                // URL `uc?export=download&id=FILE_ID` otomatis mengirim header
+                // Content-Disposition: attachment, sehingga browser mengunduh
+                // TANPA membuka Drive UI. Untuk file besar, Google mungkin
+                // menampilkan halaman konfirmasi virus scan — itu edge case.
+                if (fileId) {
+                    var ext3 = ext === 'pdf' ? 'pdf' : (ext === 'doc' ? 'doc' : (ext === 'xls' ? 'xls' : 'pdf'));
+                    var dlUrl = 'https://drive.google.com/uc?export=download&id=' + fileId;
+                    showToastInline('Mengunduh brosur... (file akan tersimpan otomatis)', 'info');
+                    triggerBrowserDownload(dlUrl, fileName + '.' + ext3);
+                    if (btnEl) {
+                        // Beri jeda agar user sempat melihat toast
+                        setTimeout(function () {
+                            btnEl.classList.remove('loading');
+                            btnEl.disabled = false;
+                        }, 1200);
+                    }
+                    return;
+                }
+
+                // ── KASUS 3: Bukan Google Drive — pakai URL apa adanya ──
+                showToastInline('Mengunduh brosur...', 'info');
+                triggerBrowserDownload(url, fileName);
+                if (btnEl) {
+                    setTimeout(function () {
+                        btnEl.classList.remove('loading');
+                        btnEl.disabled = false;
+                    }, 1200);
+                }
             }
 
             // ============================================================
@@ -196,7 +1314,7 @@
                 var hint     = document.getElementById('imgZoomHint');
 
                 var scale = 1, minScale = 1, maxScale = 5;
-                var tx = 0, ty = 0;          // translasi (pan)
+                var tx = 0, ty = 0;
                 var isDragging = false;
                 var lastX = 0, lastY = 0;
                 var hintTimer = null;
@@ -204,13 +1322,11 @@
                 function applyTransform() {
                     img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
                 }
-
                 function reset() {
                     scale = 1; tx = 0; ty = 0;
                     applyTransform();
                     img.classList.remove('dragging');
                 }
-
                 function open(src, alt) {
                     if (!src) return;
                     img.src = src;
@@ -221,23 +1337,17 @@
                     document.body.style.overflow = 'hidden';
                     showHint();
                 }
-
                 function close() {
                     overlay.classList.remove('active');
                     overlay.setAttribute('aria-hidden', 'true');
                     document.body.style.overflow = '';
                     img.src = '';
                 }
-
-                function zoomIn()  { setScale(scale + 0.3); }
-                function zoomOut() { setScale(scale - 0.3); }
-
                 function setScale(s) {
                     scale = Math.max(minScale, Math.min(maxScale, s));
                     if (scale <= 1) { tx = 0; ty = 0; }
                     applyTransform();
                 }
-
                 function showHint() {
                     hint.style.opacity = '1';
                     if (hintTimer) clearTimeout(hintTimer);
@@ -246,14 +1356,11 @@
                     }, 3500);
                 }
 
-                // ----- Wheel zoom (desktop) -----
                 stage.addEventListener('wheel', function (e) {
                     e.preventDefault();
                     var delta = e.deltaY < 0 ? 0.2 : -0.2;
                     setScale(scale + delta);
                 }, { passive: false });
-
-                // ----- Drag pan -----
                 stage.addEventListener('pointerdown', function (e) {
                     if (e.target !== img && e.target !== stage) return;
                     if (scale <= 1) return;
@@ -278,174 +1385,624 @@
                 stage.addEventListener('pointerup', endDrag);
                 stage.addEventListener('pointercancel', endDrag);
                 stage.addEventListener('pointerleave', endDrag);
-
-                // ----- Double-click / double-tap zoom -----
                 stage.addEventListener('dblclick', function (e) {
                     if (e.target === stage) { close(); return; }
                     setScale(scale >= 2 ? 1 : 2);
                 });
-
-                // ----- Tombol toolbar -----
-                btnIn.addEventListener('click', zoomIn);
-                btnOut.addEventListener('click', zoomOut);
+                btnIn.addEventListener('click', function () { setScale(scale + 0.3); });
+                btnOut.addEventListener('click', function () { setScale(scale - 0.3); });
                 btnReset.addEventListener('click', reset);
                 btnClose.addEventListener('click', close);
-
-                // ----- Klik area gelap untuk tutup (tapi bukan gambar) -----
                 stage.addEventListener('click', function (e) {
-                    // Hanya tutup jika klik kosong (bukan pada gambar)
                     if (e.target === stage) close();
                 });
-
-                // ----- ESC untuk tutup -----
                 document.addEventListener('keydown', function (e) {
                     if (!overlay.classList.contains('active')) return;
                     if (e.key === 'Escape') close();
-                    else if (e.key === '+' || e.key === '=') zoomIn();
-                    else if (e.key === '-' || e.key === '_') zoomOut();
+                    else if (e.key === '+' || e.key === '=') setScale(scale + 0.3);
+                    else if (e.key === '-' || e.key === '_') setScale(scale - 0.3);
                     else if (e.key === '0') reset();
                 });
 
                 return { open: open, close: close };
             })();
-
-            // Buka fungsi zoom global supaya bisa dipakai inline
             window.ImageZoom = ImageZoom;
 
+            // ============================================================
+            // COUNTDOWN STATE + RENDER
+            // ============================================================
+            var cdState = {
+                loaded: false,
+                startMs: null,
+                endMs: null
+            };
+            var cdTimer = null;
+            var cdElements = {
+                months: null, days: null, hours: null, minutes: null, seconds: null,
+                status: null, hero: null
+            };
+
+            function pad(n) { return String(n).padStart(2, '0'); }
+
+            function diffBreakdown(fromMs, toMs) {
+                if (toMs <= fromMs) return { months: 0, days: 0, hours: 0, minutes: 0, seconds: 0 };
+                var from = new Date(fromMs);
+                var to = new Date(toMs);
+                var months = (to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth());
+                var anchor = new Date(from.getTime());
+                if (months > 0) {
+                    anchor.setMonth(anchor.getMonth() + months);
+                    if (anchor > to) {
+                        months -= 1;
+                        anchor.setMonth(anchor.getMonth() - 1);
+                    }
+                } else { months = 0; anchor = new Date(from.getTime()); }
+                var remainingMs = to.getTime() - anchor.getTime();
+                if (remainingMs < 0) remainingMs = 0;
+                var days = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((remainingMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((remainingMs % (1000 * 60)) / 1000);
+                return { months: months, days: days, hours: hours, minutes: minutes, seconds: seconds };
+            }
+
+            function setStatusBadge(statusEl, label, kind) {
+                if (!statusEl) return;
+                statusEl.className = 'psb-status-badge ' + (kind || '');
+                var dotLabel = kind === 'open' ? 'Pendaftaran Dibuka' : (kind === 'closed' ? 'Pendaftaran Ditutup' : 'Akan Dibuka');
+                statusEl.innerHTML = '<span class="dot"></span> ' + (label || dotLabel);
+            }
+
+            function renderCountdown(targetMs) {
+                if (!cdElements.days) return;
+                var now = Date.now();
+                var diff = targetMs - now;
+                if (diff <= 0) {
+                    cdElements.months.textContent = '00';
+                    cdElements.days.textContent = '00';
+                    cdElements.hours.textContent = '00';
+                    cdElements.minutes.textContent = '00';
+                    cdElements.seconds.textContent = '00';
+                    return;
+                }
+                var b = diffBreakdown(now, targetMs);
+                cdElements.months.textContent = pad(b.months);
+                cdElements.days.textContent = pad(b.days);
+                cdElements.hours.textContent = pad(b.hours);
+                cdElements.minutes.textContent = pad(b.minutes);
+                cdElements.seconds.textContent = pad(b.seconds);
+            }
+
+            function updateStatus() {
+                if (!cdState.loaded || !cdElements.hero) return;
+                var now = Date.now();
+                var startMs = cdState.startMs;
+                var endMs = cdState.endMs;
+
+                if (!startMs && !endMs) {
+                    setStatusBadge(cdElements.status, 'Periode Belum Diumumkan', '');
+                    return;
+                }
+                if (startMs && now < startMs) {
+                    setStatusBadge(cdElements.status, 'Akan Dibuka', '');
+                    renderCountdown(startMs);
+                    return;
+                }
+                if (endMs && now < endMs) {
+                    setStatusBadge(cdElements.status, 'Pendaftaran Dibuka', 'open');
+                    renderCountdown(endMs);
+                    return;
+                }
+                setStatusBadge(cdElements.status, 'Pendaftaran Ditutup', 'closed');
+                if (cdElements.days) {
+                    cdElements.months.textContent = '00';
+                    cdElements.days.textContent = '00';
+                    cdElements.hours.textContent = '00';
+                    cdElements.minutes.textContent = '00';
+                    cdElements.seconds.textContent = '00';
+                }
+            }
+
+            function startCountdownTicker() {
+                if (cdTimer) clearInterval(cdTimer);
+                cdTimer = setInterval(updateStatus, 1000);
+            }
+
+            // ============================================================
+            // RENDER INFO PSB PAGE
+            // ============================================================
             function renderPSB(data) {
                 if (!data || data.length === 0) {
                     container.innerHTML =
                         '<div class="psb-empty">' +
                         '  <i class="fa-solid fa-clipboard-list"></i>' +
-                        '  <p>Informasi PSB belum tersedia saat ini. Silakan cek kembali nanti atau hubungi panitia PSB.</p>' +
-                        '  <a href="link-psb.html" class="btn-psb"><i class="fa-solid fa-pen-to-square"></i> Daftar Sekarang</a>' +
+                        '  <p>Informasi PSB belum tersedia saat ini. Silakan hubungi panitia PSB untuk informasi terkini.</p>' +
+                        '  <a href="https://wa.me/' + DEFAULT_WA_NUMBER + '?text=' + encodeURIComponent(DEFAULT_WA_TEXT) + '" target="_blank" rel="noopener" class="btn-daftar-primary"><i class="fa-brands fa-whatsapp"></i> Hubungi Panitia</a>' +
                         '</div>';
                     return;
                 }
 
                 var item = data[0];
-                var judul = item.judul || 'Informasi PSB';
-                // ⚠️ Penting: normalize Google Drive URL dulu sebelum dipakai di <img>
-                var gambarRaw = item.gambar_psb || '';
-                var gambar = normalizeImageUrl(gambarRaw);
-                var link = item.link_pendaftaran || '#';
+                var judul = item.judul || 'Penerimaan Peserta Didik Baru';
+                var konten = item.konten || '';
+                var syarat = Array.isArray(item.syarat) ? item.syarat : [];
+                var alurText = item.alur_pendaftaran || '';
+                var biaya = item.biaya || '';
+                var kontak = item.kontak || '';
                 var tahun = item.tahun_ajaran || '';
+                var gambarRaw = item.gambar_psb || '';
+                var gambar = gambarRaw ? normalizeImageUrl(gambarRaw) : '';
+                var brosurRaw = item.brosur_psb || '';
+                // Debug: log semua field untuk troubleshooting
+                console.info('[Info PSB] Field item:', {
+                    id: item.id,
+                    judul: item.judul,
+                    gambar_psb: item.gambar_psb,
+                    brosur_psb: item.brosur_psb,
+                    link_pendaftaran: item.link_pendaftaran,
+                    tanggal_mulai: item.tanggal_mulai,
+                    tanggal_selesai: item.tanggal_selesai,
+                    status_aktif: item.status_aktif
+                });
+                if (item.brosur_psb === undefined) {
+                    console.warn('[Info PSB] ⚠ Field "brosur_psb" TIDAK ADA di data DB. Jalankan migration-add-columns.sql untuk menambahkan kolom ini.');
+                } else if (!item.brosur_psb) {
+                    console.info('[Info PSB] Field brosur_psb kosong. Admin belum isi URL brosur di Dashboard > Info PSB.');
+                }
+                var link = item.link_pendaftaran || DEFAULT_LINK_PENDAFTARAN;
                 var tglMulai = item.tanggal_mulai ? new Date(item.tanggal_mulai) : null;
                 var tglSelesai = item.tanggal_selesai ? new Date(item.tanggal_selesai) : null;
 
-                function fmtDate(d) {
-                    if (!d) return '';
-                    var days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-                    var months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-                    return days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() +
-                        ' — ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0') + ' WIB';
+                // Default syarat & biaya jika kosong
+                if (syarat.length === 0) {
+                    syarat = [
+                        'Lulusan SMP/MTs sederajat',
+                        'Raport semester 1–5 dengan rata-rata minimal 75',
+                        'Sertifikat prestasi (jika ada)',
+                        'Surat keterangan sehat dari dokter',
+                        'Pas foto 3×4 berwarna (4 lembar)',
+                        'Fotokopi Akta Kelahiran',
+                        'Fotokopi Kartu Keluarga',
+                    ];
+                }
+                if (!biaya) {
+                    biaya = 'Biaya Awal Masuk Rp 3.500.0000. termasuk seragam dan kitab.';
+                }
+                if (!kontak) {
+                    kontak = 'Panitia PPDB: 0831-7871-0191. Email: info@smaplus-almunawwarah.sch.id';
                 }
 
+                // Set countdown state
+                cdState.startMs = tglMulai ? tglMulai.getTime() : null;
+                cdState.endMs = tglSelesai ? tglSelesai.getTime() : null;
+                cdState.loaded = true;
+
+                var alurSteps = parseAlurPendaftaran(alurText);
+                var waPhone = extractPhone(kontak);
+                var waLink = 'https://wa.me/' + waPhone + '?text=' + encodeURIComponent(DEFAULT_WA_TEXT);
+
+                // Build HTML
                 var html = '';
 
-                // 1. Header + Gambar info PSB
+                // ───── 1. STATUS HERO ─────
                 html +=
-                    '<div class="psb-image-wrapper" data-aos="fade-up">' +
-                    '  <div class="psb-image-header">' +
-                    '    <h2><i class="fa-solid fa-image"></i> ' + escapeHtml(judul) + '</h2>' +
-                    (tahun ? '    <div class="tahun">Tahun Ajaran ' + escapeHtml(tahun) + '</div>' : '') +
-                    '  </div>' +
-                    '  <div class="psb-image-figure">';
-
-                if (gambar) {
-                    // ⚠️ JANGAN escapeHtml URL gambar — cukup escape quote untuk atribut
-                    // Pakai addEventListener (bukan inline onerror) supaya tidak rapuh
-                    html +=
-                        '    <img id="psb-img" src="' + gambar + '" alt="' + escapeHtml(judul) + '" ' +
-                        '         style="cursor:zoom-in;" loading="lazy">' +
-                        '    <a href="' + gambar + '" target="_blank" rel="noopener" id="psb-img-full">' +
-                        '      <i class="fa-solid fa-up-right-and-down-left-from-center"></i> Lihat gambar penuh' +
-                        '    </a>';
-                } else {
-                    html +=
-                        '    <div class="psb-image-empty">' +
-                        '      <i class="fa-solid fa-image"></i>' +
-                        '      <p>Gambar info PSB belum diunggah oleh panitia. Silakan kembali lagi nanti.</p>' +
-                        '    </div>';
-                }
-
-                html +=
+                    '<div class="psb-status-hero" data-aos="fade-up">' +
+                    '  <div class="psb-status-row">' +
+                    '    <div style="flex:1; min-width: 280px;">' +
+                    '      <div class="psb-status-badge" id="psb-status-badge"><span class="dot"></span> Memuat status...</div>' +
+                    '      <h1>' + escapeHtml(judul) + '</h1>' +
+                    (tahun ? '      <div class="tahun-ajaran"><i class="fa-solid fa-calendar"></i> Tahun Ajaran ' + escapeHtml(tahun) + '</div>' : '') +
+                    '      <div class="psb-mini-countdown" id="psb-mini-countdown" style="display:none;">' +
+                    '        <div class="psb-mini-cd-item"><div class="num" id="cd-months">00</div><div class="lbl">Bulan</div></div>' +
+                    '        <div class="psb-mini-cd-item"><div class="num" id="cd-days">00</div><div class="lbl">Hari</div></div>' +
+                    '        <div class="psb-mini-cd-item"><div class="num" id="cd-hours">00</div><div class="lbl">Jam</div></div>' +
+                    '        <div class="psb-mini-cd-item"><div class="num" id="cd-minutes">00</div><div class="lbl">Menit</div></div>' +
+                    '        <div class="psb-mini-cd-item"><div class="num" id="cd-seconds">00</div><div class="lbl">Detik</div></div>' +
+                    '      </div>' +
+                    '      <div class="psb-status-cta-row">' +
+                    '        <a href="' + escapeHtml(link) + '" target="_blank" rel="noopener" class="btn-daftar-primary"><i class="fa-solid fa-pen-to-square"></i> Daftar Sekarang</a>' +
+                    (gambar ? '        <button class="btn-daftar-secondary" id="btn-scroll-poster"><i class="fa-solid fa-image"></i> Lihat Poster</button>' : '') +
+                    '      </div>' +
+                    '    </div>' +
                     '  </div>' +
                     '</div>';
 
-                // 1b. Periode pendaftaran
+                // ───── 2. QUICK INFO GRID ─────
+                html += '<div class="psb-quick-grid" data-aos="fade-up" data-aos-delay="50">';
+
+                // Card 1: Periode
+                var periodeVal = 'Belum diumumkan';
+                var periodeSub = '';
                 if (tglMulai || tglSelesai) {
+                    periodeVal = (tglMulai ? fmtDateShort(item.tanggal_mulai) : 'Segera') + ' — ' + (tglSelesai ? fmtDateShort(item.tanggal_selesai) : 'Belum ditentukan');
+                    periodeSub = 'Periode pendaftaran aktif';
+                }
+                html += '<div class="psb-quick-card">' +
+                    '  <div class="icon"><i class="fa-solid fa-calendar-days"></i></div>' +
+                    '  <div class="label">Periode</div>' +
+                    '  <div class="value">' + escapeHtml(periodeVal) + '</div>' +
+                    (periodeSub ? '  <div class="sub">' + escapeHtml(periodeSub) + '</div>' : '') +
+                    '</div>';
+
+                // Card 2: Biaya (singkat)
+                var biayaShort = 'Lihat detail di bawah';
+                var biayaMatch = biaya.match(/Rp\s?[\d\.\,]+/i);
+                if (biayaMatch) {
+                    biayaShort = biayaMatch[0] + '.';
+                }
+                html += '<div class="psb-quick-card">' +
+                    '  <div class="icon"><i class="fa-solid fa-money-bill"></i></div>' +
+                    '  <div class="label">Biaya Pendaftaran</div>' +
+                    '  <div class="value">' + escapeHtml(biayaShort) + '</div>' +
+                    '  <div class="sub"></div>' +
+                    '</div>';
+
+                // Card 3: Program
+                html += '<div class="psb-quick-card">' +
+                    '  <div class="icon"><i class="fa-solid fa-graduation-cap"></i></div>' +
+                    '  <div class="label">Program</div>' +
+                    '  <div class="value">Reguler • Tahfidz • Bilingual</div>' +
+                    '  <div class="sub">Boarding School Islami</div>' +
+                    '</div>';
+
+                // Card 4: Kontak
+                html += '<div class="psb-quick-card">' +
+                    '  <div class="icon"><i class="fa-solid fa-headset"></i></div>' +
+                    '  <div class="label">Panitia PSB</div>' +
+                    '  <div class="value">Hubungi via WhatsApp</div>' +
+                    '  <a href="' + waLink + '" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--primary);font-weight:600;text-decoration:none;margin-top:4px;">Chat sekarang →</a>' +
+                    '</div>';
+
+                html += '</div>';
+
+                // ───── 3. POSTER GAMBAR ─────
+                if (gambar) {
                     html +=
-                        '<div class="psb-card" data-aos="fade-up" data-aos-delay="50">' +
-                        '  <h2><i class="fa-solid fa-calendar-days"></i> Periode Pendaftaran</h2>';
-                    if (tglMulai) {
-                        html += '<p><strong>Mulai:</strong> ' + escapeHtml(fmtDate(tglMulai)) + '</p>';
-                    }
-                    if (tglSelesai) {
-                        html += '<p><strong>Selesai:</strong> ' + escapeHtml(fmtDate(tglSelesai)) + '</p>';
-                    }
-                    html +=
-                        '  <p style="margin-top:12px;font-size:0.82rem;color:var(--gray-500);">' +
-                        '    <i class="fa-solid fa-info-circle"></i> Hitung mundur pendaftaran dapat dilihat di halaman ' +
-                        '    <a href="link-psb.html" style="color:var(--primary);font-weight:600;">Pendaftaran</a>.' +
-                        '  </p>' +
+                        '<div class="psb-section" data-aos="fade-up" id="poster-section">' +
+                        '  <div class="psb-section-head">' +
+                        '    <div class="icon-box"><i class="fa-solid fa-image"></i></div>' +
+                        '    <div>' +
+                        '      <h2>Poster Pendaftaran</h2>' +
+                        '      <div class="sub">Klik gambar untuk memperbesar</div>' +
+                        '    </div>' +
+                        '  </div>' +
+                        '  <div class="psb-poster-wrap">' +
+                        '    <img id="psb-poster-img" src="' + gambar + '" alt="Poster Pendaftaran ' + escapeHtml(tahun || '') + '" loading="lazy">' +
+                        '    <div class="psb-poster-actions">' +
+                        '      <button class="psb-poster-btn" id="psb-poster-zoom"><i class="fa-solid fa-expand"></i> Perbesar</button>' +
+                        (brosurRaw ? '      <button class="psb-poster-btn primary" id="psb-poster-download-quick"><i class="fa-solid fa-download"></i> Unduh Brosur</button>' : '') +
+                        '      <a href="' + gambar + '" target="_blank" rel="noopener" class="psb-poster-btn"><i class="fa-solid fa-up-right-from-square"></i> Buka di tab baru</a>' +
+                        '    </div>' +
+                        '  </div>' +
                         '</div>';
                 }
 
-                // 2. CTA Section
-                var linkValid = link && link !== '#';
+                // ───── 3b. BROSUR DOWNLOAD ─────
+                if (brosurRaw) {
+                    // Deteksi apakah brosur berupa gambar atau dokumen (PDF)
+                    var brosurExt = detectFileExtension(brosurRaw);
+                    var brosurIcon = brosurExt === 'pdf' ? 'fa-file-pdf' :
+                                     (brosurExt === 'image' ? 'fa-file-image' : 'fa-file-arrow-down');
+                    var brosurLabel = brosurExt === 'pdf' ? 'Brosur PDF' :
+                                      (brosurExt === 'image' ? 'Brosur Gambar' : 'Brosur Pendaftaran');
+                    var brosurSizeLabel = brosurExt === 'pdf' ? 'Dokumen PDF' :
+                                          (brosurExt === 'image' ? 'Gambar resolusi tinggi' : 'File brosur');
+
+                    html +=
+                        '<div class="psb-section" data-aos="fade-up" id="brosur-section">' +
+                        '  <div class="psb-section-head">' +
+                        '    <div class="icon-box"><i class="fa-solid fa-download"></i></div>' +
+                        '    <div>' +
+                        '      <h2>Brosur & Materi Pendaftaran</h2>' +
+                        '      <div class="sub">Unduh brosur lengkap untuk dibaca offline</div>' +
+                        '    </div>' +
+                        '  </div>' +
+                        '  <div class="psb-brosur-card">' +
+                        '    <div class="psb-brosur-icon"><i class="fa-solid ' + brosurIcon + '"></i></div>' +
+                        '    <div class="psb-brosur-info">' +
+                        '      <h4>Brosur PSB ' + escapeHtml(tahun || '') + '</h4>' +
+                        '      <p>Unduh brosur resmi pendaftaran siswa baru berisi informasi lengkap: program unggulan, biaya, persyaratan, dan alur pendaftaran.</p>' +
+                        '      <div class="meta">' +
+                        '        <span><i class="fa-solid fa-file"></i> ' + escapeHtml(brosurLabel) + '</span>' +
+                        '        <span><i class="fa-solid fa-circle-check"></i> ' + escapeHtml(brosurSizeLabel) + '</span>' +
+                        '        <span><i class="fa-solid fa-bolt"></i> Unduh langsung</span>' +
+                        '      </div>' +
+                        '    </div>' +
+                        '    <button class="btn-download-brosur" id="btn-download-brosur">' +
+                        '      <i class="fa-solid fa-download"></i> Unduh Brosur' +
+                        '    </button>' +
+                        '  </div>' +
+                        '</div>';
+                }
+
+                // ───── 4. DESKRIPSI / KONTEN ─────
+                if (konten) {
+                    html +=
+                        '<div class="psb-section" data-aos="fade-up">' +
+                        '  <div class="psb-section-head">' +
+                        '    <div class="icon-box"><i class="fa-solid fa-circle-info"></i></div>' +
+                        '    <div>' +
+                        '      <h2>Tentang Pendaftaran</h2>' +
+                        '      <div class="sub">Informasi umum penerimaan siswa baru</div>' +
+                        '    </div>' +
+                        '  </div>' +
+                        '  <div class="psb-description">' + konten + '</div>' +
+                        '</div>';
+                }
+
+                // ───── 5. ALUR PENDAFTARAN ─────
+                if (alurSteps.length > 0) {
+                    html +=
+                        '<div class="psb-section" data-aos="fade-up">' +
+                        '  <div class="psb-section-head">' +
+                        '    <div class="icon-box"><i class="fa-solid fa-route"></i></div>' +
+                        '    <div>' +
+                        '      <h2>Alur Pendaftaran</h2>' +
+                        '      <div class="sub">Tahapan penerimaan peserta didik baru</div>' +
+                        '    </div>' +
+                        '  </div>' +
+                        '  <div class="psb-stepper">';
+                    for (var i = 0; i < alurSteps.length; i++) {
+                        var step = alurSteps[i];
+                        html +=
+                            '<div class="psb-step">' +
+                            '  <div class="psb-step-num">' + step.num + '</div>' +
+                            '  <h4>' + escapeHtml(step.title) + '</h4>' +
+                            (step.desc ? '<p>' + escapeHtml(step.desc) + '</p>' : '') +
+                            '</div>';
+                    }
+                    html += '  </div>' +
+                        '</div>';
+                }
+
+                // ───── 6. PERSYARATAN ─────
                 html +=
-                    '<div class="psb-cta" data-aos="fade-up" data-aos-delay="100">' +
-                    '  <h2>Siap Mendaftar?</h2>' +
-                    '  <p>Jangan lewatkan kesempatan bergabung bersama SMA Plus Almunawwarah. Daftar sekarang dan raih masa depan yang lebih baik!</p>' +
-                    (linkValid
-                        ? '  <a href="' + escapeHtml(link) + '" target="_blank" rel="noopener" class="btn-psb"><i class="fa-solid fa-pen-to-square"></i> Daftar Sekarang</a>'
-                        : '  <span class="btn-psb disabled" disabled><i class="fa-solid fa-pen-to-square"></i> Link pendaftaran belum tersedia</span>') +
+                    '<div class="psb-section" data-aos="fade-up">' +
+                    '  <div class="psb-section-head">' +
+                    '    <div class="icon-box"><i class="fa-solid fa-list-check"></i></div>' +
+                    '    <div>' +
+                    '      <h2>Persyaratan Pendaftaran</h2>' +
+                    '      <div class="sub">Berkas yang perlu disiapkan calon siswa</div>' +
+                    '    </div>' +
+                    '  </div>' +
+                    '  <div class="psb-syarat-grid">';
+                for (var j = 0; j < syarat.length; j++) {
+                    html +=
+                        '<div class="psb-syarat-item">' +
+                        '  <div class="check"><i class="fa-solid fa-check"></i></div>' +
+                        '  <span>' + escapeHtml(syarat[j]) + '</span>' +
+                        '</div>';
+                }
+                html += '  </div>' +
+                    '</div>';
+
+                // ───── 7. BIAYA ─────
+                html +=
+                    '<div class="psb-section" data-aos="fade-up">' +
+                    '  <div class="psb-section-head">' +
+                    '    <div class="icon-box"><i class="fa-solid fa-money-bill-wave"></i></div>' +
+                    '    <div>' +
+                    '      <h2>Biaya Pendaftaran & Dana Pendidikan</h2>' +
+                    '      <div class="sub">Rincian biaya dan opsi pembayaran</div>' +
+                    '    </div>' +
+                    '  </div>' +
+                    '  <div class="psb-biaya-card">' +
+                    '    <p>' + escapeHtml(biaya) + '</p>' +
+                    '    <div class="psb-biaya-note"><i class="fa-solid fa-circle-info"></i> .</div>' +
+                    '  </div>' +
+                    '</div>';
+
+                // ───── 8. KONTAK ─────
+                html +=
+                    '<div class="psb-section" data-aos="fade-up">' +
+                    '  <div class="psb-section-head">' +
+                    '    <div class="icon-box"><i class="fa-solid fa-headset"></i></div>' +
+                    '    <div>' +
+                    '      <h2>Kontak Panitia PSB</h2>' +
+                    '      <div class="sub">Hubungi untuk pertanyaan seputar pendaftaran</div>' +
+                    '    </div>' +
+                    '  </div>' +
+                    '  <div class="psb-kontak-card">' +
+                    '    <div class="wa-icon"><i class="fa-brands fa-whatsapp"></i></div>' +
+                    '    <div class="info">' +
+                    '      <h4>Panitia PPDB SMA Plus Almunawwarah</h4>' +
+                    '      <p>' + escapeHtml(kontak) + '</p>' +
+                    '    </div>' +
+                    '    <a href="' + waLink + '" target="_blank" rel="noopener" class="btn-wa"><i class="fa-brands fa-whatsapp"></i> Chat WhatsApp</a>' +
+                    '  </div>' +
+                    '</div>';
+
+                // ───── 9. FAQ ACCORDION ─────
+                html +=
+                    '<div class="psb-section" data-aos="fade-up">' +
+                    '  <div class="psb-section-head">' +
+                    '    <div class="icon-box"><i class="fa-solid fa-circle-question"></i></div>' +
+                    '    <div>' +
+                    '      <h2>Pertanyaan yang Sering Diajukan</h2>' +
+                    '      <div class="sub">FAQ seputar pendaftaran & sekolah</div>' +
+                    '    </div>' +
+                    '  </div>' +
+                    '  <div class="psb-faq-list" id="psb-faq-list">';
+                for (var k = 0; k < DEFAULT_FAQ.length; k++) {
+                    var faq = DEFAULT_FAQ[k];
+                    html +=
+                        '<div class="psb-faq-item">' +
+                        '  <button class="psb-faq-q" type="button">' +
+                        '    <span>' + escapeHtml(faq.q) + '</span>' +
+                        '    <i class="fa-solid fa-chevron-down chev"></i>' +
+                        '  </button>' +
+                        '  <div class="psb-faq-a">' + escapeHtml(faq.a) + '</div>' +
+                        '</div>';
+                }
+                html += '  </div>' +
+                    '</div>';
+
+                // ───── 10. FINAL CTA ─────
+                html +=
+                    '<div class="psb-cta" data-aos="fade-up">' +
+                    '  <h2>Siap Menjadi Bagian dari Keluarga Besar Kami?</h2>' +
+                    '  <p>Daftarkan diri Anda sekarang dan raih masa depan gemilang dengan ilmu, iman, dan akhlak mulia di SMA Plus Almunawwarah.</p>' +
+                    '  <a href="' + escapeHtml(link) + '" target="_blank" rel="noopener" class="btn-daftar-primary"><i class="fa-solid fa-pen-to-square"></i> Daftar Sekarang</a>' +
                     '</div>';
 
                 container.innerHTML = html;
                 AOS.refresh();
 
-                // ===== Pasang event handler SETELAH innerHTML dirender =====
-                if (gambar) {
-                    var imgEl = document.getElementById('psb-img');
-                    if (imgEl) {
-                        // Klik gambar → buka zoom modal
-                        imgEl.addEventListener('click', function () {
-                            ImageZoom.open(gambar, judul);
-                        });
-                        // Error handler aman (tanpa inline onerror bersarang)
-                        imgEl.addEventListener('error', function () {
-                            var parent = imgEl.parentElement;
-                            parent.innerHTML =
-                                '<div class="psb-image-empty">' +
-                                '  <i class="fa-solid fa-triangle-exclamation"></i>' +
-                                '  <p>Gambar gagal dimuat. URL: ' + escapeHtml(gambarRaw) + '</p>' +
-                                '  <p style="font-size:0.78rem;margin-top:8px;color:var(--gray-400);">' +
-                                '    Jika ini Google Drive, pastikan file berupa <strong>gambar</strong> (bukan dokumen) ' +
-                                '    dan izin sharing-nya "Anyone with the link".' +
-                                '  </p>' +
+                // ───── Wire up countdown elements ─────
+                cdElements.hero = document.querySelector('.psb-status-hero');
+                cdElements.status = document.getElementById('psb-status-badge');
+                cdElements.months = document.getElementById('cd-months');
+                cdElements.days = document.getElementById('cd-days');
+                cdElements.hours = document.getElementById('cd-hours');
+                cdElements.minutes = document.getElementById('cd-minutes');
+                cdElements.seconds = document.getElementById('cd-seconds');
+
+                var miniCd = document.getElementById('psb-mini-countdown');
+                if (cdState.startMs || cdState.endMs) {
+                    if (miniCd) miniCd.style.display = 'flex';
+                    updateStatus();
+                    startCountdownTicker();
+                } else {
+                    if (miniCd) miniCd.style.display = 'none';
+                    setStatusBadge(cdElements.status, 'Periode Belum Diumumkan', '');
+                }
+
+                // ───── Wire up poster zoom ─────
+                var posterImg = document.getElementById('psb-poster-img');
+                var posterZoomBtn = document.getElementById('psb-poster-zoom');
+                if (posterImg) {
+                    var openZoom = function () {
+                        ImageZoom.open(gambar, 'Poster Pendaftaran ' + (tahun || ''));
+                    };
+                    posterImg.addEventListener('click', openZoom);
+                    if (posterZoomBtn) posterZoomBtn.addEventListener('click', openZoom);
+                    // Error handler
+                    posterImg.addEventListener('error', function () {
+                        var wrap = posterImg.closest('.psb-poster-wrap');
+                        if (wrap) {
+                            wrap.innerHTML =
+                                '<div class="psb-poster-empty">' +
+                                '  <div class="ph-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>' +
+                                '  <h4>Poster gagal dimuat</h4>' +
+                                '  <p>Pastikan URL gambar benar dan izin sharing Google Drive diset "Anyone with the link".</p>' +
                                 '</div>';
+                        }
+                    });
+                }
+
+                // ───── Wire up scroll to poster ─────
+                var scrollPosterBtn = document.getElementById('btn-scroll-poster');
+                if (scrollPosterBtn) {
+                    scrollPosterBtn.addEventListener('click', function () {
+                        var posterSection = document.getElementById('poster-section');
+                        if (posterSection) {
+                            posterSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    });
+                }
+
+                // ───── Wire up brosur download ─────
+                var brosurBtn = document.getElementById('btn-download-brosur');
+                if (brosurBtn) {
+                    brosurBtn.addEventListener('click', function () {
+                        downloadBrosur(brosurRaw, tahun, brosurBtn);
+                    });
+                }
+                // Quick download button di poster section
+                var quickBrosurBtn = document.getElementById('psb-poster-download-quick');
+                if (quickBrosurBtn) {
+                    quickBrosurBtn.addEventListener('click', function () {
+                        // Scroll ke section brosur dulu, lalu trigger download
+                        var brosurSection = document.getElementById('brosur-section');
+                        if (brosurSection) {
+                            brosurSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                        downloadBrosur(brosurRaw, tahun, quickBrosurBtn);
+                    });
+                }
+
+                // ───── Wire up FAQ accordion ─────
+                var faqItems = document.querySelectorAll('.psb-faq-item');
+                faqItems.forEach(function (item) {
+                    var btn = item.querySelector('.psb-faq-q');
+                    if (btn) {
+                        btn.addEventListener('click', function () {
+                            var wasActive = item.classList.contains('active');
+                            // Close all
+                            faqItems.forEach(function (other) { other.classList.remove('active'); });
+                            // Toggle this one
+                            if (!wasActive) item.classList.add('active');
                         });
                     }
+                });
+
+                // ───── Wire up sticky CTA ─────
+                if (stickyCta) {
+                    stickyStatus.textContent = 'Pendaftaran Tersedia';
+                    stickyTahun.textContent = tahun || '2025/2026';
+                    stickyBtn.setAttribute('href', link);
+                    // Show sticky CTA after scrolling past hero
+                    var showSticky = function () {
+                        var hero = document.querySelector('.psb-status-hero');
+                        if (!hero) return;
+                        var rect = hero.getBoundingClientRect();
+                        if (rect.bottom < 100) {
+                            stickyCta.style.display = 'flex';
+                        } else {
+                            stickyCta.style.display = 'none';
+                        }
+                    };
+                    window.addEventListener('scroll', showSticky, { passive: true });
+                    showSticky();
                 }
             }
 
+            // ============================================================
+            // LOAD PSB DATA
+            // ============================================================
             async function loadPSB() {
                 try {
                     var data = await SMAPlusAPI.fetchInfoPSB();
+                    console.info('[Info PSB] Data diterima dari DB:', data);
+                    if (!data || data.length === 0) {
+                        console.warn('[Info PSB] Tidak ada row di tabel info_psb. Pastikan admin sudah mengisi data melalui Dashboard > Info PSB.');
+                    } else {
+                        console.info('[Info PSB] Menampilkan row:', data[0]);
+                    }
                     renderPSB(data);
                 } catch (err) {
-                    console.error('Gagal memuat info PSB:', err);
+                    console.error('[Info PSB] Gagal memuat info PSB:', err);
                     container.innerHTML =
                         '<div class="psb-empty">' +
                         '  <i class="fa-solid fa-circle-exclamation"></i>' +
-                        '  <p>Gagal memuat informasi PSB. Silakan coba lagi nanti.</p>' +
+                        '  <p>Gagal memuat informasi PSB. Silakan coba lagi nanti atau hubungi panitia.</p>' +
+                        '  <a href="https://wa.me/' + DEFAULT_WA_NUMBER + '?text=' + encodeURIComponent(DEFAULT_WA_TEXT) + '" target="_blank" rel="noopener" class="btn-daftar-primary"><i class="fa-brands fa-whatsapp"></i> Hubungi Panitia</a>' +
                         '</div>';
                 }
             }
 
             loadPSB();
+
+            // ============================================================
+            // LIVE UPDATE: Re-render otomatis kalau ada perubahan data
+            // ============================================================
+            // listen event 'smaplus:data-updated' dari api.js (SWR).
+            // Kalau admin update data info_psb di dashboard, halaman
+            // ini akan otomatis re-render tanpa perlu refresh.
+            // ============================================================
+            window.addEventListener('smaplus:data-updated', function (e) {
+                var detail = e.detail || {};
+                if (detail.table === 'info_psb') {
+                    console.info('[Info PSB] Data berubah di DB, re-render otomatis');
+                    var freshData = detail.data;
+                    if (Array.isArray(freshData) && freshData.length > 0) {
+                        renderPSB(freshData);
+                    } else if (freshData && !Array.isArray(freshData)) {
+                        // single() return object langsung
+                        renderPSB([freshData]);
+                    }
+                }
+            });
 
             AOS.init({
                 duration: 800,
@@ -456,7 +2013,6 @@
         })();
     </script>
     <script>
-        // Register Service Worker for caching — hanya via http/https (bukan file://)
         if ('serviceWorker' in navigator && window.location.protocol.indexOf('http') === 0) {
             window.addEventListener('load', function() {
                 var swPath = (window.location.pathname.includes('/pages/') || window.location.pathname.includes('/admincms/')) ? '../sw.js' : 'sw.js';
@@ -466,8 +2022,6 @@
                     console.warn('SW registration failed:', err);
                 });
             });
-        } else {
-            console.info('SW dilewati: protocol tidak didukung (file://) atau SW tidak tersedia.');
         }
     </script>
 </body>
