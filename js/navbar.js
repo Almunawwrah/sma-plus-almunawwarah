@@ -25,7 +25,7 @@
   var profilPages = ['sejarah', 'struktur-organisasi', 'tenaga-pendidik', 'sarana-prasarana', 'prestasi'];
   var akademikPages = ['kurikulum', 'program-unggulan'];
   var organisasiPages = ['osis', 'ospm', 'ekstrakurikuler'];
-  var informasiPages = ['berita', 'galeri', 'info-psb'];
+  var informasiPages = ['berita' , 'info-psb'];
 
   var activeNav = null;
   if (profilPages.indexOf(filename) !== -1) activeNav = 'profil';
@@ -798,7 +798,6 @@
       '        <div class="nav-link' + informasiActive + '">Informasi <i class="fa-solid fa-chevron-down" style="font-size:0.65rem;margin-left:4px"></i></div>',
       '        <div class="dropdown-menu">',
       '          <a href="https://smaplusalmunawwarahsmd.blogspot.com/" class="dropdown-item"><i class="fa-solid fa-newspaper"></i> Berita</a>',
-      '          <a href="' + pages('galeri.html') + '" class="dropdown-item"><i class="fa-solid fa-images"></i> Galeri</a>',
       '          <a href="' + pages('info-psb.html') + '" class="dropdown-item"><i class="fa-solid fa-clipboard-list"></i> Info PSB</a>',
       '        </div>',
       '      </div>',
@@ -859,7 +858,6 @@
       '      </div>',
       '      <div class="mobile-submenu" id="mobile-informasi">',
       '        <a href="' + pages('berita.html') + '"><i class="fa-solid fa-newspaper"></i> Berita</a>',
-      '        <a href="' + pages('galeri.html') + '"><i class="fa-solid fa-images"></i> Galeri</a>',
       '        <a href="' + pages('info-psb.html') + '"><i class="fa-solid fa-clipboard-list"></i> Info PSB</a>',
       '      </div>',
       '    </div>',
